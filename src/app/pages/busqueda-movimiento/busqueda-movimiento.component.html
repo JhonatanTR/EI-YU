@@ -1,0 +1,144 @@
+<div class="body">
+    <p style="text-align: center; font-size: 20px; top:50%">Consulta de movimientos</p>
+    <mat-label style="padding-left: 10px; padding-top: 45px; font-size: 15px; font-weight: 520;  ">Buscar información
+        de:</mat-label><br>
+    <div class="example-fechaI">
+        <mat-form-field style="width: 120%;" required>
+            <mat-label>Fecha de Inicio</mat-label>
+            <input matInput [matDatepicker]="picker1" [(ngModel)]="inicio" [max]="fechaActual" [min]="getMinDate()"
+                (dateChange)="onFechaInicioChange($event)" required    >
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error *ngIf="!inicio">La fecha de inicio es obligatoria</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="example-fechaF">
+        <mat-form-field style="width: 120%; left: 30px;">
+            <mat-label>Fecha de final</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="final" [min]="inicio" [max]="maximaFecha"
+              (dateChange)="onFechaFinalChange($event)" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="!final">La fecha final es obligatoria</mat-error>
+          </mat-form-field>
+    </div>
+    <mat-form-field class="example-form-field" style="width: 24%; top: 11px; right: 12px; left:120px; ">
+        <mat-label>Clave de rastreo</mat-label>
+        <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)">
+    </mat-form-field>
+
+    <mat-form-field style="width: 15%; left: 120px; top: 11px; padding-left: 30px; ">
+        <mat-label>Institución beneficiaria</mat-label>
+        <input type="text" matInput placeholder="Institución beneficiaria" [formControl]="institucionControl"
+            [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayIB" (optionSelected)="seleccionarBanco($event)">
+            <mat-option *ngFor="let p of filteredBancos " [value]="p">{{p.descripcion}}</mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <br>
+    
+    <mat-form-field style="width: 18%; top: 11px; right: 20px; left: 30px;">
+      <mat-label>Tipo movimientos</mat-label>
+      <mat-select [(value)]="datos">
+        <mat-option *ngFor="let tip of tipos" [value]="tip.value">
+          {{tip.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field style="width: 18%; top: 11px;  left: 95px; ">
+        <mat-label>Estatus</mat-label>
+        <input matInput [(ngModel)]="estatus">
+    </mat-form-field>
+    <button mat-raised-button
+        style="color: #FAF8FF; background-color: #45B39D; width: 15%; left: 140px; top: 8px; padding-top: 4px; padding-left: 10px; "
+        (click)="filtar()"  ><mat-icon>search</mat-icon></button>
+</div>
+<!--Inicio de la tabla de filtrado-->
+<div class="tabla">
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? toggleAllRows() : null;"
+                              (change)="primeraCasillaSeleccionada = $event.source.checked"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation();"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                              [checked]="this.primeraCasillaSeleccionada ? chekeador2(row) : chekeador(row)"
+                              (change)="ver(row)"
+                              [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <!-- ID Column -->
+            <ng-container matColumnDef="Clave de rastreo">
+              <th mat-header-cell *matHeaderCellDef> Clave de rastreo </th>
+              <td mat-cell *matCellDef="let row">{{row.cve_rastreo}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Concepto">
+              <th mat-header-cell *matHeaderCellDef> Concepto </th>
+              <td mat-cell *matCellDef="let row">{{row.concepto_pago}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Fecha de creacion">
+              <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
+              <td mat-cell *matCellDef="let row">{{row.fecha_creacion}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Tipo de movimiento">
+              <th mat-header-cell *matHeaderCellDef> Tipo de movimiento </th>
+              <td mat-cell *matCellDef="let row">{{row.tipomoviiento}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="Institucióm">
+              <th mat-header-cell *matHeaderCellDef> Institución </th>
+              <td mat-cell *matCellDef="let row">{{row.institucion}}</td>
+            </ng-container>
+          
+            <ng-container matColumnDef="estatus">
+              <th mat-header-cell *matHeaderCellDef> Estatus </th>
+              <td mat-cell *matCellDef="let row">{{row.estatus}}</td>
+            </ng-container>
+            <!-- Progress Column -->
+            <ng-container matColumnDef="Opciones">
+              <th mat-header-cell *matHeaderCellDef>Opciones</th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-button color="primary" (click)="opendialogo(row)">Ver detalle</button>
+              </td>
+            </ng-container>
+          
+            <!-- Progress Column -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <!-- Row shown when there is no matching data. -->
+          </table>
+         
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons [length]="cantidad"
+            (page)="mostrarMas($event)"></mat-paginator>
+
+    </div>
+    <br>
+    <div style="position: relative; left: 37%;">
+        <button mat-icon-button (click)="exportarPdf()"   [disabled]="pdfDisp()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Descargar PDF
+        </button>
+        <button mat-icon-button style="left:110px;" (click)="exportarExcel()" [disabled]="exDisp()">
+            <mat-icon>table_chart</mat-icon> 
+            Descargar Excel
+        </button>
+        <br>
+    </div>
+</div>
+
+<footer class="foot">
+  @ Derechos reservados ASP Integra Opciones V 1.1
+</footer>

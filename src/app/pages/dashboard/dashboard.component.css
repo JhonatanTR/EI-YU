@@ -1,0 +1,301 @@
+mat-form-field {
+    max-width: 400px;
+    /* Ajusta este valor según tus necesidades */
+    margin: 0 1;
+    /* Centra el campo de fecha horizontalmente */
+    display: block;
+    /* Hace que el campo de fecha ocupe todo el ancho disponible */
+}
+
+.example-container {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+    /* Agrega una sombra */
+    border-radius: 10px;
+    /* Agrega esquinas redondeadas */
+    padding: 15px;
+    /* Agrega un poco de espacio al contenido */
+}
+
+.example-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-right: 13px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+    /* Agrega una sombra */
+    border-radius: 10px;
+    /* Agrega esquinas redondeadas */
+    padding: 25px;
+    /* Agrega un poco de espacio al contenido */
+    color: black;
+    /* Cambia el color del texto según tus necesidades */
+    border-radius: 10px;
+    /* Agrega esquinas redondeadas */
+    transition: all 0.2s ease-in-out;
+    /* Agrega una transición suave */
+}
+
+.example-text {
+    margin-top: 12px;
+    margin-bottom: 10px;
+    margin-left: 29px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.example-fecha {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+    /* Agrega una sombra */
+    border-radius: 10px;
+    /* Agrega esquinas redondeadas */
+    padding: 2px;
+    /* Agrega un poco de espacio al contenido */
+    margin-left: 29px;
+    margin-right: 20px;
+}
+.header-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1em;
+}
+.label-title{
+    padding-left: 1em;
+    font-size: 15px;
+    font-weight: 520;
+}
+.label-toggle{
+    margin-right: 2em;
+    position: relative;
+    left: 90px;
+}
+.body-content{
+    justify-content: space-around;
+    width: 100%;
+}
+.example-fechaI {
+    /*display: flex;
+  margin-left: 31px;
+   margin-bottom: -10px;
+    margin-top: 10px;
+       padding: 2px;
+    font-size: 14px;
+     margin-right: 10px;
+  */
+    white-space: nowrap;
+    width: 30%;
+    padding-left: 40px;
+    display: inline-block;
+   
+}
+
+.example-fechaF {
+    display: flex;
+  
+    white-space: nowrap;
+    margin-left: 31px;
+    margin-bottom: -10px;
+    margin-top: 10px;
+    width: 34%;
+    padding: 2px;
+    font-size: 14px;
+    padding-left: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
+.example-form mat-slide-toggle {
+    margin: 8px 0;
+    display: block;
+  }
+  
+.card-container {
+    display: flex;
+   
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+    
+}
+
+.example-card {
+    flex: 1 1 300px;
+    margin: 10px;
+    max-width: 100%;
+}
+
+.example-card.blue-line {
+    max-width: 390px;
+    height: 50px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    margin-left: 29px;
+    margin-right: 20px;
+}
+
+.example-card.blue-line {
+    border-left: 4px solid #9B9B9B;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.example-card.blue-line {
+    border-left: 4px solid #eab52F;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.example-card.blue-line1 {
+    max-width: 390px;
+    height: 50px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    margin-left: 29px;
+    margin-right: 20px;
+
+}
+
+.example-card.blue-line1 {
+    border-left: 4px solid #9B9B9B;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.example-card.blue-line1 {
+    border-left: 4px solid #eab52F;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.example-card.blue-line2 {
+    max-width: 390px;
+    height: 50px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    margin-left: 29px;
+    margin-right: 20px;
+}
+
+.example-card.blue-line2 {
+    border-left: 4px solid #9B9B9B;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.example-card.blue-line2 {
+    border-left: 4px solid #eab52F;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.icon {
+    display: contents;
+    align-items: center;
+    padding-right: 8px;
+
+}
+
+mat-icon {
+
+    font-size: 40px;
+    color: #9B9B9B;
+    position: absolute;
+    right: 23px;
+}
+.mt{
+    position: relative;
+    left: 7px;
+}
+.foot {
+    display: flex;
+    height: 50%;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin: 1em;
+}
+
+
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mt {
+    font-size: 24px;
+    color: #eab52F;
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    position: absolute;
+    left: 330px;
+    right: 40px;
+}
+
+
+
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 110%;
+    margin: auto auto;
+}
+
+.chart-wrapper {
+    max-width: 60%;
+    width: 125%;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: 30px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 70px;
+}
+
+
+.chart-wrapper2 {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+    /* Agrega una sombra */
+    border-radius: 10px;
+    max-width: 25%;
+    width: 80%;
+    margin: 10px;
+    margin-left: 30px;
+    padding: 5px;
+}
+
+canvas {
+    width: 110%;
+    height: 80%;
+}
+
+.chart-titlePie,
+.chart-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+}
+@media (min-width: 600px) and (max-width: 1280px) {
+    .label-toggle{ 
+        margin-right: 2em;
+        position: relative;
+        left: 13em;
+    }
+  }
+  

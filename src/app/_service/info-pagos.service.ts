@@ -1,0 +1,32 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { InfoCapturaSPEIPago } from '../_model/InfoCapturaSPEIPago';
+import { InfoAutorizarSpei } from '../_model/InfoAutorizarSpei';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class InfoPagosService {
+
+  urlPago: string = "http://localhost:8090/encriptacion/pago" //Esta url Hace el envio del pago apuntando al micro
+  urlEnlistar: string = "http://localhost:8080/spei";//Esta url Hace el listado de Autorizar Spei
+  constructor(private http: HttpClient) { }
+
+  realizarPago(infoCapturaSPEIPago: InfoCapturaSPEIPago) {//DA DE ALTA UN PAGO
+    return this.http.post<any>(this.urlPago, infoCapturaSPEIPago);
+  }
+
+  guardarEnLatablaListarPagos(infoAutorizarSpei: InfoAutorizarSpei) {//Guarda en la tabla listarSpei
+    return this.http.post<InfoAutorizarSpei>(`${this.urlEnlistar}/speiOut`, infoAutorizarSpei);
+  }
+  listarPagosDeAutorizar() {//Guarda en la tabla listarSpei
+    return this.http.get<InfoAutorizarSpei[]>(`${this.urlEnlistar}/speiOutList`);
+  }
+  listarPagoSoloTrue(dato: any) {//Listar solo true
+    return this.http.post<InfoAutorizarSpei[]>(`${this.urlEnlistar}/listNoPagado`, dato);
+  }
+  actualizarPagados(infoAutorizarSpei: InfoAutorizarSpei) {//actualizar a true  si han sido pagados
+    return this.http.put<InfoAutorizarSpei>(`${this.urlEnlistar}/actualizar`, infoAutorizarSpei);
+  }
+
+}

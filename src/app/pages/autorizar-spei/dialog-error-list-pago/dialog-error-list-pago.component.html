@@ -1,0 +1,27 @@
+
+<div>ERRORES DE ENVÍO</div>
+<button mat-icon-button style="position: relativ; left: 95%; top:-30px;" (click)="salir()">
+    <mat-icon>clear</mat-icon>
+</button>
+<div class="table-container" matTableScrollable>
+    <table mat-table [dataSource]="dataSource" matSort  >          
+            <ng-container matColumnDef="dato1">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header  >Beneficiarío</th>
+                <td mat-cell *matCellDef="let row"  > {{row.beneficiario}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dato2">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+                <td mat-cell *matCellDef="let row"> ${{row.monto   | number:'1.2-2'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="dato3">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Clave de rastreo </th>
+                <td mat-cell *matCellDef="let row"> {{row.claberastreo}} </td>
+            </ng-container>
+ 
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+            <!-- Row shown when there is no matching data. -->
+          
+        </table>
+    </div>

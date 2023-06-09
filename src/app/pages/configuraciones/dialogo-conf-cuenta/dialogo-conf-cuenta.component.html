@@ -1,0 +1,40 @@
+<button mat-icon-button style="display: flex;align-content: flex-end;float: right;" (click)="salir()" >
+  <mat-icon>clear</mat-icon>
+  </button>
+  <div style="display: flex; justify-content: center; align-content: flex-end; font-size: 19px;font-family: 500; left: 20px;">
+    Agregar cuenta clabe
+  </div>
+<br>
+  <mat-form-field class="example-full-width" style="width: 70%;">
+    <mat-label>Numeros de cuenta</mat-label>
+    <input matInput placeholder="Agregar numero de cuenta" [(ngModel)]="seleccionado" maxlength="18" minlength="18" (keypress)="validateInput($event)" (keydown)="validarNumeroCuenta($event)">
+  </mat-form-field>
+  <button mat-raised-button style="width: 20%; padding:3px; left: 30px; top: -8px; background-color: #45B39D; color: #FAF8FF;"  (click)="agregarAlatabla()" *ngIf="mostrarBotonagregar">Agregar</button>
+  <button mat-raised-button color="primary" style="width: 20%; padding:3px; left: 30px; top: -8px; background-color: #45B39D;color: #FAF8FF" (click)="modificar()" #botonModificar *ngIf="mostrarBotonModificar">Modificar</button>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Position Column -->
+      <!-- Name Column -->
+      <ng-container matColumnDef="numC">
+        <th mat-header-cell *matHeaderCellDef> Numero de cuenta </th>
+        <td mat-cell *matCellDef="let element"> {{element.cuentaClabe}} </td>
+      </ng-container>
+      Acciones
+      <ng-container matColumnDef="Acciones" style="text-align: center;">
+        <th mat-header-cell *matHeaderCellDef  style="text-align: center;" > Acciones </th>
+        <td mat-cell *matCellDef="let element"  style="text-align: center;">
+         <button mat-icon-button  (click)="editar(element)"  > <mat-icon matTooltip="Editar"   style="color: #45B39D;">edit</mat-icon></button>
+          <button mat-icon-button   (click)="eliminar(element)" > <mat-icon matTooltip="Eliminar" style="color: #ED7067;" >delete</mat-icon></button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+  </div><br>
+  <mat-form-field class="example-full-width" style="width: 40%; padding-left: 30%;">
+    <mat-label>Código OTP</mat-label>
+    <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp" #myInput   >
+</mat-form-field>
+<button  mat-icon-button style="left: 0px; width: 13%;" (click)="enviar()"  > <mat-icon matTooltip="Enviar"   style="color: #45B39D;">send</mat-icon></button>

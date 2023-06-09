@@ -1,0 +1,21 @@
+<div style="background-color: #9B9B9B; width: 100%; height: 100%;">
+
+  <button mat-icon-button style="position: relativ; left: 95%; top:-30px;" (click)="salir()" >
+    <mat-icon>clear</mat-icon>
+    </button>
+  <br>    <br><div style="position: relative ;top: -29px;"><h1 style="text-align: center;color: white;">GENERAR CODIGO DE ENROLAMIENTO</h1></div>
+  <p style="text-align: center; color: white; font-size: 20px; font-weight: 550;">{{textHead}}</p>
+  <div class="btn">
+    <button mat-raised-button color="primary" (click)="enrolar()" [disabled]="btnD">{{textBtn}}</button>
+  </div>
+  <div class="contenedor-spinner" *ngIf="mostrarSpinner">
+    <br>
+   <mat-spinner></mat-spinner>
+    <!-- <mat-progress-bar style="width: 90%;" mode="indeterminate"></mat-progress-bar><br><br>-->
+  </div>  <br> 
+  <div *ngIf="mostrarQR" style="display: flex; justify-content: center; width: auto;">
+    <br> 
+    <img [src]="imagenData" alt="Imagen QR">
+  </div>
+  <br>
+</div>

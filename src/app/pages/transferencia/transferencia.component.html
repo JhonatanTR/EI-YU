@@ -1,0 +1,128 @@
+<div class="bodyEnvio">
+    <p style="text-align: center; font-size: 23px; top:50%">Transferencia</p>
+    <!--<div class="btnDialogo">
+        <button mat-raised-button style="color: #FAF8FF; background-color: #B71C1C; " (click)="openDialog()">Carga
+            masiva</button>
+    </div-->
+    <br> <br>
+    <div style="position: relative; top: -30px;">
+        <div class="titulos">
+            <p style="text-align: center; font-size: 20px;  padding-top: 0px; color: white;">Beneficiario</p>
+        </div>
+        <br>
+        <!-- ______________________________________-->
+        <div style="padding: 0;">
+            <mat-form-field appearance="fill" class="example-full-width" style="width: 49%;">
+                <mat-label>Destino</mat-label>
+                <input matInput type="text" placeholder="CLABE/TARJETA/CELULAR" [(ngModel)]="destinatario"
+                  maxlength="18" (input)="mostrarValorCampo($event)" (input)="limitarMaximo18Digitos($event)"
+                  inputmode="numeric" pattern="[0-9]*" (keypress)="validarSoloNumeros($event)" />
+              </mat-form-field>
+            <!--
+            <mat-form-field appearance="fill" class="example-full-width" style="width: 32%; padding-left: 10px;padding-right: 10px;">
+                <mat-label>RFC beneficiario</mat-label>
+                <input matInput placeholder="RFC beneficiario" [(ngModel)]="rfcBeneficiario" (keyup)="formatRFC($event)">
+              </mat-form-field>
+              -->
+
+            <mat-form-field appearance="fill" class="example-full-width" style="width: 49%; padding-left: 2%;">
+                <mat-label>Nombre beneficiario</mat-label>
+                <input matInput placeholder="Nombre beneficiario" [(ngModel)]="nomBeneficiario">
+            </mat-form-field>
+        </div>
+        <div class="titulos">
+            <p style="text-align: center; font-size: 20px; padding-top: 0px; color: white;">Ordenante</p>
+        </div>
+        <!-- <mat-form-field appearance="fill" style="width: 100%;font-size: 15px; padding-top: 10px;">
+            <mat-label>Seleccionar Cuenta</mat-label>
+            <input type="text" matInput placeholder="Cuenta Origen" [formControl]="cuentasControl" required
+                [matAutocomplete]="autos">
+            <mat-autocomplete #autos="matAutocomplete" [displayWith]="displayCu"
+                (optionSelected)="seleccionarCuenta($event)">
+                <mat-option *ngFor="let f of filteredCuentas " [value]="f">{{f.clabe}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field-->
+        <!--mat-form-field appearance="fill" class="example-form-field" style="width: 100%;  padding-top: 10px;">
+            <mat-label>Numero de Cuenta</mat-label>
+            <input matInput type="text" [(ngModel)]="numeroDeCuenta" (keydown)="validarNumeroCuenta($event)"
+                maxlength="18">
+        </mat-form-field-->
+        <mat-form-field appearance="fill" class="example-form-field" style="width: 100%;  padding-top: 10px;">
+            <mat-label>Seleccione el numero de Cuenta</mat-label>
+            <mat-select [(value)]="cuentasSeleccionada">
+                <mat-option *ngFor="let cun of cuentas" [value]="cun">
+                    {{cun.cuentaClabe}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div class="titulos">
+            <p style="text-align: center; font-size: 20px; padding-top: 0px; color: white;">Detalles de Pago</p>
+        </div>
+
+        <mat-form-field appearance="fill" style="width: 100%;font-size: 15px; padding-top: 10px;">
+            <mat-label>Seleccionar Institución beneficiaria</mat-label>
+            <input type="text" matInput placeholder="Institución beneficiaria" [formControl]="institucionControl"
+                required [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayIB"
+                (optionSelected)="seleccionarBanco($event)">
+                <mat-option *ngFor="let p of filteredBancos " [value]="p">{{p.descripcion}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+
+        <br>
+        <!-- ______________________________________-->
+        <mat-form-field appearance="fill" class="example-full-width" style="width: 33%;">
+            <mat-label>Monto</mat-label>
+            <span matPrefix>$ &nbsp;</span>
+            <input matInput type="text" [(ngModel)]="monto" required placeholder="0" (input)="separarNumeros($event)">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="example-full-width"
+            style="width: 32%; padding-left: 10px;padding-right: 10px;">
+            <mat-label>Ref. Numerica</mat-label>
+            <input matInput placeholder="Ref. Numerica" [(ngModel)]="refNumerica">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="example-full-width" style="width: 32%; ">
+            <mat-label>Concepto pago</mat-label>
+            <input matInput placeholder="Concepto Pago" [(ngModel)]="conceptoPago">
+        </mat-form-field>
+        <!--mat-form-field appearance="fill" class="example-full-width" style="width: 32%;">
+            <mat-label>Ref. Cobranza</mat-label>
+            <input matInput placeholder="Ref. Cobranza" [(ngModel)]="cobranza">
+        </mat-form-field-->
+        <!--<mat-form-field appearance="fill" style="width: 32%; padding-left: 10px;">
+            <span matPrefix>$ &nbsp;</span>
+            <mat-label>Iva del pago</mat-label>
+            <input matInput type="text" [(ngModel)]="iva" min="0" readonly >
+        </mat-form-field-->
+        <br>
+        <!-- ______________________________________-->
+
+
+        <!-- ______________________________________-->
+        <div style="padding: 0;">
+            <mat-form-field appearance="fill" class="example-form-field" style="width: 33%; ">
+                <mat-label>Clave de rastreo</mat-label>
+                <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)" readonly>
+            </mat-form-field>
+
+
+        </div> <!-- ______________________________________---------------------------------->
+
+        <!-- ______________________________________---------------------------------->
+
+
+        <mat-form-field class="example-full-width" style="width: 23%; padding-left: 34%;">
+            <mat-label>Código OTP</mat-label>
+            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp">
+        </mat-form-field>
+
+        <button mat-raised-button style="color: #FAF8FF; background-color: #45B39D; width: 9%;" (click)="enviar()"
+            [disabled]="estadoBotonRegistrar()"  [ngClass]="{'disabled-button': estadoBotonRegistrar()}"><mat-icon matTooltip="Enviar">send</mat-icon></button>
+    
+        </div>
+</div>
+<footer class="foot">
+    @ Derechos reservados ASP Integra Opciones V 1.1
+  </footer>

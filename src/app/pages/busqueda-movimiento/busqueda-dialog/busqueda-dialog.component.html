@@ -1,0 +1,43 @@
+<button mat-icon-button style="display: flex;align-content: flex-end;float: right;" (click)="Salir()">
+  <mat-icon>clear</mat-icon>
+</button><br> 
+<div style="display: flex; justify-content: center; align-content: flex-end; font-size: 18px; left: 20px;">
+  Movimiento:
+  <div style="font-weight: 550;">{{clabe}}</div>
+</div>
+<table>
+  <tr>
+    <th>Cuenta Origen:</th>
+    <td>{{infoMovimientoDetalle.cuentaorigen}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Banco Origen:</th>
+    <td>{{infoMovimientoDetalle.bancoorigen}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Nombre Origen:</th>
+    <td>{{infoMovimientoDetalle.nombreorigen}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Cuenta destino:</th>
+    <td>{{infoMovimientoDetalle.cuentadestino}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Banco Destino:</th>
+    <td>{{infoMovimientoDetalle.bancodestino}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Nombre destino:</th>
+    <td>{{infoMovimientoDetalle.nombre_destino}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Concepto:</th>
+    <td>{{infoMovimientoDetalle.conscepto}}</td>
+  </tr>
+</table>

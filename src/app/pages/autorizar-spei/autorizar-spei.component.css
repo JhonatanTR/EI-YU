@@ -1,0 +1,34 @@
+.tabla {
+    padding: 8px;
+    width: 97%;
+    max-width: 97%;
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    margin: 20px auto 10px;
+    /* Añadir 50px de margen superior */
+    text-align: justify;
+}
+table {
+    width: 100%;
+  }
+  .disabled-button {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .fila-error {
+    background-color: rgb(255, 168, 168);
+  }
+  .spinner-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+  .foot{
+    display: flex;
+    height: 5%;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin: 1em;
+    }

@@ -1,0 +1,73 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.bienvenida {
+  font-size: 16px;
+  margin-left: 20%;
+}
+
+.left-size-header {
+  display: flex;
+  width: auto;
+  justify-content: flex-start;
+
+}
+
+.menu-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.example-sidenav-container {
+  flex: 1;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.example-toolbar {
+  background-color: #eab52F;
+}
+
+.id {
+  box-shadow: 2px 2px 4px #eab52F;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 12px;
+  font-weight: 590;
+}
+
+
+.imgEi {
+  border-radius: 4px;
+  padding: 0px;
+  width: 55px;
+}
+
+
+@media (min-width: 600px) and (max-width: 1280px) {
+  .bienvenida {
+    font-size: 14px;
+    margin: auto;
+  }
+}
+
+.foot {
+  display: flex;
+  height: 5%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 1em;
+}

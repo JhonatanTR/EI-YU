@@ -1,0 +1,18 @@
+.tabla {
+    padding: 8px;
+    width: 97%;
+    max-width: 97%;
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    margin: 20px auto 10px;
+    /* Añadir 50px de margen superior */
+    text-align: justify;
+}
+table {
+    width: 100%;
+  }
+  
+  .table-container {
+    height: 400px; /* Establece la altura deseada para el contenedor */
+    overflow-y: auto; /* Permite el scroll vertical cuando el contenido excede la altura del contenedor */
+  }
