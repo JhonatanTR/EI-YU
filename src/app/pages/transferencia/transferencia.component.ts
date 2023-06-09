@@ -238,7 +238,7 @@ export class TransferenciaComponent implements OnInit {
   }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
     this._snackBar.open(da1, da2, {
-      duration: 2000,
+      duration: 6000,
     });
   }
   estadoBotonRegistrar() {

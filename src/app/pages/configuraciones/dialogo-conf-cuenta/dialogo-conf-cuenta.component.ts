@@ -27,20 +27,20 @@ export class DialogoConfCuentaComponent implements OnInit {
   mostrarBotonagregar = true;
   mensajeDeValidacion: string = "";
   constructor(private localStorageService: LocalStorageService, private dialogRef: MatDialogRef<DialogoConfCuentaComponent>, private _snackBar: MatSnackBar, private infoLoginService: InfoLoginService, private infoCuentaClabeService: InfoCuentaclabeService) {
-
-   }
+    
+  }
   datoAeditar!: InfoCuentaClabe;
   ngOnInit(): void {
+    
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.listarPagosDeAutorizarPblu(res).pipe(
       catchError((error) => {
-        
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
         return of([]);
       })).subscribe(data => {
-      this.cuentas = data;
-      this.dataSource = new MatTableDataSource<InfoCuentaClabe>(data);
-    })
+        this.cuentas = data;
+        this.dataSource = new MatTableDataSource<InfoCuentaClabe>(data);
+      })
   }
   listarNuevo() {//Este metodo funciona para listar las modificaciones y a cargar la lista de nuevo
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
@@ -51,45 +51,40 @@ export class DialogoConfCuentaComponent implements OnInit {
     })
   }
   agregarAlatabla() {
+    console.log(this.cuentas.length);
     let datoseleccionado: string = this.seleccionado;
     let datss = new InfoCuentaClabe();
     datss.cuentaClabe = datoseleccionado;
-    datss.pblu= this.localStorageService.getUsuario("pblu") 
-    console.log( datss.pblu)
-    if (datoseleccionado.length > 17) {
-      console.log("String del input",datoseleccionado)
-      if (datoseleccionado != "") {
-        console.log("String del input",datoseleccionado)
+    datss.pblu = this.localStorageService.getUsuario("pblu");
+    console.log(datss.pblu);
+    if (datoseleccionado.length > 17) { 
         if (this.cuentas.length < 2) {
-          for (let data of this.cuentas) {
-            console.log("lista De cuentas clabes",data)
-            if (data.cuentaClabe != datoseleccionado) {
-              this.infoCuentaClabeService.guardarEnLatablaListarPagos(datss).pipe(
-                catchError((error) => {
-                  this.openSnackBar('Error Alta de la cuenta', 'Aviso');
-                  return of(null);
+          const index = this.cuentas.findIndex(item => item.cuentaClabe === datoseleccionado); 
+          console.log(index)             
+              if (index!=null && Number(index)>-1) {
+                this.openSnackBar("Este numero de cuenta ya existe", "Aviso");
+              } else {
+                this.infoCuentaClabeService.guardarEnLatablaListarPagos(datss).pipe(
+                  catchError((error) => {
+                    this.openSnackBar('Error Alta de la cuenta', 'Aviso');
+                    return of(null);
+                  })
+                ).subscribe(data => {
+                  let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
+                  this.infoCuentaClabeService.listarPagosDeAutorizarPblu(res).subscribe(date => {
+                    this.cuentas = date;
+                    this.dataSource = new MatTableDataSource<InfoCuentaClabe>(date);
+                  })
                 })
-              ).subscribe(data => {
-                let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
-                this.infoCuentaClabeService.listarPagosDeAutorizarPblu(res).subscribe(date => {
-                  this.cuentas = date;
-                  this.dataSource = new MatTableDataSource<InfoCuentaClabe>(date);
-                })
-              })
-            } else {
-              this.openSnackBar("Este numero de cuenta ya existe", "Aviso");
-            }
-          }
+              }
         } else {
-          this.openSnackBar("Excede el maximo de cuentas permitidas", "Aviso");
+          this.openSnackBar("Excede el máximo de cuentas permitidas", "Aviso");
         }
-      } else {
-        this.openSnackBar("Numero de cuenta necesarío", "Aviso");
-      }
-      this.seleccionado = "";
+     
     } else {
-      this.openSnackBar("Numero de cuenta incorrecta", "Aviso");
+      this.openSnackBar("Número de cuenta incorrecto", "Aviso");
     }
+
   }
 
   modificar() {
@@ -101,7 +96,7 @@ export class DialogoConfCuentaComponent implements OnInit {
           this.infoCuentaClabeService.listarPagosDeAutorizar().subscribe(datas => {
             this.infoCuentaClabeService.listaCuentaNueva.next(datas);
             this.listarNuevo();
-            this.mensajeDeValidacion="";
+            this.mensajeDeValidacion = "";
           });
         });
       } else {
@@ -116,7 +111,7 @@ export class DialogoConfCuentaComponent implements OnInit {
   }
   openSnackBar(da1: string, da2: string) {
     this._snackBar.open(da1, da2, {
-      duration: 2000,
+      duration: 6000,
     });
   }
   eliminar(element: InfoCuentaClabe) {
@@ -126,7 +121,7 @@ export class DialogoConfCuentaComponent implements OnInit {
         this.infoCuentaClabeService.listarPagosDeAutorizar().subscribe(datas => {
           this.infoCuentaClabeService.listaCuentaNueva.next(datas);
           this.listarNuevo();
-          this.mensajeDeValidacion="";
+          this.mensajeDeValidacion = "";
         });
       })
     } else {
@@ -144,7 +139,6 @@ export class DialogoConfCuentaComponent implements OnInit {
       this.myInput.nativeElement.focus();
       this.openSnackBar("Introduzca el codigo otp", "Aviso");
     }
-
   }
   enviar() {
     let InfSpei = new InfoSpei();
@@ -158,10 +152,10 @@ export class DialogoConfCuentaComponent implements OnInit {
         return of(null);
       })
     ).subscribe(data => {
-       if (data?.mensaje == "Otp validado correctamente") {
-      this.mensajeDeValidacion = "Otp validado correctamente";
-      this.openSnackBar("Modificación y Eliminacion Disponible", "Aviso");
-      this.codigoOtp = "";
+      if (data?.mensaje == "Otp validado correctamente") {
+        this.mensajeDeValidacion = "Otp validado correctamente";
+        this.openSnackBar("Modificación y Eliminacion Disponible", "Aviso");
+        this.codigoOtp = "";
       } else {
 
       }
