@@ -13,10 +13,12 @@
         <!-- ______________________________________-->
         <div style="padding: 0;">
             <mat-form-field appearance="fill" class="example-full-width" style="width: 49%;">
-                <mat-label>Destino</mat-label>
-                <input matInput type="text" placeholder="CLABE/TARJETA/CELULAR" [(ngModel)]="destinatario"
-                  maxlength="18" (input)="mostrarValorCampo($event)" (input)="limitarMaximo18Digitos($event)"
-                  inputmode="numeric" pattern="[0-9]*" (keypress)="validarSoloNumeros($event)" />
+                  <mat-label>Cuenta Destino</mat-label>
+                  <mat-select [(value)]="cuentasSeleccionada">
+                      <mat-option *ngFor="let cun of cuentas" [value]="cun">
+                          {{cun.cuentaClabe}}
+                      </mat-option>
+                  </mat-select>
               </mat-form-field>
             <!--
             <mat-form-field appearance="fill" class="example-full-width" style="width: 32%; padding-left: 10px;padding-right: 10px;">
@@ -49,9 +51,9 @@
         </mat-form-field-->
         <mat-form-field appearance="fill" class="example-form-field" style="width: 100%;  padding-top: 10px;">
             <mat-label>Seleccione el numero de Cuenta</mat-label>
-            <mat-select [(value)]="cuentasSeleccionada">
-                <mat-option *ngFor="let cun of cuentas" [value]="cun">
-                    {{cun.cuentaClabe}}
+            <mat-select [(value)]="clabePadre">
+                <mat-option *ngFor="let cun of clabeP" [value]="cun">
+                    {{cun.clabe}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

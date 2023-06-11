@@ -16,9 +16,12 @@ export class DialogErrorListPagoComponent implements OnInit {
   errores:InfoAutorizarSpei[]=[];
   ngOnInit(): void {
     this.errores =[]; 
-    this.listaErrores.forEach(e=>{
-      this.errores.push(e)
-    })
+    this.listaErrores.forEach(e => {
+     
+        this.errores.push(e);
+      
+    });
+    
     this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(this.errores);
   }
   salir() {

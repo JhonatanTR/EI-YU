@@ -162,13 +162,14 @@ export class AutorizarSpeiComponent implements OnInit {
     "estatus": false,
     "pblu": this.localStorageService.getUsuario("pblu")
   }
+  aver: InfoAutorizarSpei[] = [];
   listaDeSpeiOut() {//Se consulta la lista de todos los spei out
-    this.selection = new SelectionModel<InfoAutorizarSpei>(true, []);
     this.infoPagosService.listarPagoSoloTrue(this.dat).pipe(
       catchError((error) => {
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
         return of([]);
       })).subscribe(lista => {
+        this.aver = lista;
         this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
         this.dataSource.paginator = this.paginator;
       })
@@ -180,6 +181,7 @@ export class AutorizarSpeiComponent implements OnInit {
     return numSelected === numRows;
   }
   toggleAllRowss() {
+
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
@@ -195,9 +197,7 @@ export class AutorizarSpeiComponent implements OnInit {
       this.datos(a);
       return;
     }
-
     this.selection.select(...this.dataSource.data);
-
     this.total = 0;
     this.sumar(this.selection.selected);
   }
@@ -240,10 +240,67 @@ export class AutorizarSpeiComponent implements OnInit {
     return banco ? banco.clave : "";
   }
 
+  /*  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
+      this.listaErroSpei = [];
+      this.mostrarSpinner = true;
+      let cont = 0;
+      let InfSpei = new InfoSpei();
+      InfSpei = this.storage.getUsuario("userE");
+      let request = new requestOtp();
+      request.idUsuario = InfSpei.idUsuario;
+      request.otp = this.otp.trim()
+      this.infoLoginService.verificarOtp(request).pipe(
+        catchError((error) => {
+          this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
+          this.otp = "";
+          return of(null);
+        })
+      ).subscribe((data) => {
+       if (data != null) {
+          const pagosObservables = this.info.map(info => {  
+            let speiout = new InfoCapturaSPEIPago();
+            speiout.nombreDestino = info.beneficiario;
+            speiout.ctaDestino = info.destino;
+            speiout.clabe = info.numerodecuenta;
+            speiout.monto = info.monto.toString();
+            speiout.refNum = info.refnumerica;
+            speiout.cveRastreo = info.claberastreo;
+            speiout.conceptoPago = info.conceptopago;
+            return this.infoPagosService.realizarPago(speiout).pipe(
+              catchError(() => of(null))
+            );
+          });
+          forkJoin(pagosObservables).pipe(
+            finalize(() => {
+              this.mostrarSpinner = false;
+              if (this.listaErroSpei.length > 0) {
+                this.openDiaCuenta(this.listaErroSpei);
+              }
+            })
+          ).subscribe(results => {
+            for (let i = 0; i < results.length; i++) {
+              if (results[i] !== null) {
+                this.info[i].estatus = true;
+                this.infoPagosService.actualizarPagados(this.info[i]).subscribe(() => {
+                  this.listaDeSpeiOut();
+                });
+                this.openSnackBar('Pago realizado', 'Aviso');
+              } else {            
+                this.listaErroSpei.push(this.info[i]);
+              }
+            }
+          }, () => {
+            this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
+          });
+        }
+        this.mostrarSpinner = false;
+      }, () => {
+        this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
+      });
+    }*/
   enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
-    this.listaErroSpei = [];
+    this.listaErroSpei = []
     this.mostrarSpinner = true;
-    let cont = 0;
     let InfSpei = new InfoSpei();
     InfSpei = this.storage.getUsuario("userE");
     let request = new requestOtp();
@@ -256,9 +313,9 @@ export class AutorizarSpeiComponent implements OnInit {
         return of(null);
       })
     ).subscribe((data) => {
+
       if (data != null) {
         const pagosObservables = this.info.map(info => {
-          this.listaErroSpei = [];
           let speiout = new InfoCapturaSPEIPago();
           speiout.nombreDestino = info.beneficiario;
           speiout.ctaDestino = info.destino;
@@ -271,39 +328,65 @@ export class AutorizarSpeiComponent implements OnInit {
             catchError(() => of(null))
           );
         });
+
         forkJoin(pagosObservables).pipe(
           finalize(() => {
             this.mostrarSpinner = false;
+            this.selection.clear();
+            this.total = 0;
+            this.info = [];
             if (this.listaErroSpei.length > 0) {
               this.openDiaCuenta(this.listaErroSpei);
+
             }
           })
         ).subscribe(results => {
+    
           for (let i = 0; i < results.length; i++) {
-            if (results[i] !== null) {
-              this.info[i].estatus = true;
-              this.infoPagosService.actualizarPagados(this.info[i]).subscribe(() => {
-                this.listaDeSpeiOut();
+            if (results[i] != null) {
+
+              let aux = new InfoAutorizarSpei();
+              aux.banco = this.info[i].banco;
+              aux.beneficiario = this.info[i].beneficiario;
+              aux.claberastreo = this.info[i].claberastreo;
+              aux.conceptopago = this.info[i].conceptopago;
+              aux.destino = this.info[i].destino;
+              aux.estatus = true;
+              aux.id = this.info[i].id;
+              aux.monto = this.info[i].monto;
+              aux.numerodecuenta = this.info[i].numerodecuenta;
+              aux.pblu = this.info[i].pblu;
+              aux.refnumerica = this.info[i].refnumerica;
+
+              this.infoPagosService.actualizarPagados(aux).subscribe(() => {
+                this.aver = this.aver.filter(item => item.id !== aux.id);
+                this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(this.aver);
+                this.dataSource.paginator = this.paginator;
+
               });
               this.openSnackBar('Pago realizado', 'Aviso');
-            } else {
-              cont++;
+            } else if (results[i] == null) {
               this.listaErroSpei.push(this.info[i]);
             }
           }
         }, () => {
           this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
         });
+
       }
       this.mostrarSpinner = false;
+
     }, () => {
       this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
     });
+
   }
 
-  openDiaCuenta(listaErroSpei: InfoAutorizarSpei[]) {//abre el dialgo para ver las cuentas erroneas
+
+  openDiaCuenta(listaErroSpeei: InfoAutorizarSpei[]) {//abre el dialgo para ver las cuentas erroneas
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = listaErroSpei;
+    let lista = listaErroSpeei;
+    dialogConfig.data = lista;
     dialogConfig.width = '50%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
     dialogConfig.height = 'auto'; // establece la altura del diálogo al 50% del alto de la pantalla
     dialogConfig.maxWidth = '50%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla

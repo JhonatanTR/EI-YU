@@ -27,6 +27,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatRadioModule} from '@angular/material/radio';
 //Aqui se deben almacenar todos los material module para no saturar el module principal
 @NgModule({
     declarations: [],
@@ -57,7 +59,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
         MatTooltipModule,
         MatProgressSpinnerModule,
         MatProgressBarModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatRadioModule,
+        MatStepperModule,
     ],
     exports: [
         ReactiveFormsModule,

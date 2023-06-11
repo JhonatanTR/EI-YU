@@ -13,6 +13,7 @@ import { InfoSpei } from 'src/app/_model/InfoSpei';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { catchError, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 
 @Component({
   selector: 'app-login',
@@ -28,13 +29,12 @@ export class LoginComponent implements OnInit {
   password: string = "";
   showError: boolean = false;
   errorMessage: string = 'Error: Credenciales inválidas. Intente de nuevo.';
-  constructor(private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog, private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
+  constructor(private infoCuentaClabeService: InfoCuentaclabeService,private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog, private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
  
   }
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   ngOnInit(): void {
-   
     let cli = new Cliente;
     cli.login = false;
     this.loginService.cli.next(cli);
@@ -43,9 +43,7 @@ export class LoginComponent implements OnInit {
       'password': new FormControl(''),
       'otp': new FormControl(''),
     });
-
   }
-
   signIn() {
 
   }
@@ -95,28 +93,42 @@ export class LoginComponent implements OnInit {
             this.loginService.rol.next(false)
             this.localStorageService.setDat("rol", false)
           }
-          this.router.navigate(['dashboard']);
-          let cli = new Cliente;
-          let InfoSpe = new InfoSpei();
-          InfoSpe.idUsuario = da.usuario.id;
-          InfoSpe.username = da.usuario.apiPassword.username;
-          InfoSpe.password = da.usuario.apiPassword.password;
-          InfoSpe.certificado = da.usuario.apiPassword.certificado;
-          InfoSpe.llave = da.usuario.apiPassword.llave;
-          InfoSpe.phrase = da.usuario.apiPassword.phrase;
-          this.localStorageService.setUsuario("userE", InfoSpe);
-          this.localStorageService.setIdPblu("pblu", da.usuario.idParticipante);
-          this.localStorageService.setDat("log", true)
-          this.loginService.cli.next(cli);
-          if (da.usuario.token?.activo == true || da.usuario.token != null) {
-          } else {
-            if (da.usuario.rol.idRol == 1) {
-              setTimeout(() => {
-                this.openDialogo(da.usuario.id);
-              }, 1000);
-            }
 
-          }
+          let res = { "peiyu":  da.usuario.idParticipante }
+          this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
+            let clabe = { "clabe": data.clabe_pblu };
+            this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
+              if (d == null) {
+                this.openSnackBar('PARTICIPANTE NO CONFIGURADO. FAVOR DE COMUNICARSE CON SOPORTE EIYU.', 'Aviso');
+              } else {
+                this.router.navigate(['dashboard']);
+                let cli = new Cliente;
+                let InfoSpe = new InfoSpei();
+                InfoSpe.idUsuario = da.usuario.id;
+                InfoSpe.username = da.usuario.apiPassword.username;
+                InfoSpe.password = da.usuario.apiPassword.password;
+                InfoSpe.certificado = da.usuario.apiPassword.certificado;
+                InfoSpe.llave = da.usuario.apiPassword.llave;
+                InfoSpe.phrase = da.usuario.apiPassword.phrase;
+                this.localStorageService.setUsuario("userE", InfoSpe);
+                this.localStorageService.setIdPblu("pblu", da.usuario.idParticipante);
+                this.localStorageService.setDat("log", true)
+                this.loginService.cli.next(cli);
+                if (da.usuario.token?.activo == true || da.usuario.token != null) {
+                } else {
+                  if (da.usuario.rol.idRol == 1) {
+                    setTimeout(() => {
+                      this.openDialogo(da.usuario.id);
+                    }, 1000);
+                  }
+      
+                }
+               
+            
+              }
+            })
+          })
+          
         } else {
           let cli = new Cliente;
           cli.login = false;

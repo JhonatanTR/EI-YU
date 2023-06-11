@@ -36,7 +36,7 @@ export class DashboardComponent implements OnDestroy {
   sn: string = "0.00"; // Variable de tipo "string" para almacenar un número en forma de cadena de caracteres, con valor inicial de "0.00"
   pblu: string = this.localStorageService.getUsuario("pblu").toString();//Almacena el idPblu del participante
   intervalSubscription: Subscription | null = null;
-  data: number = 3000;
+  data: number = 1000;
   constructor(private loginService: LoginService, private infoLog: InfoLoginService, private Infob: InfoBancosService, private localStorageService: LocalStorageService) {
     this.fechaActual = new Date();
     this.fechaInicio = new Date;
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnDestroy {
         this.infoLog.saldo(this.token).subscribe(sal => {
           this.token = this.localStorageService.getDesc("token")
           this.sn = sal.saldo_actual;
-
+      console.log(sal)
         })
       });
     });

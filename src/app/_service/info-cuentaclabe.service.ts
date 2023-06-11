@@ -27,4 +27,11 @@ export class InfoCuentaclabeService {
   modificar(infoCuentaClabe:InfoCuentaClabe){//Modifica la Cuentas clabe 
     return this.http.put<InfoCuentaClabe>(`${this.url}/modificar`,infoCuentaClabe);
   }
+  buscarCuentaExiste(data:any){
+    return this.http.post<any>(`${this.url}/validar/existeCuenta`,data);
+  }
+  buscarPbluConCuenta(data:any){
+    return this.http.post<any>(`${this.url}/validar/existePblu`,data);
+  }
+
 }

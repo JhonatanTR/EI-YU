@@ -24,6 +24,7 @@ import { requesteClaveRastreo } from 'src/app/_modelRequest/requestClaveRastreo'
   styleUrls: ['./transferencia.component.css']
 })
 export class TransferenciaComponent implements OnInit {
+  clabeP:clabeP[]=[];
   listaBancos: InfoBancos[] = [];//Lista de los bancos de la base de datos
   listaCuentas: InfoCuenta[] = [];//LISTA DE LAS CUENTAS DE LA BASE DE DATOS
   institucionSeleccionada: InfoBancos | undefined; //la institucion que selecciono el cliente
@@ -43,6 +44,7 @@ export class TransferenciaComponent implements OnInit {
   numeroDeCuenta: string = "";
   cuentas: InfoCuentaClabe[] = [];
   cuentasSeleccionada!: InfoCuentaClabe;
+  clabePadre!:clabeP;
   filteredBancos: any[] = [];//aqui se almacenan los filtros de banco
   filteredCuentas: any[] = [];//aqui se almacenan los filtros de las cuentas
   institucionControl = new FormControl();
@@ -58,9 +60,28 @@ export class TransferenciaComponent implements OnInit {
     })
     this.listarBanco();
     this.generadorDeClave();
-
+    this.optenerClabePblu();
   }
-
+  activo = false;
+  clabeMadre = "";
+  optenerClabePblu() {
+    let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
+    this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
+  
+      let clabe = { "clabe": data.clabe_pblu };
+      this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
+        if (d == null) {
+          this.activo = true;
+        } else {
+          this.clabeMadre = d.clabe;
+          let lis={"clabe":this.clabeMadre}
+          this.clabeP.push(lis);
+       
+          this.activo = false;
+        }
+      })
+    })
+  }
   validarNumeroCuenta(event: any): void {
     const keyCode = event.keyCode || event.which;
     const tecla = String.fromCharCode(keyCode);
@@ -180,40 +201,38 @@ export class TransferenciaComponent implements OnInit {
       })
     ).subscribe(data => {
       if (data?.mensaje == "Otp validado correctamente") {
-      this.codigoOtp = "";
-      let m: any = this.monto
-      m = m.replace(/,/g, '');
-      let speiout = new InfoCapturaSPEIPago();
-      speiout.username = InfSpei.username;
-      speiout.password = InfSpei.password;
-      speiout.certificado = InfSpei.certificado;
-      speiout.llave = InfSpei.llave;
-      speiout.phrase = InfSpei.phrase;
-      speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
-      speiout.ctaDestino = this.destinatario.toString();
-      speiout.nombreDestino = this.nomBeneficiario;
-      speiout.clabe = this.cuentasSeleccionada.cuentaClabe;
-      speiout.monto = m;
-      speiout.refNum = this.refNumerica;
-      
-      speiout.cveRastreo = this.claveDeRastreo;
-      speiout.conceptoPago = this.conceptoPago;
-      
-      this.infoPagos.realizarPago(speiout).pipe(
-        catchError((error) => {
-          this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
-          // Aquí puedes realizar las acciones necesarias en caso de error
-          return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
-        })
-      ).subscribe((data) => {
-        if (data) {
-          this.limpiar();
-          this.openSnackBar('Pago realizado', 'Aviso');
-        }
-      });
+        this.codigoOtp = "";
+        let m: any = this.monto
+        m = m.replace(/,/g, '');
+        let speiout = new InfoCapturaSPEIPago();
+        speiout.username = InfSpei.username;
+        speiout.password = InfSpei.password;
+        speiout.certificado = InfSpei.certificado;
+        speiout.llave = InfSpei.llave;
+        speiout.phrase = InfSpei.phrase;
+        speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
+        speiout.ctaDestino = this.cuentasSeleccionada.cuentaClabe;
+        speiout.nombreDestino = this.nomBeneficiario;
+        speiout.clabe = this.clabePadre.clabe.toString().trim();
+        speiout.monto = m;
+        speiout.refNum = this.refNumerica;
+        speiout.cveRastreo = this.claveDeRastreo;
+        speiout.conceptoPago = this.conceptoPago;
+        this.infoPagos.realizarPago(speiout).pipe(
+          catchError((error) => {
+            this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
+            // Aquí puedes realizar las acciones necesarias en caso de error
+            return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
+          })
+        ).subscribe((data) => {
+          if (data) {
+            this.limpiar();
+            this.openSnackBar('Pago realizado', 'Aviso');
+          }
+        });
 
 
-      //aqui se almacena a la base de datos
+        //aqui se almacena a la base de datos
       }
 
 
@@ -242,7 +261,7 @@ export class TransferenciaComponent implements OnInit {
     });
   }
   estadoBotonRegistrar() {
-    return (this.monto <= 0 || this.claveDeRastreo == "" || this.conceptoPago === "" || this.refNumerica === "" || this.nomBeneficiario === "" || this.codigoOtp === "" || this.destinatario === "");
+    return (this.monto <= 0 || this.claveDeRastreo == "" || this.conceptoPago === "" || this.refNumerica === "" || this.nomBeneficiario === "" || this.codigoOtp === "" || this.clabePadre.clabe === "");
   }
   formatRFC(event: any) {
     const input = event.target as HTMLInputElement;
@@ -260,8 +279,6 @@ export class TransferenciaComponent implements OnInit {
       this.rfcBeneficiario = "";
     }
   }
-
-
   mostrarValorCampo(event: any): void {
     let dat = event.target.value.toString();
     if (dat.length == 3) {
@@ -402,4 +419,7 @@ export class TransferenciaComponent implements OnInit {
 interface Bancos {
   clave: string,
   nomBanco: string
+}
+interface clabeP {
+  clabe: string
 }
