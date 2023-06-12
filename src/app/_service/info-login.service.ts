@@ -16,6 +16,12 @@ export class InfoLoginService {
   login(login: login) {//Realiza el login del sistema 
     return this.http.post<any>(`${this.url}/login`, login)
   }
+  optenerIdTokenEnrParticipante(data: any) {//Realiza el login del sistema 
+    return this.http.post<any>(`${this.url}/enroladors`, data)
+  }
+  actualizarUsuario(data: any) {//actualiza El cliente Usuario
+    return this.http.put<any>(`${this.url}/actualizar`, data)
+  }
 
   verificarOtp(rtOtp: requestOtp) {//Verifica si el codigo OTP es correcto
     return this.http.post<any>(`${this.url}/otp/validar`, rtOtp);

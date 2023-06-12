@@ -89,7 +89,7 @@ export class DashboardComponent implements OnDestroy {
         this.infoLog.saldo(this.token).subscribe(sal => {
           this.token = this.localStorageService.getDesc("token")
           this.sn = sal.saldo_actual;
-      console.log(sal)
+  
         })
       });
     });

@@ -29,8 +29,8 @@ export class LoginComponent implements OnInit {
   password: string = "";
   showError: boolean = false;
   errorMessage: string = 'Error: Credenciales inválidas. Intente de nuevo.';
-  constructor(private infoCuentaClabeService: InfoCuentaclabeService,private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog, private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
- 
+  constructor(private infoCuentaClabeService: InfoCuentaclabeService, private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog, private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
+
   }
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
@@ -65,42 +65,43 @@ export class LoginComponent implements OnInit {
         return of(null);
       })
     ).subscribe(da => {//login al portal
-      if(da!=null){
-      if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
-        this.showError = true;
-        setTimeout(() => {
-          this.showError = false;
-        }, 3000);
-      } else {
+      if (da != null) {
       
-        let dato = { "peiyu": da.usuario.idParticipante };
-        let rql = new RequestLogin();
-        rql.username = da.usuario.apiPassword.username;
-        rql.password = da.usuario.apiPassword.password;
-        this.loginServices.token(rql).subscribe(data => {
-          this.localStorageService.setDesc("token", data.response.toString());
-          this.loginService.enviarMensaje(data.response.toString())
-        })
-        this.des.descripcion(dato).subscribe(data => {
-          this.localStorageService.setDesc("des", data.descripcion);
-          this.loginService.descripcion.next(data.descripcion);
-        })
-        if (da.mensaje == "OK") {
-          if (da.usuario.rol.idRol == 1) {
-            this.loginService.rol.next(true)
-            this.localStorageService.setDat("rol", true)
-          } else {
-            this.loginService.rol.next(false)
-            this.localStorageService.setDat("rol", false)
-          }
+        if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
+          this.showError = true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
+        } else {
 
-          let res = { "peiyu":  da.usuario.idParticipante }
-          this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-            let clabe = { "clabe": data.clabe_pblu };
-            this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
-              if (d == null) {
+          let dato = { "peiyu": da.usuario.idParticipante };
+          let rql = new RequestLogin();
+          rql.username = da.usuario.apiPassword.username;
+          rql.password = da.usuario.apiPassword.password;
+          this.loginServices.token(rql).subscribe(data => {
+            this.localStorageService.setDesc("token", data.response.toString());
+            this.loginService.enviarMensaje(data.response.toString())
+          })
+          this.des.descripcion(dato).subscribe(data => {
+            this.localStorageService.setDesc("des", data.descripcion);
+            this.loginService.descripcion.next(data.descripcion);
+          })
+          if (da.mensaje == "OK") {
+            if (da.usuario.rol.idRol == 1) {
+              this.loginService.rol.next(true)
+              this.localStorageService.setDat("rol", true)
+            } else {
+              this.loginService.rol.next(false)
+              this.localStorageService.setDat("rol", false)
+            }
+
+            let res = { "peiyu": da.usuario.idParticipante }
+            this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
+              let clabe = { "clabe": data.clabe_pblu };
+              if (data.clabe_pblu == "") {
                 this.openSnackBar('PARTICIPANTE NO CONFIGURADO. FAVOR DE COMUNICARSE CON SOPORTE EIYU.', 'Aviso');
               } else {
+                
                 this.router.navigate(['dashboard']);
                 let cli = new Cliente;
                 let InfoSpe = new InfoSpei();
@@ -115,28 +116,45 @@ export class LoginComponent implements OnInit {
                 this.localStorageService.setDat("log", true)
                 this.loginService.cli.next(cli);
                 if (da.usuario.token?.activo == true || da.usuario.token != null) {
-                } else {
-                  if (da.usuario.rol.idRol == 1) {
-                    setTimeout(() => {
-                      this.openDialogo(da.usuario.id);
-                    }, 1000);
-                  }
-      
-                }
                
-            
-              }
-            })
-          })
-          
-        } else {
-          let cli = new Cliente;
-          cli.login = false;
-          this.loginService.cli.next(cli);
+                } else {
+                  if (da.usuario.token == null) {
+                    let pb = { "pblu": da.usuario.idParticipante }
+                    this.loginServices.optenerIdTokenEnrParticipante(pb).subscribe(data => {
+                      if (data != 0) {
+                        let token = { "id": data }
+                        da.usuario.token = token;
+                        this.loginServices.actualizarUsuario(da.usuario).subscribe(sa => {
+                         
+                        })
+  
+                      }else{
+                        if (da.usuario.rol.idRol == 1) {
+                          setTimeout(() => {
+                            this.openDialogo(da.usuario.id);
+                          }, 1000);
+                        }
+      
+                      }
+                    })
+                  }
+                
+                }
 
+
+              }
+
+            })
+
+          } else {
+            let cli = new Cliente;
+            cli.login = false;
+            this.loginService.cli.next(cli);
+
+          }
         }
       }
-    }})
+    })
 
   }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
