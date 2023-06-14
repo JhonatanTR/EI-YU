@@ -17,7 +17,9 @@ import { AutorizarSpeiComponent } from './pages/autorizar-spei/autorizar-spei.co
 import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
 import { DialogoConfCuentaComponent } from './pages/configuraciones/dialogo-conf-cuenta/dialogo-conf-cuenta.component';
 import { EnrolarTokenComponent } from './pages/enrolar-token/enrolar-token.component';
-
+import { NgxMaskModule } from 'ngx-mask';
+import { IConfig } from 'ngx-mask';
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-error-list-pago/dialog-error-list-pago.component'; // import NgxQRCodeModule
 
 
@@ -45,6 +47,7 @@ import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-erro
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
+      NgxMaskModule.forRoot(options),
     
     ],
   providers: [

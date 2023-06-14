@@ -14,7 +14,7 @@
         <div style="padding: 0;">
             <mat-form-field appearance="fill" class="example-full-width" style="width: 49%;">
                   <mat-label>Cuenta Destino</mat-label>
-                  <mat-select [(value)]="cuentasSeleccionada">
+                  <mat-select [(value)]="cuentasSeleccionada" (selectionChange)="seleccionarCuenta($event)" >
                       <mat-option *ngFor="let cun of cuentas" [value]="cun">
                           {{cun.cuentaClabe}}
                       </mat-option>
@@ -83,7 +83,7 @@
         <mat-form-field appearance="fill" class="example-full-width"
             style="width: 32%; padding-left: 10px;padding-right: 10px;">
             <mat-label>Ref. Numerica</mat-label>
-            <input matInput placeholder="Ref. Numerica" [(ngModel)]="refNumerica">
+            <input matInput placeholder="Ref. Numerica" maxlength="7"  (keypress)="validarSoloNumeros($event)" [(ngModel)]="refNumerica">
         </mat-form-field>
         <mat-form-field appearance="fill" class="example-full-width" style="width: 32%; ">
             <mat-label>Concepto pago</mat-label>

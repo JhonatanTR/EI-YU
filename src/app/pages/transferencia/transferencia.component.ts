@@ -118,9 +118,10 @@ export class TransferenciaComponent implements OnInit {
   }
 
   seleccionarCuenta(e: any) {
-
-    this.cuentaSeleccionada = e.option.value;
-
+   
+    let a =e.value.id_banco
+    this.mostrarValorCampo(a);
+  
   }
 
   displayIB(val: InfoBancos) {
@@ -279,24 +280,13 @@ export class TransferenciaComponent implements OnInit {
       this.rfcBeneficiario = "";
     }
   }
-  mostrarValorCampo(event: any): void {
-    let dat = event.target.value.toString();
-    if (dat.length == 3) {
-      for (const bancos of this.bancosConstante) {
-        if (bancos.clave === dat) {
+  mostrarValorCampo(a:any): void {  
           for (const bancosList of this.listaBancos) {
-            if (bancosList.descripcion === bancos.nomBanco) {
+            if (bancosList.id_banco ===a) {
               this.institucionSeleccionada = bancosList;
               this.institucionControl.setValue(this.institucionSeleccionada);
             }
           }
-        } else {
-        }
-      }
-
-    } else if (dat.length < 3) {
-      this.institucionControl.setValue("");
-    }
   }
 
   bancosConstante: Bancos[] = [

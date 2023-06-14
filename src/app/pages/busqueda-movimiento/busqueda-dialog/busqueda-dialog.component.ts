@@ -31,6 +31,11 @@ export class BusquedaDialogComponent implements OnInit {
       this.infoMovimientoDetalle=data;
     })
   }
+  obtenerCuentaEnmascarada(cuenta: string): string {
+    const dosUltimos = cuenta.slice(-3);
+    return `***${dosUltimos}`;
+  }
+
 
   Salir() {
     this.dialogRef.close();

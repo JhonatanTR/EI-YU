@@ -152,7 +152,15 @@ export class DialogoConfCuentaComponent implements OnInit {
       this.openSnackBar("Número de cuenta incorrecto", "Aviso");
     }
   }
-
+  mostrarContenidoCopiado2(event: ClipboardEvent) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+    const onlyNumbers = pastedText.replace(/[^0-9]/g, ''); // Elimina todos los caracteres no numéricos
+    // Actualiza el valor del campo de entrada solo con los números pegados
+    this.seleccionado = onlyNumbers;
+  }
+  
   modificar() {
     let datoAe=new InfoCuentaClabe;
     datoAe.id = this.datoAeditar.id;

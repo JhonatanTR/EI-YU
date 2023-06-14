@@ -198,6 +198,40 @@ export class EnviarPagoComponent implements OnInit {
     this.claveDeRastreo = event.toUpperCase();
   }
 
+  mostrarContenidoCopiado(event: ClipboardEvent) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+    const onlyNumbers = pastedText.replace(/[^0-9]/g, ''); // Elimina todos los caracteres no numéricos
+    // Actualiza el valor del campo de entrada solo con los números pegados
+    this.destinatario = onlyNumbers;
+    
+    if (clipboardData && clipboardData.types.includes('text/plain')) {
+      const copiedContent = clipboardData.getData('text/plain');
+      let primerasTresLetras: string = copiedContent.substring(0, 3);
+     
+      for (const bancos of this.listaBancos) {
+        var ultimos_tres_digitos = bancos.id_banco.toString().substr(2);
+        if (ultimos_tres_digitos === primerasTresLetras) {
+          for (const bancosList of this.listaBancos) {
+            if (bancosList.descripcion === bancos.descripcion) {
+              this.institucionSeleccionada = bancosList;
+              this.institucionControl.setValue(this.institucionSeleccionada);
+            }
+          }
+        } else {
+        }
+      }
+       }
+  }
+  mostrarContenidoCopiado2(event: ClipboardEvent) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+    const onlyNumbers = pastedText.replace(/[^0-9]/g, ''); // Elimina todos los caracteres no numéricos
+    // Actualiza el valor del campo de entrada solo con los números pegados
+    this.numeroDeCuenta = onlyNumbers;
+  }
   enviar() {//Envia los datos
 
     if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {
@@ -335,9 +369,16 @@ export class EnviarPagoComponent implements OnInit {
       dataBaseSPEI.refnumerica = this.refNumerica;
       dataBaseSPEI.claberastreo = this.claveDeRastreo;
       dataBaseSPEI.conceptopago = this.conceptoPago;
+      if(this.localStorageService.getDat("rol")){
+        
+        dataBaseSPEI.id_rol = 1;
+      }else{
+        dataBaseSPEI.id_rol = 2;
+      
+      }
       this.enlistarSpei.guardarEnLatablaListarPagos(dataBaseSPEI).subscribe(data => {
         this.openSnackBar('Enlistado correctamente', 'Aviso');
-      })
+     })
      this.limpiar()
       this.generadorDeClave();
     } else {

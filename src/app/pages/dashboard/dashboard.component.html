@@ -1,12 +1,15 @@
 <div class="example-text">
   <mat-icon class="mt">dashboard</mat-icon>
-  <h1>Dashboard</h1>
+  <h1>Dashboard</h1>  <div class="lav"> <mat-slide-toggle class="label-toggle" [(ngModel)]="ocult"> Ver información</mat-slide-toggle></div>
+
 
 </div>
 <div class="example-fecha">
   <div class="header-content">
-    <mat-label class="label-title">Buscar información de:</mat-label> 
+    <mat-label class="label-title">Buscar información de:</mat-label>
+   
   </div>
+
   <div class="body-content">
     <div class="example-fechaI">
       <mat-form-field>
@@ -25,58 +28,65 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
-      
-    </div><mat-slide-toggle class="label-toggle" [(ngModel)]="isChecked" (click)="empezar()"  > Saldo en tiempo real</mat-slide-toggle>
+    </div>
 
-   
+
+    <mat-slide-toggle class="label-toggle" [(ngModel)]="isChecked" (click)="empezar()"> Saldo en tiempo
+      real</mat-slide-toggle>
+
+
+
+
   </div>
 </div><br>
 <!-- aqui empieza los card-->
-<div class="card-container">
-  <mat-card class="example-card blue-line1">
-    <mat-card-header>
-      <mat-card-title-group>
-        <mat-card-subtitle style="font-size: 18px; font-weight: 600;">MONTO DE PAGOS ENVIADOS</mat-card-subtitle>
-        <mat-card-title style="font-size: 24px; font-weight: 600;"> ${{pas.pago|
-          number:'1.2-2'}}</mat-card-title>
-      </mat-card-title-group>
-    </mat-card-header>
+<div [hidden]="!ocult">
+  <div class="card-container">
+    <mat-card class="example-card blue-line1">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-subtitle style="font-size: 18px; font-weight: 600;">MONTO DE PAGOS ENVIADOS</mat-card-subtitle>
+          <mat-card-title style="font-size: 24px; font-weight: 600;"> ${{pas.pago|
+            number:'1.2-2'}}</mat-card-title>
+        </mat-card-title-group>
+      </mat-card-header>
 
-    <div class="icon">
+      <div class="icon">
 
-      <mat-icon>check</mat-icon>
+        <mat-icon>check</mat-icon>
 
-    </div>
+      </div>
 
-  </mat-card>
-  <mat-card class="example-card blue-line">
-    <mat-card-header>
-      <mat-card-title-group>
-        <mat-card-subtitle style="font-size: 18px; font-weight: 600;">MONTO DE ABONOS RECIBIDOS</mat-card-subtitle>
-        <mat-card-title style="font-size: 24px; font-weight: 600;">${{pas.abono|
-          number:'1.2-2'}}</mat-card-title>
-      </mat-card-title-group>
-    </mat-card-header>
-    <div class="icon">
+    </mat-card>
+    <mat-card class="example-card blue-line">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-subtitle style="font-size: 18px; font-weight: 600;">MONTO DE ABONOS RECIBIDOS</mat-card-subtitle>
+          <mat-card-title style="font-size: 24px; font-weight: 600;">${{pas.abono|
+            number:'1.2-2'}}</mat-card-title>
+        </mat-card-title-group>
+      </mat-card-header>
+      <div class="icon">
 
-      <mat-icon>payment</mat-icon>
+        <mat-icon>payment</mat-icon>
 
-    </div>
-  </mat-card>
-  <mat-card class="example-card blue-line2">
-    <mat-card-header>
-      <mat-card-title-group>
-        <mat-card-subtitle style="font-size: 18px; font-weight: 600;">SALDO ACTUAL</mat-card-subtitle>
-        <mat-card-title style="font-size: 24px; font-weight: 600;">${{sn |
-          number:'1.2-2'}}</mat-card-title>
-      </mat-card-title-group>
-    </mat-card-header>
+      </div>
+    </mat-card>
+    <mat-card class="example-card blue-line2">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-subtitle style="font-size: 18px; font-weight: 600;">SALDO ACTUAL</mat-card-subtitle>
+          <mat-card-title style="font-size: 24px; font-weight: 600;">${{sn |
+            number:'1.2-2'}}</mat-card-title>
+        </mat-card-title-group>
+      </mat-card-header>
 
-    <div class="icon">
-      <mat-icon> money</mat-icon>
-    </div>
+      <div class="icon">
+        <mat-icon> money</mat-icon>
+      </div>
 
-  </mat-card>
+    </mat-card>
+  </div>
 </div>
 <!--Aqui viene la graficas-->
 <!--

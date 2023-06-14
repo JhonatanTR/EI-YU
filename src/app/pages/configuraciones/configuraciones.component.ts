@@ -14,7 +14,7 @@ import { LocalStorageService } from 'src/app/_service/local-storage.service';
 export class ConfiguracionesComponent implements OnInit {
  
   constructor(private dialog: MatDialog,private localStorageService: LocalStorageService,  private _snackBar: MatSnackBar, private infoLoginService: InfoLoginService, private infoCuentaClabeService: InfoCuentaclabeService) { }
-  activo = true
+  activo = false
   ngOnInit(): void {
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {

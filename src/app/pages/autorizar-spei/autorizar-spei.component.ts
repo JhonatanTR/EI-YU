@@ -142,14 +142,19 @@ export class AutorizarSpeiComponent implements OnInit {
   constructor(private localStorageService: LocalStorageService, private dialog: MatDialog, private storage: LocalStorageService, private _snackBar: MatSnackBar, private infoPagosService: InfoPagosService, private infoLoginService: InfoLoginService) {
     this.dataSource = new MatTableDataSource<InfoAutorizarSpei>([]); // Inicialización de la fuente de datos de la tabla
   }
-
+  rol:number=0;
   ngOnInit(): void {
     this.selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Inicialización de la selección de filas
-    this.listaDeSpeiOut(); // Obtener la lista de pagos
+     // Obtener la lista de pagos
     if (this.localStorageService.getDat("rol")) {
       this.adm = false;
+      this.rol=1;
+      this.listaDeSpeiOut();
     } else {
+      this.rol=2;
+     
       this.adm = true;
+      this.listaDeSpeiOutRol();
     }
   }
 
@@ -158,13 +163,15 @@ export class AutorizarSpeiComponent implements OnInit {
   }
 
   // Resto del código...
-  dat: any = {
-    "estatus": false,
-    "pblu": this.localStorageService.getUsuario("pblu")
-  }
+
   aver: InfoAutorizarSpei[] = [];
   listaDeSpeiOut() {//Se consulta la lista de todos los spei out
-    this.infoPagosService.listarPagoSoloTrue(this.dat).pipe(
+    let dat: any = {
+      "estatus": false,
+      "pblu": this.localStorageService.getUsuario("pblu"),
+      "id_rol":this.rol
+    }
+    this.infoPagosService.listarPagoSoloTrue(dat).pipe(
       catchError((error) => {
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
         return of([]);
@@ -174,7 +181,22 @@ export class AutorizarSpeiComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
       })
   }
-
+  listaDeSpeiOutRol() {//Se consulta la lista de todos los spei out
+    let dat: any = {
+      "estatus": false,
+      "pblu": this.localStorageService.getUsuario("pblu"),
+      "id_rol":this.rol
+    }
+    this.infoPagosService.listarPagoSoloTrueRol(dat).pipe(
+      catchError((error) => {
+        this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
+        return of([]);
+      })).subscribe(lista => {
+        this.aver = lista;
+        this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
+        this.dataSource.paginator = this.paginator;
+      })
+  }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -238,6 +260,11 @@ export class AutorizarSpeiComponent implements OnInit {
   obtenerIdBanco(nombreBanco: string): string | "" {
     const banco = this.bancosConstante.find(b => b.clave === nombreBanco);
     return banco ? banco.clave : "";
+  }
+  obtenerCuentaEnmascarada(cuenta: string): string {
+    const tresPrimeros = cuenta.slice(0, 3);
+    const dosUltimos = cuenta.slice(-3);
+    return `***${dosUltimos}`;
   }
 
   /*  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
@@ -317,6 +344,11 @@ export class AutorizarSpeiComponent implements OnInit {
       if (data != null) {
         const pagosObservables = this.info.map(info => {
           let speiout = new InfoCapturaSPEIPago();
+          speiout.username = InfSpei.username;
+          speiout.password = InfSpei.password;
+          speiout.certificado = InfSpei.certificado;
+          speiout.llave = InfSpei.llave;
+          speiout.phrase = InfSpei.phrase;
           speiout.nombreDestino = info.beneficiario;
           speiout.ctaDestino = info.destino;
           speiout.clabe = info.numerodecuenta;
@@ -324,6 +356,7 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.refNum = info.refnumerica;
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
+        
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
           );

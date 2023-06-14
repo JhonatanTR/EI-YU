@@ -58,13 +58,18 @@ mat-form-field {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+        width: 100%;
     margin-bottom: 1em;
 }
 .label-title{
     padding-left: 1em;
     font-size: 15px;
     font-weight: 520;
+}
+.lav{
+    position: fixed;
+    right: 100px;
+    top: 84px;;
 }
 .label-toggle{
     margin-right: 2em;
@@ -295,7 +300,7 @@ canvas {
     .label-toggle{ 
         margin-right: 2em;
         position: relative;
-        left: 13em;
+        left: 15em;
     }
   }
   

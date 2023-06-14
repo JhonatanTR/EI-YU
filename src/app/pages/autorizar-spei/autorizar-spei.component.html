@@ -20,7 +20,7 @@
             <!-- ID Column -->
             <ng-container matColumnDef="dato1">
                 <th mat-header-cell *matHeaderCellDef>Destino</th>
-                <td mat-cell *matCellDef="let row" [style.color]="letraColor"> {{row.destino}} </td>
+                <td mat-cell *matCellDef="let row" [style.color]="letraColor"> {{obtenerCuentaEnmascarada(row.destino)}} </td>
             </ng-container>
         
             <ng-container matColumnDef="dato2">
@@ -30,7 +30,7 @@
         
             <ng-container matColumnDef="dato3">
                 <th mat-header-cell *matHeaderCellDef> Numero de cuenta </th>
-                <td mat-cell *matCellDef="let row">{{row.numerodecuenta}}</td>
+                <td mat-cell *matCellDef="let row">{{obtenerCuentaEnmascarada(row.numerodecuenta)}}</td>
             </ng-container>
         
             <ng-container matColumnDef="dato4">

@@ -25,6 +25,9 @@ export class InfoPagosService {
   listarPagoSoloTrue(dato: any) {//Listar solo true
     return this.http.post<InfoAutorizarSpei[]>(`${this.urlEnlistar}/listNoPagado`, dato);
   }
+  listarPagoSoloTrueRol(dato: any) {//Listar solo true
+    return this.http.post<InfoAutorizarSpei[]>(`${this.urlEnlistar}/listNoPagadoRol`, dato);
+  }
   actualizarPagados(infoAutorizarSpei: InfoAutorizarSpei) {//actualizar a true  si han sido pagados
     return this.http.put<InfoAutorizarSpei>(`${this.urlEnlistar}/actualizar`, infoAutorizarSpei);
   }

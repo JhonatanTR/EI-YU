@@ -6,4 +6,5 @@ export class InfoMovimientoDetalle{
     bancodestino: string="";
     nombre_destino:string="";
     conscepto: string="";
+    ref_num:string="";
 }

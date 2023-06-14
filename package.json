@@ -27,7 +27,7 @@
     "crypto-js": "^4.1.1",
     "file-saver": "^2.0.5",
     "jspdf-autotable": "^3.5.29",
-    "ngx-mask": "^16.0.9",
+    "ngx-mask": "^13.1.13",
     "pdfmake": "^0.2.7",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

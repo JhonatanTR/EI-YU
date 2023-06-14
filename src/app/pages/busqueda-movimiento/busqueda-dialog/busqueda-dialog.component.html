@@ -8,7 +8,8 @@
 <table>
   <tr>
     <th>Cuenta Origen:</th>
-    <td>{{infoMovimientoDetalle.cuentaorigen}}</td>
+    <td>{{ obtenerCuentaEnmascarada(infoMovimientoDetalle.cuentaorigen) }}</td>
+
   </tr>
   <br>
   <tr>
@@ -23,7 +24,7 @@
   <br>
   <tr>
     <th>Cuenta destino:</th>
-    <td>{{infoMovimientoDetalle.cuentadestino}}</td>
+    <td>{{ obtenerCuentaEnmascarada(infoMovimientoDetalle.cuentadestino) }} </td>
   </tr>
   <br>
   <tr>
@@ -39,5 +40,10 @@
   <tr>
     <th>Concepto:</th>
     <td>{{infoMovimientoDetalle.conscepto}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Referecia Numerica:</th>
+    <td>{{infoMovimientoDetalle.ref_num}}</td>
   </tr>
 </table>

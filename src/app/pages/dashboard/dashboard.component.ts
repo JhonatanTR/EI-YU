@@ -36,7 +36,8 @@ export class DashboardComponent implements OnDestroy {
   sn: string = "0.00"; // Variable de tipo "string" para almacenar un número en forma de cadena de caracteres, con valor inicial de "0.00"
   pblu: string = this.localStorageService.getUsuario("pblu").toString();//Almacena el idPblu del participante
   intervalSubscription: Subscription | null = null;
-  data: number = 1000;
+  data: number = 2000;
+  ocult= false;
   constructor(private loginService: LoginService, private infoLog: InfoLoginService, private Infob: InfoBancosService, private localStorageService: LocalStorageService) {
     this.fechaActual = new Date();
     this.fechaInicio = new Date;
@@ -73,8 +74,6 @@ export class DashboardComponent implements OnDestroy {
       this.startDataUpdate();
     }
   }
-
-
   startDataUpdate(): void {// Iniciamos el intervalo de 15 segundos y nos suscribimos a él
     const datePipe = new DatePipe('en-US');
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');

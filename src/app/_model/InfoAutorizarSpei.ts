@@ -10,5 +10,6 @@ export class InfoAutorizarSpei{
     conceptopago: string="";
     estatus:boolean=false;
     pblu:number=0;
+    id_rol:number=0;
    
 }

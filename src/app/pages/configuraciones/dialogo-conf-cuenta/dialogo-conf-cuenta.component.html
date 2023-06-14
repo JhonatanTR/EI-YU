@@ -7,7 +7,7 @@
 <br>
   <mat-form-field class="example-full-width" style="width: 70%;">
     <mat-label>Numeros de cuenta</mat-label>
-    <input   matInput placeholder="Agregar numero de cuenta" [(ngModel)]="seleccionado" maxlength="18" minlength="18" inputmode="numeric" pattern="[0-9]*"   (keypress)="validarSoloNumeros($event)">
+    <input   matInput placeholder="Agregar numero de cuenta" [(ngModel)]="seleccionado" maxlength="18" minlength="18" inputmode="numeric" pattern="[0-9]*"   (keypress)="validarSoloNumeros($event)" (paste)="mostrarContenidoCopiado2($event)">
   </mat-form-field>
   <button mat-raised-button style="width: 20%; padding:3px; left: 30px; top: -8px; background-color: #45B39D; color: #FAF8FF;"  (click)="agregarAlatabla()" *ngIf="mostrarBotonagregar"  [disabled]="activo" [ngClass]="{'disabled-button': activo}">Agregar</button>
   <button mat-raised-button color="primary" style="width: 20%; padding:3px; left: 30px; top: -8px; background-color: #45B39D;color: #FAF8FF" (click)="modificar()" #botonModificar *ngIf="mostrarBotonModificar">Modificar</button>
