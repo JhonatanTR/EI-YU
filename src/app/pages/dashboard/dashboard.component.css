@@ -58,7 +58,7 @@ mat-form-field {
     display: flex;
     justify-content: space-between;
     align-items: center;
-        width: 100%;
+    width: 100%;
     margin-bottom: 1em;
 }
 .label-title{

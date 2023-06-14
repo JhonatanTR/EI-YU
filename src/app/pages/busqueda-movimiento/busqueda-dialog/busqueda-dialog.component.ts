@@ -16,7 +16,7 @@ export class BusquedaDialogComponent implements OnInit {
 
   constructor(private localStorageService: LocalStorageService,private dialogRef: MatDialogRef<BusquedaDialogComponent>, @Inject(MAT_DIALOG_DATA) private data: InfoMovimiento, private bancosService: InfoBancosService) { }
   infoMovimientoDetalle!:InfoMovimientoDetalle;
-  clabe:string="";
+  clabe:string=" ";
   ngOnInit(): void {
     this.infoMovimientoDetalle=new InfoMovimientoDetalle();
     let infoMovimiento = new InfoMovimiento();
@@ -32,7 +32,7 @@ export class BusquedaDialogComponent implements OnInit {
     })
   }
   obtenerCuentaEnmascarada(cuenta: string): string {
-    const dosUltimos = cuenta.slice(-3);
+    const dosUltimos = cuenta.slice(-4);
     return `***${dosUltimos}`;
   }
 

@@ -152,7 +152,6 @@ export class AutorizarSpeiComponent implements OnInit {
       this.listaDeSpeiOut();
     } else {
       this.rol=2;
-     
       this.adm = true;
       this.listaDeSpeiOutRol();
     }
@@ -263,7 +262,7 @@ export class AutorizarSpeiComponent implements OnInit {
   }
   obtenerCuentaEnmascarada(cuenta: string): string {
     const tresPrimeros = cuenta.slice(0, 3);
-    const dosUltimos = cuenta.slice(-3);
+    const dosUltimos = cuenta.slice(-4);
     return `***${dosUltimos}`;
   }
 
@@ -356,7 +355,7 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.refNum = info.refnumerica;
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
-        
+         
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
           );
