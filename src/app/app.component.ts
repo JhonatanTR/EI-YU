@@ -44,10 +44,10 @@ export class AppComponent implements OnInit {
     return this.login;
   }
   cerrarCession() {
-    this.localStorageService.clear()
     let cl = new Cliente();
     cl.login = false;
-    this.loginService.cli.next(cl);
-    this.router.navigate(['login']);
+    this.localStorageService.clear()
+    this.loginService.cli.next(cl)
+    
   }
 }

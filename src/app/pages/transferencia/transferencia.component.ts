@@ -67,8 +67,8 @@ export class TransferenciaComponent implements OnInit {
   optenerClabePblu() {
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-  
-      let clabe = { "clabe": data.clabe_pblu };
+      let clabe = { "clabe": data.clabe_pblu,
+      "pblu":this.localStorageService.getUsuario("pblu")  };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
           this.activo = true;
@@ -169,7 +169,8 @@ export class TransferenciaComponent implements OnInit {
       this.listaBancos = bancos;
       this.filtradorBanco();
     })
-    this.infoBancoService.listarCuenta(9).subscribe(cuentas => {
+    let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
+    this.infoBancoService.listarCuenta(res).subscribe(cuentas => {
       this.listaCuentas = cuentas;
       this.filtradorCuenta();
     })
@@ -201,10 +202,11 @@ export class TransferenciaComponent implements OnInit {
         return of(null);
       })
     ).subscribe(data => {
-      if (data?.mensaje == "Otp validado correctamente") {
+    if (data?.mensaje == "Otp validado correctamente") {
         this.codigoOtp = "";
         let m: any = this.monto
         m = m.replace(/,/g, '');
+       
         let speiout = new InfoCapturaSPEIPago();
         speiout.username = InfSpei.username;
         speiout.password = InfSpei.password;
@@ -212,15 +214,17 @@ export class TransferenciaComponent implements OnInit {
         speiout.llave = InfSpei.llave;
         speiout.phrase = InfSpei.phrase;
         speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
-        speiout.ctaDestino = this.cuentasSeleccionada.cuentaClabe;
         speiout.nombreDestino = this.nomBeneficiario;
+        speiout.ctaDestino = this.cuentasSeleccionada.cuentaClabe;
         speiout.clabe = this.clabePadre.clabe.toString().trim();
         speiout.monto = m;
         speiout.refNum = this.refNumerica;
         speiout.cveRastreo = this.claveDeRastreo;
         speiout.conceptoPago = this.conceptoPago;
+     
         this.infoPagos.realizarPago(speiout).pipe(
           catchError((error) => {
+          
             this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
             // Aquí puedes realizar las acciones necesarias en caso de error
             return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error

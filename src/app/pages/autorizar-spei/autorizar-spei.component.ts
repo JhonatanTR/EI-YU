@@ -146,15 +146,22 @@ export class AutorizarSpeiComponent implements OnInit {
   ngOnInit(): void {
     this.selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Inicialización de la selección de filas
      // Obtener la lista de pagos
+    if(this.localStorageService.getDat("permiso")!=3){
     if (this.localStorageService.getDat("rol")) {
       this.adm = false;
       this.rol=1;
       this.listaDeSpeiOut();
-    } else {
+      
+    } else if(this.localStorageService.getDat("permiso")==2){
       this.rol=2;
       this.adm = true;
       this.listaDeSpeiOutRol();
     }
+  }else{
+    this.rol=2;
+    this.adm=false;
+    this.listNoPagadoRolIntermedio();
+  }
   }
 
   ngAfterViewInit() {
@@ -184,7 +191,8 @@ export class AutorizarSpeiComponent implements OnInit {
     let dat: any = {
       "estatus": false,
       "pblu": this.localStorageService.getUsuario("pblu"),
-      "id_rol":this.rol
+      "id_rol":this.rol,
+      "nomusuario":this.localStorageService.getDesc("usuario")
     }
     this.infoPagosService.listarPagoSoloTrueRol(dat).pipe(
       catchError((error) => {
@@ -195,6 +203,35 @@ export class AutorizarSpeiComponent implements OnInit {
         this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
         this.dataSource.paginator = this.paginator;
       })
+  }
+  listNoPagadoRolIntermedio() {//Se consulta la lista de todos los spei out
+    let a ={"id_usuario_autoriza":this.localStorageService.getDesc("idUser_1")}
+
+    this.infoPagosService.buscarLlaveUsuario(a).subscribe(dat=>{
+    
+      let b ={"id":parseInt(dat)}
+      this.infoLoginService.buscarNomUsuarioPorId(b).subscribe(date=>{
+       
+      let dat: any = {
+      "estatus": false,
+      "pblu": this.localStorageService.getUsuario("pblu"),
+      "id_rol":this.rol,
+      "nomusuario":date.nomUsuario
+    }
+    
+    this.infoPagosService.listarPagoSoloTrueRolIntermedio(dat).pipe(
+      catchError((error) => {
+        this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
+        return of([]);
+      })).subscribe(lista => {
+        this.aver = lista;
+        this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
+        this.dataSource.paginator = this.paginator;
+      })
+      })
+    })
+   
+
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;

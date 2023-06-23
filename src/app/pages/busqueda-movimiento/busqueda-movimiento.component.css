@@ -13,6 +13,14 @@
     align-items: center;
     height: 100vh; /* Ajusta la altura según sea necesario */
   }
+  .center-cell {
+    text-align: center;
+  }
+  
+  .center-span {
+    display: inline-block;
+  }
+  
   
 .example-fechaI {
     display: flex;
@@ -50,6 +58,20 @@
 table {
     width: 100%;
   }
+  :host ::ng-deep {
+    .mat-sort-header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 1.5em;
+      
+    }
+  .mat-header-cell {
+      text-align: center;
+  }
+}
+
+
   .foot{
     display: flex;
     height: 5%;

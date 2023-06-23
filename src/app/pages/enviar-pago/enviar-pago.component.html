@@ -12,17 +12,18 @@
         <br>
         <!-- ______________________________________-->
         <div style="padding: 0;">
-            
+
 
             <mat-form-field appearance="fill" class="example-full-width" style="width: 49%;">
                 <mat-label>Destino</mat-label>
                 <input matInput type="text" placeholder="CLABE/TARJETA/CELULAR" [(ngModel)]="destinatario"
-                  maxlength="18" (input)="mostrarValorCampo($event)" (input)="limitarMaximo18Digitos($event)"
-                  inputmode="numeric" pattern="[0-9]*" (keypress)="validarSoloNumeros($event)" (paste)="mostrarContenidoCopiado($event)"/>
-              </mat-form-field>
-              
+                    maxlength="18" (input)="mostrarValorCampo($event)" (input)="limitarMaximo18Digitos($event)"
+                    inputmode="numeric" pattern="[0-9]*" (keypress)="validarSoloNumeros($event)"
+                    (paste)="mostrarContenidoCopiado($event)" />
+            </mat-form-field>
 
-        <!--<mat-form-field appearance="fill" class="example-full-width" style="width: 32%; padding-left: 10px;padding-right: 10px;">
+
+            <!--<mat-form-field appearance="fill" class="example-full-width" style="width: 32%; padding-left: 10px;padding-right: 10px;">
                     <mat-label>RFC beneficiario</mat-label>
                     <input matInput placeholder="RFC beneficiario" [(ngModel)]="rfcBeneficiario" (keyup)="formatRFC($event)">
                 </mat-form-field>
@@ -45,14 +46,29 @@
                 <mat-option *ngFor="let f of filteredCuentas " [value]="f">{{f.clabe}}</mat-option>
             </mat-autocomplete>
         </mat-form-field-->
-        <mat-form-field appearance="fill" class="example-form-field" style="width: 100%;  padding-top: 10px;">
+
+        <!--mat-form-field appearance="fill" class="example-form-field" style="width: 100%;  padding-top: 10px;">
             <mat-label>Numero de Cuenta</mat-label>
-            <input matInput  [(ngModel)]="numeroDeCuenta" maxlength="18" (keypress)="validateInput($event)"
-                placeholder="Clabe" (input)="limitarMaximo18Digitos($event)"
-                pattern="[0-9]*" max="999999999999999999" (keypress)="validarSoloNumeros($event)" (paste)="mostrarContenidoCopiado2($event)" >
-            <mat-error *ngIf="isInputInvalid"  class="error-message">El campo de entrada no puede contener caracteres especiales.</mat-error>
-            
-        </mat-form-field>
+            <input matInput [(ngModel)]="numeroDeCuenta" maxlength="18" (keypress)="validateInput($event)"
+                placeholder="Clabe" (input)="limitarMaximo18Digitos($event)" pattern="[0-9]*" max="999999999999999999"
+                (keypress)="validarSoloNumeros($event)" (paste)="mostrarContenidoCopiado2($event)">
+            <mat-error *ngIf="isInputInvalid" class="error-message">El campo de entrada no puede contener caracteres
+                especiales.</mat-error>
+
+        </mat-form-field-->
+        <mat-form-field appearance="fill" class="example-form-field" style="width: 100%; padding-top: 10px;">
+            <mat-label>Numero de Cuenta</mat-label>
+              <input type="text" [(ngModel)]="numeroDeCuenta" matInput placeholder="Clabe" [formControl]="cuentasControl"
+                     required [matAutocomplete]="auto1" (input)="limitarMaximo18Digitos($event)"  max="999999999999999999"
+                     (keypress)="validarSoloNumeros($event)" (blur)="validarSeleccionManual()">
+            <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayCu" (optionSelected)="seleccionarCuenta($event)">
+              <mat-option *ngFor="let p of filteredCuentas" [value]="p">{{ p.clabe }}</mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          
+          
+          
+          
 
         <div class="titulos">
             <p style=" color: white;text-align: center; font-size: 20px; padding-top: 0px;">Detalles de envio</p>
@@ -78,7 +94,8 @@
         <mat-form-field appearance="fill" class="example-full-width"
             style="width: 32%; padding-left: 10px;padding-right: 10px;">
             <mat-label>Ref. Numerica</mat-label>
-            <input matInput placeholder="Ref. Numerica" [(ngModel)]="refNumerica"   maxlength="7"  (keypress)="validarSoloNumeros($event)">
+            <input matInput placeholder="Ref. Numerica" [(ngModel)]="refNumerica" maxlength="7"
+                (keypress)="validarSoloNumeros($event)">
         </mat-form-field>
         <mat-form-field appearance="fill" class="example-full-width" style="width: 32%;">
             <mat-label>Concepto pago</mat-label>
@@ -101,23 +118,25 @@
         <div style="padding: 0;">
             <mat-form-field appearance="fill" class="example-form-field" style="width: 33%; ">
                 <mat-label>Clave de rastreo</mat-label>
-                <input matInput type="text" [(ngModel)]="claveDeRastreo"  (ngModelChange)="mayusculas($event)" readonly>
+                <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)" readonly>
             </mat-form-field>
             <button mat-raised-button style="color: white; background-color: #9B9B9B; width: 12%; left: 20px;"
-            (click)="enlistarSPEIOUT()" [disabled]="estadoBotonRegistrarEnlis()" [ngClass]="{'disabled-button': estadoBotonRegistrarEnlis()}">Enlistar</button>
- 
-        </div> <!-- ______________________________________---------------------------------->
-        <!-- ______________________________________---------------------------------->
-        
-         <div [hidden]="adm">
+                (click)="enlistarSPEIOUT()" [disabled]="estadoBotonRegistrarEnlis()"
+                [ngClass]="{'disabled-button': estadoBotonRegistrarEnlis()}">Enlistar</button>
+        </div> <!------------------------------------>
+        <!------------------------------------>
+        <div [hidden]="adm">
             <mat-form-field class="example-full-width" style="width: 23%; padding-left: 29%;">
-            <mat-label>Código OTP</mat-label>
-            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp">
-        </mat-form-field>
-        <button mat-raised-button style="color: #FAF8FF; background-color: #45B39D; width: 9%; left: 10px; "  (click)="enviar()" [disabled]="estadoBotonRegistrar()" [ngClass]="{'disabled-button': estadoBotonRegistrar()}"> <mat-icon matTooltip="Enviar">send</mat-icon></button>
-    </div>
+                <mat-label>Código OTP</mat-label>
+                <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp">
+            </mat-form-field>
+            <button mat-raised-button style="color: #FAF8FF; background-color: #45B39D; width: 9%; left: 10px; "
+                (click)="enviar()" [disabled]="estadoBotonRegistrar()"
+                [ngClass]="{'disabled-button': estadoBotonRegistrar()}"> <mat-icon
+                    matTooltip="Enviar">send</mat-icon></button>
+        </div>
     </div>
 </div>
 <footer class="foot">
-    @ Derechos reservados ASP Integra Opciones V 1.1
-  </footer>
+    @ Derechos reservados ASP Integra Opciones V 1.2
+</footer>

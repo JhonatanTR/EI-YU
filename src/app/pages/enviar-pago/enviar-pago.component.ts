@@ -61,10 +61,10 @@ export class EnviarPagoComponent implements OnInit {
       let clabe = { "clabe": data.clabe_pblu };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
-         
+
         } else {
           this.clabeMadre = d.clabe;
-         
+
         }
       })
     })
@@ -130,7 +130,14 @@ export class EnviarPagoComponent implements OnInit {
 
   seleccionarCuenta(e: any) {
     this.cuentaSeleccionada = e.option.value; // Establecer el valor seleccionado de la cuenta
+
   }
+  seleccionManual: boolean = false;
+
+  validarSeleccionManual() {
+    this.seleccionManual = this.cuentasControl.value !== null && this.cuentasControl.value !== '';
+  }
+
 
   displayIB(val: InfoBancos) {
     return val ? `${val.descripcion}` : val; // Devolver la descripción del banco o el valor original si es nulo
@@ -147,7 +154,7 @@ export class EnviarPagoComponent implements OnInit {
       map(value => this._filterBancos(value))
     )
       .subscribe(filteredBancos => {
-       
+
         this.filteredBancos = filteredBancos; // Filtrar la lista de bancos en base al valor ingresado en el campo de búsqueda
       });
   }
@@ -178,7 +185,8 @@ export class EnviarPagoComponent implements OnInit {
       this.listaBancos = bancos;
       this.filtradorBanco();
     })
-    this.infoBancoService.listarCuenta(9).subscribe(cuentas => {
+    let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
+    this.infoBancoService.listarCuenta(res).subscribe(cuentas => {
       this.listaCuentas = cuentas;
       this.filtradorCuenta();
     })
@@ -205,11 +213,9 @@ export class EnviarPagoComponent implements OnInit {
     const onlyNumbers = pastedText.replace(/[^0-9]/g, ''); // Elimina todos los caracteres no numéricos
     // Actualiza el valor del campo de entrada solo con los números pegados
     this.destinatario = onlyNumbers;
-    
     if (clipboardData && clipboardData.types.includes('text/plain')) {
       const copiedContent = clipboardData.getData('text/plain');
       let primerasTresLetras: string = copiedContent.substring(0, 3);
-     
       for (const bancos of this.listaBancos) {
         var ultimos_tres_digitos = bancos.id_banco.toString().substr(2);
         if (ultimos_tres_digitos === primerasTresLetras) {
@@ -222,7 +228,7 @@ export class EnviarPagoComponent implements OnInit {
         } else {
         }
       }
-       }
+    }
   }
   mostrarContenidoCopiado2(event: ClipboardEvent) {
     event.preventDefault();
@@ -233,7 +239,11 @@ export class EnviarPagoComponent implements OnInit {
     this.numeroDeCuenta = onlyNumbers;
   }
   enviar() {//Envia los datos
-
+    if (this.cuentasControl.value?.clabe == undefined) {
+      this.numeroDeCuenta = this.cuentasControl.value
+    } else {
+      this.numeroDeCuenta = this.cuentasControl.value.clabe;
+    }
     if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {
       let InfSpei = new InfoSpei();
       InfSpei = this.localStorageService.getUsuario("userE");
@@ -246,7 +256,6 @@ export class EnviarPagoComponent implements OnInit {
           return of(null);
         })
       ).subscribe(data => {
-
         if (data?.mensaje == "Otp validado correctamente") {
           this.codigoOtp = "";
           let m: any = this.monto
@@ -266,7 +275,7 @@ export class EnviarPagoComponent implements OnInit {
           // speiout.refCobranza = this.cobranza;
           speiout.cveRastreo = this.claveDeRastreo;
           speiout.conceptoPago = this.conceptoPago;
-
+     
           this.infoPagos.realizarPago(speiout).pipe(
             catchError((error) => {
               this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
@@ -285,7 +294,7 @@ export class EnviarPagoComponent implements OnInit {
         }
       })
     } else {
-      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora...', 'Aviso');
+      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
     }
   }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
@@ -346,43 +355,45 @@ export class EnviarPagoComponent implements OnInit {
 
   Listspeiout: InfoCapturaSPEI[] = [];
   enlistarSPEIOUT() {
+    if (this.cuentasControl.value?.clabe == undefined) {
+    
+      this.numeroDeCuenta = this.cuentasControl.value;
+    } else {
+      this.numeroDeCuenta = this.cuentasControl.value.clabe;
+    
+    }
+
     if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {
       let m: any = this.monto
       m = m.replace(/,/g, '');
-      let speiout = new InfoCapturaSPEI();
-      speiout.destinatario = this.destinatario;
-      speiout.nombreBeneficiario = this.nomBeneficiario;
-      speiout.numeroCuenta = this.numeroDeCuenta;
-      speiout.infoBancos = this.institucionSeleccionada;
-      speiout.monto = parseFloat(m);
-      speiout.refNumerica = this.refNumerica;
-      // speiout.refCobranza = this.cobranza;
-      speiout.claveRastreo = this.claveDeRastreo;
-      speiout.conceptoPago = this.conceptoPago;
       let dataBaseSPEI = new InfoAutorizarSpei();
       dataBaseSPEI.pblu = this.localStorageService.getUsuario("pblu");
       dataBaseSPEI.destino = this.destinatario;
       dataBaseSPEI.beneficiario = this.nomBeneficiario;
-      dataBaseSPEI.numerodecuenta = this.numeroDeCuenta;
+      dataBaseSPEI.numerodecuenta = this.cuentasControl.value;
       dataBaseSPEI.banco = this.institucionSeleccionada.descripcion;
       dataBaseSPEI.monto = parseFloat(m);
       dataBaseSPEI.refnumerica = this.refNumerica;
       dataBaseSPEI.claberastreo = this.claveDeRastreo;
       dataBaseSPEI.conceptopago = this.conceptoPago;
-      if(this.localStorageService.getDat("rol")){
-        
-        dataBaseSPEI.id_rol = 1;
-      }else{
+      dataBaseSPEI.nomusuario = this.localStorageService.getDesc("usuario");
+      if (this.localStorageService.getDesc("idRol") != '3') {
+        if (this.localStorageService.getDat("rol")) {
+          dataBaseSPEI.id_rol = 1;
+        } else {
+          dataBaseSPEI.id_rol = 2;
+
+        }
+      } else {
         dataBaseSPEI.id_rol = 2;
-      
       }
       this.enlistarSpei.guardarEnLatablaListarPagos(dataBaseSPEI).subscribe(data => {
         this.openSnackBar('Enlistado correctamente', 'Aviso');
-     })
-     this.limpiar()
+      })
+      this.limpiar()
       this.generadorDeClave();
     } else {
-      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora...', 'Aviso');
+      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
     }
   }
   limpiar() {

@@ -12,26 +12,28 @@ import { LocalStorageService } from 'src/app/_service/local-storage.service';
   styleUrls: ['./configuraciones.component.css']
 })
 export class ConfiguracionesComponent implements OnInit {
- 
-  constructor(private dialog: MatDialog,private localStorageService: LocalStorageService,  private _snackBar: MatSnackBar, private infoLoginService: InfoLoginService, private infoCuentaClabeService: InfoCuentaclabeService) { }
-  activo = false
+
+  constructor(private dialog: MatDialog, private localStorageService: LocalStorageService, private _snackBar: MatSnackBar, private infoLoginService: InfoLoginService, private infoCuentaClabeService: InfoCuentaclabeService) { }
+  activo = true
   ngOnInit(): void {
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-      let clabe = { "clabe": data.clabe_pblu };
+      let clabe = {
+        "clabe": data.clabe_pblu,
+        "pblu": this.localStorageService.getUsuario("pblu")
+      };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
           this.activo = true;
-       
         } else {
           this.activo = false;
-         
+
         }
       })
     })
   }
-  openDiaCuenta(){
-    if(this.activo==false){
+  openDiaCuenta() {
+    if (this.activo===false) {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.width = '50%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
       dialogConfig.height = 'auto'; // establece la altura del diálogo al 50% del alto de la pantalla
@@ -39,12 +41,12 @@ export class ConfiguracionesComponent implements OnInit {
       dialogConfig.maxHeight = '93%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
       dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
       this.dialog.open(DialogoConfCuentaComponent, dialogConfig);
-    }else{
+    } else if(this.activo ===true ) {
       this.openSnackBar('Su cuenta no está completamente configurada, comuníquese con soporte EIYU', 'Aviso');
     }
 
   }
- 
+
   openSnackBar(da1: string, da2: string) {
     this._snackBar.open(da1, da2, {
       duration: 6000,

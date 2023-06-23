@@ -1,0 +1,13 @@
+<button mat-icon-button style="display: flex;align-content: flex-end;float: right;" (click)="Salir()">
+    <mat-icon>clear</mat-icon>
+  </button><br> 
+  <div class="head" style="display: flex; align-items: center; justify-content: center; font-size: 18px;">
+    <p>Información Adicional</p>
+  </div>
+  <table>
+    <tr>
+      <th>Información:</th>
+      <td>{{ quitarCorchetes(infoMovimientoDetalle.info_adicional)}}</td>
+  
+    </tr>
+  </table>

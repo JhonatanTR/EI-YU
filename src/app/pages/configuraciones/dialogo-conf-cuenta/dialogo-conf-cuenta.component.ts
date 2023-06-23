@@ -31,7 +31,7 @@ export class DialogoConfCuentaComponent implements OnInit {
   mostrarBotonModificar = false;
   mostrarBotonagregar = true;
   mensajeDeValidacion: string = "";
-  activo = true
+  activo = false
   clabeMadre: string = "";
   constructor(private infoBancoService: InfoBancosService, private localStorageService: LocalStorageService, private dialogRef: MatDialogRef<DialogoConfCuentaComponent>, private _snackBar: MatSnackBar, private infoLoginService: InfoLoginService, private infoCuentaClabeService: InfoCuentaclabeService) {
     this.cuentas = [];
@@ -41,7 +41,9 @@ export class DialogoConfCuentaComponent implements OnInit {
     this.listarBanco();
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-      let clabe = { "clabe": data.clabe_pblu };
+      let clabe = { "clabe": data.clabe_pblu,
+                     "pblu": this.localStorageService.getUsuario("pblu")
+      };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
           this.activo = true;

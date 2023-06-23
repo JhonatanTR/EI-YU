@@ -20,6 +20,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VerEstadoComponent } from './ver-estado/ver-estado.component';
 
 @Component({
   selector: 'app-busqueda-movimiento',
@@ -131,6 +132,16 @@ export class BusquedaMovimientoComponent implements OnInit {
     dialogConfig.height = '70%'; // establece la altura del diálogo al 50% del alto de la pantalla
     dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
     this.dialog.open(BusquedaDialogComponent, dialogConfig);
+  }
+  opendialogo2(infoMovimiento: any) {//Este metodo abre el modal para visualizar los detalles del abono o pago
+    let infoMov = new InfoMovimiento();
+    infoMov = infoMovimiento;
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = infoMov;//Envia los datos para ver los mas sobre el abono o Cargo
+    dialogConfig.width = '25%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
+    dialogConfig.height = '26%'; // establece la altura del diálogo al 50% del alto de la pantalla
+    dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
+    this.dialog.open(VerEstadoComponent, dialogConfig);
   }
   mayusculas(event: any) {
     this.claveDeRastreo = event.toUpperCase();

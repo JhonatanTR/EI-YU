@@ -1,6 +1,6 @@
 export class Cliente {
-    user:string="xavierjr";
-    password:string="junior";
+    user:string="";
+    password:string="";
     otp:string="";
     login:boolean=true;
 }

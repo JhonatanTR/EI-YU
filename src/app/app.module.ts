@@ -20,7 +20,8 @@ import { EnrolarTokenComponent } from './pages/enrolar-token/enrolar-token.compo
 import { NgxMaskModule } from 'ngx-mask';
 import { IConfig } from 'ngx-mask';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
-import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-error-list-pago/dialog-error-list-pago.component'; // import NgxQRCodeModule
+import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-error-list-pago/dialog-error-list-pago.component';
+import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-estado.component'; // import NgxQRCodeModule
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-erro
     DialogoConfCuentaComponent,
     EnrolarTokenComponent,
     DialogErrorListPagoComponent,
+    VerEstadoComponent,
     
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],

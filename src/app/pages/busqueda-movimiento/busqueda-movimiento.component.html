@@ -80,37 +80,42 @@
             <!-- ID Column -->
             <ng-container matColumnDef="Clave de rastreo">
               <th mat-header-cell *matHeaderCellDef> Clave de rastreo </th>
-              <td mat-cell *matCellDef="let row">{{row.cve_rastreo}}</td>
+              <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.cve_rastreo}}</td>
             </ng-container>
           
             <ng-container matColumnDef="Concepto">
               <th mat-header-cell *matHeaderCellDef> Concepto </th>
-              <td mat-cell *matCellDef="let row">{{row.concepto_pago}}</td>
+              <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.concepto_pago}}</td>
             </ng-container>
           
             <ng-container matColumnDef="Fecha de creacion">
               <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
-              <td mat-cell *matCellDef="let row">{{row.fecha_creacion}}</td>
+              <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.fecha_creacion}}</td>
             </ng-container>
           
             <ng-container matColumnDef="Tipo de movimiento">
               <th mat-header-cell *matHeaderCellDef> Tipo de movimiento </th>
-              <td mat-cell *matCellDef="let row">{{row.tipomoviiento}}</td>
+              <td mat-cell *matCellDef="let row" style="text-align: center; ">{{row.tipomoviiento}}</td>
             </ng-container>
           
             <ng-container matColumnDef="Institucióm">
-              <th mat-header-cell *matHeaderCellDef> Institución </th>
-              <td mat-cell *matCellDef="let row">{{row.institucion}}</td>
+              <th mat-header-cell *matHeaderCellDef > Institución </th>
+              <td mat-cell *matCellDef="let row" style="text-align: center; ">{{row.institucion}}</td>
             </ng-container>
           
             <ng-container matColumnDef="estatus">
               <th mat-header-cell *matHeaderCellDef> Estatus </th>
-              <td mat-cell *matCellDef="let row">{{row.estatus}}</td>
+              <td mat-cell *matCellDef="let row" style="text-align: center; ">
+                <button mat-button color="primary"  *ngIf="row.estatus === 'Rechazado ASP' || row.estatus === 'Retorno' || row.estatus === 'Cancelado'" (click)="opendialogo2(row)">{{row.estatus}}</button>
+                <p  *ngIf="row.estatus !== 'Rechazado ASP' && row.estatus !== 'Retorno' && row.estatus !== 'Cancelado' ">{{row.estatus}}</p>
+              </td>
             </ng-container>
+            
+            
             <!-- Progress Column -->
             <ng-container matColumnDef="Opciones">
               <th mat-header-cell *matHeaderCellDef>Opciones</th>
-              <td mat-cell *matCellDef="let row">
+              <td mat-cell *matCellDef="let row"  style="text-align: center; ">
                 <button mat-button color="primary" (click)="opendialogo(row)">Ver detalle</button>
               </td>
             </ng-container>
@@ -140,5 +145,5 @@
 </div>
 
 <footer class="foot">
-  @ Derechos reservados ASP Integra Opciones V 1.1
+  @ Derechos reservados ASP Integra Opciones V 1.2
 </footer>

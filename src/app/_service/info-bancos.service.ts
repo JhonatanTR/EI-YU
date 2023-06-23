@@ -25,8 +25,8 @@ export class InfoBancosService {
   listarBanco(){
     return this.http.get<InfoBancos[]>(this.url);
   }
-  listarCuenta(id: number) {//Cuentas disponibles
-    return this.http.get<InfoCuenta[]>(`${this.url}/cuentasPorPEiyu/${id}`)
+  listarCuenta(dato: any) {//Cuentas disponibles
+    return this.http.post<InfoCuenta[]>(`${this.url}/cuentasPorP`,dato)
   }
 
   listarMovientosDelCliente(request: RequestMovimientos) {//Movimientos realizado por los clientes

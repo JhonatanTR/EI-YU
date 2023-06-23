@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   ngOnInit(): void {
+    this.localStorageService.clear();
     let cli = new Cliente;
     cli.login = false;
     this.loginService.cli.next(cli);
@@ -66,7 +67,6 @@ export class LoginComponent implements OnInit {
       })
     ).subscribe(da => {//login al portal
       if (da != null) {
-      
         if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
           this.showError = true;
           setTimeout(() => {
@@ -82,6 +82,7 @@ export class LoginComponent implements OnInit {
             this.localStorageService.setDesc("token", data.response.toString());
             this.loginService.enviarMensaje(data.response.toString())
           })
+          this.localStorageService.setDesc("usuario", da.usuario.idUsuario);
           this.des.descripcion(dato).subscribe(data => {
             this.localStorageService.setDesc("des", data.descripcion);
             this.loginService.descripcion.next(data.descripcion);
@@ -91,17 +92,23 @@ export class LoginComponent implements OnInit {
               this.loginService.rol.next(true)
               this.localStorageService.setDat("rol", true)
             } else {
+            
               this.loginService.rol.next(false)
               this.localStorageService.setDat("rol", false)
+              if(da.usuario.usuarios_permisos[0].id==2){
+              
+                this.localStorageService.setDesc("permiso", da.usuario.usuarios_permisos[0].id.toString());
+              }else if(da.usuario.usuarios_permisos[0].id==3){
+             
+                this.localStorageService.setDesc("permiso",  da.usuario.usuarios_permisos[0].id.toString())
+                 this.localStorageService.setDesc("idUser_1",  da.usuario.id)
+              }
             }
-
             let res = { "peiyu": da.usuario.idParticipante }
             this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-              let clabe = { "clabe": data.clabe_pblu };
               if (data.clabe_pblu == "") {
                 this.openSnackBar('PARTICIPANTE NO CONFIGURADO. FAVOR DE COMUNICARSE CON SOPORTE EIYU.', 'Aviso');
               } else {
-                
                 this.router.navigate(['dashboard']);
                 let cli = new Cliente;
                 let InfoSpe = new InfoSpei();
@@ -116,36 +123,18 @@ export class LoginComponent implements OnInit {
                 this.localStorageService.setDat("log", true)
                 this.loginService.cli.next(cli);
                 if (da.usuario.token?.activo == true || da.usuario.token != null) {
-               
+
                 } else {
                   if (da.usuario.token == null) {
-                    let pb = { "pblu": da.usuario.idParticipante }
-                    this.loginServices.optenerIdTokenEnrParticipante(pb).subscribe(data => {
-                      if (data != 0) {
-                        let token = { "id": data }
-                        da.usuario.token = token;
-                        this.loginServices.actualizarUsuario(da.usuario).subscribe(sa => {
-                         
-                        })
-  
-                      }else{
-                        if (da.usuario.rol.idRol == 1) {
-                          setTimeout(() => {
-                            this.openDialogo(da.usuario.id);
-                          }, 1000);
-                        }
-      
-                      }
-                    })
+                    if (da.usuario.rol.idRol == 1 || da.usuario.usuarios_permisos[0].id==3) {
+                      setTimeout(() => {
+                        this.openDialogo(da.usuario.id);
+                      }, 1000);
+                    }
                   }
-                
                 }
-
-
               }
-
             })
-
           } else {
             let cli = new Cliente;
             cli.login = false;

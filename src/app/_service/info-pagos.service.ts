@@ -28,8 +28,15 @@ export class InfoPagosService {
   listarPagoSoloTrueRol(dato: any) {//Listar solo true
     return this.http.post<InfoAutorizarSpei[]>(`${this.urlEnlistar}/listNoPagadoRol`, dato);
   }
+  listarPagoSoloTrueRolIntermedio(dato: any) {//Listar solo true
+    return this.http.post<InfoAutorizarSpei[]>(`${this.urlEnlistar}/listNoPagadoRolIntermedio`, dato);
+  }
   actualizarPagados(infoAutorizarSpei: InfoAutorizarSpei) {//actualizar a true  si han sido pagados
     return this.http.put<InfoAutorizarSpei>(`${this.urlEnlistar}/actualizar`, infoAutorizarSpei);
   }
+  buscarLlaveUsuario(dato: any) {//Listar solo true
+    return this.http.post<any>(`${this.urlEnlistar}/consultaId`, dato);
+  }
+
 
 }

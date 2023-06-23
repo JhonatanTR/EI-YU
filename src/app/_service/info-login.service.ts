@@ -10,7 +10,7 @@ export class InfoLoginService {
 
   url: string = "http://localhost:8092";
   urlValidacionToken: string = "http://localhost:8090/encriptacion/token"
-  urlPago: string = "http://20.225.157.214:9091/api/v1/saldo/eyu_saldo_dia_actual";
+  urlPago: string = "http://20.88.171.49:9091/api/v1/saldo/eyu_saldo_dia_actual";
   constructor(private http: HttpClient) { }
 
   login(login: login) {//Realiza el login del sistema 
@@ -40,8 +40,13 @@ export class InfoLoginService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.get<any>('http://20.225.157.214:9091/api/v1/saldo/eyu_saldo_dia_actual', httpOptions)
+    return this.http.get<any>('http://20.88.171.49:9091/api/v1/saldo/eyu_saldo_dia_actual', httpOptions)
   }
+
+  buscarNomUsuarioPorId(dato:any){
+    return this.http.post<any>(`${this.url}/buscarIdUsuario`, dato)
+  }
+
 
 }
 
