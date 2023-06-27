@@ -61,10 +61,8 @@ export class EnviarPagoComponent implements OnInit {
       let clabe = { "clabe": data.clabe_pblu };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
-
         } else {
           this.clabeMadre = d.clabe;
-
         }
       })
     })
@@ -130,7 +128,6 @@ export class EnviarPagoComponent implements OnInit {
 
   seleccionarCuenta(e: any) {
     this.cuentaSeleccionada = e.option.value; // Establecer el valor seleccionado de la cuenta
-
   }
   seleccionManual: boolean = false;
 
@@ -356,11 +353,9 @@ export class EnviarPagoComponent implements OnInit {
   Listspeiout: InfoCapturaSPEI[] = [];
   enlistarSPEIOUT() {
     if (this.cuentasControl.value?.clabe == undefined) {
-    
       this.numeroDeCuenta = this.cuentasControl.value;
     } else {
       this.numeroDeCuenta = this.cuentasControl.value.clabe;
-    
     }
 
     if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {

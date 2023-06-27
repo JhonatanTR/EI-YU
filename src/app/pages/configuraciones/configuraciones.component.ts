@@ -27,7 +27,6 @@ export class ConfiguracionesComponent implements OnInit {
           this.activo = true;
         } else {
           this.activo = false;
-
         }
       })
     })

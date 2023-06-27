@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
   password: string = "";
   showError: boolean = false;
   errorMessage: string = 'Error: Credenciales inválidas. Intente de nuevo.';
-  constructor(private infoCuentaClabeService: InfoCuentaclabeService, private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog, private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
+  constructor(private infoCuentaClabeService: InfoCuentaclabeService, private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog,
+   private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
 
   }
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
