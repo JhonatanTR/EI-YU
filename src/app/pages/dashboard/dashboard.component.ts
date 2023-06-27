@@ -85,10 +85,11 @@ export class DashboardComponent implements OnDestroy {
     this.intervalSubscription = interval(this.data).subscribe(() => {
       this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
         this.pas = dato;
-        this.infoLog.saldo(this.token).subscribe(sal => {
+        let to ={"token":this.token}
+        this.infoLog.saldo(to).subscribe(sal => {
           this.token = this.localStorageService.getDesc("token")
-          this.sn = sal.saldo_actual;
-  
+          this.sn = sal;
+        
         })
       });
     });

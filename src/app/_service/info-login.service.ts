@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { login } from '../_model/InfoLogin';
 import { requestOtp } from '../_modelRequest/requestOtp';
+import { HOST } from '../_shared/var.constant';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class InfoLoginService {
 
   url: string = "http://localhost:8092";
   urlValidacionToken: string = "http://localhost:8090/encriptacion/token"
-  urlPago: string = "http://20.88.171.49:9091/api/v1/saldo/eyu_saldo_dia_actual";
+  urlSaldo:string=`${HOST}`
   constructor(private http: HttpClient) { }
 
   login(login: login) {//Realiza el login del sistema 
@@ -34,16 +35,10 @@ export class InfoLoginService {
     return this.http.post<any>(this.urlValidacionToken, data);
   }
   saldo(TOKEN: any) {//para saber el saldo tienes que introducir el token antes devuelto 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.get<any>('http://20.88.171.49:9091/api/v1/saldo/eyu_saldo_dia_actual', httpOptions)
+    return this.http.post<any>(`${this.urlSaldo}/saldo`,TOKEN)
   }
 
-  buscarNomUsuarioPorId(dato:any){
+  buscarNomUsuarioPorId(dato: any) {
     return this.http.post<any>(`${this.url}/buscarIdUsuario`, dato)
   }
 

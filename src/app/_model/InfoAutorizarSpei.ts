@@ -11,6 +11,6 @@ export class InfoAutorizarSpei{
     estatus:boolean=false;
     pblu:number=0;
     id_rol:number=0;
-    nomusuario:string="";
+    id_usuario:string="";
    
 }

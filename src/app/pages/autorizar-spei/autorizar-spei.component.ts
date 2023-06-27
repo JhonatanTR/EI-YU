@@ -142,26 +142,26 @@ export class AutorizarSpeiComponent implements OnInit {
   constructor(private localStorageService: LocalStorageService, private dialog: MatDialog, private storage: LocalStorageService, private _snackBar: MatSnackBar, private infoPagosService: InfoPagosService, private infoLoginService: InfoLoginService) {
     this.dataSource = new MatTableDataSource<InfoAutorizarSpei>([]); // Inicialización de la fuente de datos de la tabla
   }
-  rol:number=0;
+  rol: number = 0;
   ngOnInit(): void {
     this.selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Inicialización de la selección de filas
-     // Obtener la lista de pagos
-    if(this.localStorageService.getDat("permiso")!=3){
-    if (this.localStorageService.getDat("rol")) {
+    // Obtener la lista de pagos
+    if (this.localStorageService.getDat("permiso") != 3) {
+      if (this.localStorageService.getDat("rol")) {
+        this.adm = false;
+        this.rol = 1;
+        this.listaDeSpeiOut();
+
+      } else if (this.localStorageService.getDat("permiso") == 2) {
+        this.rol = 2;
+        this.adm = true;
+        this.listaDeSpeiOutRol();
+      }
+    } else {
+      this.rol = 2;
       this.adm = false;
-      this.rol=1;
-      this.listaDeSpeiOut();
-      
-    } else if(this.localStorageService.getDat("permiso")==2){
-      this.rol=2;
-      this.adm = true;
-      this.listaDeSpeiOutRol();
+      this.listNoPagadoRolIntermedio();
     }
-  }else{
-    this.rol=2;
-    this.adm=false;
-    this.listNoPagadoRolIntermedio();
-  }
   }
 
   ngAfterViewInit() {
@@ -174,8 +174,7 @@ export class AutorizarSpeiComponent implements OnInit {
   listaDeSpeiOut() {//Se consulta la lista de todos los spei out
     let dat: any = {
       "estatus": false,
-      "pblu": this.localStorageService.getUsuario("pblu"),
-      "id_rol":this.rol
+      "pblu": this.localStorageService.getUsuario("pblu")
     }
     this.infoPagosService.listarPagoSoloTrue(dat).pipe(
       catchError((error) => {
@@ -191,8 +190,8 @@ export class AutorizarSpeiComponent implements OnInit {
     let dat: any = {
       "estatus": false,
       "pblu": this.localStorageService.getUsuario("pblu"),
-      "id_rol":this.rol,
-      "nomusuario":this.localStorageService.getDesc("usuario")
+      "id_rol": this.rol,
+      "id_usuario": this.localStorageService.getDesc("usuario")
     }
     this.infoPagosService.listarPagoSoloTrueRol(dat).pipe(
       catchError((error) => {
@@ -205,32 +204,31 @@ export class AutorizarSpeiComponent implements OnInit {
       })
   }
   listNoPagadoRolIntermedio() {//Se consulta la lista de todos los spei out
-    let a ={"id_usuario_autoriza":this.localStorageService.getDesc("idUser_1")}
+    let a = { "id_usuario_autoriza": this.localStorageService.getDesc("idUser_1") }
+    this.infoPagosService.buscarLlaveUsuario(a).subscribe(dat => {
+      let b = { "id": parseInt(dat) }
+      this.infoLoginService.buscarNomUsuarioPorId(b).subscribe(date => {
+        let dat: any = {
+          "estatus": false,
+          "pblu": this.localStorageService.getUsuario("pblu"),
+          "id_rol": this.rol,
+          "id_usuario": date.nomUsuario
+        }
 
-    this.infoPagosService.buscarLlaveUsuario(a).subscribe(dat=>{
-    
-      let b ={"id":parseInt(dat)}
-      this.infoLoginService.buscarNomUsuarioPorId(b).subscribe(date=>{
-       
-      let dat: any = {
-      "estatus": false,
-      "pblu": this.localStorageService.getUsuario("pblu"),
-      "id_rol":this.rol,
-      "nomusuario":date.nomUsuario
-    }
-    
-    this.infoPagosService.listarPagoSoloTrueRolIntermedio(dat).pipe(
-      catchError((error) => {
-        this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
-        return of([]);
-      })).subscribe(lista => {
-        this.aver = lista;
-        this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
-        this.dataSource.paginator = this.paginator;
-      })
+
+        this.infoPagosService.listarPagoSoloTrueRolIntermedio(dat).pipe(
+          catchError((error) => {
+            this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
+            return of([]);
+          })).subscribe(lista => {
+            this.aver = lista;
+            this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
+            this.dataSource.paginator = this.paginator;
+          })
+
       })
     })
-   
+
 
   }
   isAllSelected() {
@@ -392,7 +390,7 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.refNum = info.refnumerica;
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
-         
+
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
           );
@@ -410,7 +408,7 @@ export class AutorizarSpeiComponent implements OnInit {
             }
           })
         ).subscribe(results => {
-    
+
           for (let i = 0; i < results.length; i++) {
             if (results[i] != null) {
 

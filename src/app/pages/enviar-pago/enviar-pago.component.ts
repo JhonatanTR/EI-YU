@@ -376,7 +376,7 @@ export class EnviarPagoComponent implements OnInit {
       dataBaseSPEI.refnumerica = this.refNumerica;
       dataBaseSPEI.claberastreo = this.claveDeRastreo;
       dataBaseSPEI.conceptopago = this.conceptoPago;
-      dataBaseSPEI.nomusuario = this.localStorageService.getDesc("usuario");
+      dataBaseSPEI.id_usuario = this.localStorageService.getDesc("usuario");
       if (this.localStorageService.getDesc("idRol") != '3') {
         if (this.localStorageService.getDat("rol")) {
           dataBaseSPEI.id_rol = 1;
