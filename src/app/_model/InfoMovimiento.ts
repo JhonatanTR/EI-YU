@@ -9,4 +9,5 @@ export class InfoMovimiento {
     estatus: string = "";
     bl: boolean =false;
     infoM:InfoMovimientoDetalle | undefined;
+    monto:number=0;
 }

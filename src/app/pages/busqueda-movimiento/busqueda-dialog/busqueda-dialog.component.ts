@@ -28,8 +28,8 @@ export class BusquedaDialogComponent implements OnInit {
     requestMovimientoDetalle.id_pblu = this.localStorageService.getUsuario("pblu").toString();
     requestMovimientoDetalle.tipoMovimiento = this.data.tipomoviiento;
     this.bancosService.listarMovientosDetalle(requestMovimientoDetalle).subscribe(data => {
-     
       this.infoMovimientoDetalle = data;
+      console.log(this.infoMovimientoDetalle)
     })
   }
   obtenerCuentaEnmascarada(cuenta: string): string {

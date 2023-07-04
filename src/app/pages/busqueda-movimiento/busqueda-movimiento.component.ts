@@ -35,7 +35,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   selectAllPages = false;
   listaBancos: InfoBancos[] = []//lista de Bancos
   fechaActual!: Date;//Fecha actual
-  claveDeRastreo: string = "";//Clave de rastreo aqui se almacenan 
+  claveDeRastreo: string = "";//Clave de rastreo aqui se almacenan
   institucionSeleccionada!: InfoBancos;
   tipoDeMovimiento: string = "";
   estatus: string = "";
@@ -103,6 +103,7 @@ export class BusquedaMovimientoComponent implements OnInit {
           return of(null);
         }))
       .subscribe(data => {
+        console.log(data)
         let mov = JSON.parse(JSON.stringify(data))?.content
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
@@ -224,7 +225,7 @@ export class BusquedaMovimientoComponent implements OnInit {
     // Generamos el contenido del PDF
   }
 
-  generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de 
+  generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de
     let data = [];
     // Agregamos las columnas del encabezado
     data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento', 'Institución', 'Estatus']);
@@ -331,6 +332,8 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.req.tipoMovimiento = this.datos.trim();
       this.req.claveRastreo = this.claveDeRastreo.trim();
       this.req.estatus = this.estatus.trim();
+      this.req.monto =1;
+      console.log(this.req)
       this.infoBancoService.listarMovimientoFiltradosPageable(this.req, 0, 10).pipe(
         catchError((error) => {
           this.openSnackBar('', 'Aviso');
@@ -340,6 +343,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
         this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
+        console.log(data)
       })
     } else {
       this.openSnackBar('Seleccione una fecha de inicio y una fecha final ', 'Aviso');
@@ -347,7 +351,7 @@ export class BusquedaMovimientoComponent implements OnInit {
 
   }
 
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });
