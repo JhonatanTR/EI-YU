@@ -43,7 +43,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   filteredBancos: any[] = [];//aqui se almacenan los filtros de banco
   filteredCuentas: any[] = [];//aqui se almacenan los filtros de las cuentas
   institucionControl = new FormControl();
-  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento', 'Institucióm', 'estatus', 'monto' 'Opciones'];
+  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento', 'Institución', 'estatus', 'monto', 'Opciones'];
   cantidad: number = 0;//es la cantidad de elementos de la consulta
   inicio!: Date;
   final!: Date;
