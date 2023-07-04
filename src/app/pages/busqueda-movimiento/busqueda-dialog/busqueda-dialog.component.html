@@ -1,6 +1,6 @@
 <button mat-icon-button style="display: flex;align-content: flex-end;float: right;" (click)="Salir()">
   <mat-icon>clear</mat-icon>
-</button><br> 
+</button><br>
 <div style="display: flex; justify-content: center; align-content: flex-end; font-size: 18px; left: 20px;">
   Clave de rastreo: <div style="font-weight: 550; left: 10px; ">{{clabe}}</div>
 </div>
@@ -49,5 +49,10 @@
   <tr>
     <th>Referencia Numérica:</th>
     <td>{{infoMovimientoDetalle.ref_num}}</td>
+  </tr>
+  <br>
+  <tr>
+    <th>Monto:</th>
+    <td>{{infoMovimientoDetalle.monto}}</td>
   </tr>
 </table>

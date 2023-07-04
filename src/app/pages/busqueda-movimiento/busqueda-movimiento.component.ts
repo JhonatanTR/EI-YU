@@ -35,7 +35,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   selectAllPages = false;
   listaBancos: InfoBancos[] = []//lista de Bancos
   fechaActual!: Date;//Fecha actual
-  claveDeRastreo: string = "";//Clave de rastreo aqui se almacenan 
+  claveDeRastreo: string = "";//Clave de rastreo aqui se almacenan
   institucionSeleccionada!: InfoBancos;
   tipoDeMovimiento: string = "";
   estatus: string = "";
@@ -230,7 +230,7 @@ export class BusquedaMovimientoComponent implements OnInit {
     // Generamos el contenido del PDF
   }
 
-  generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de 
+  generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de
     let data = [];
     // Agregamos las columnas del encabezado
     data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento', 'Institución', 'Estatus']);
