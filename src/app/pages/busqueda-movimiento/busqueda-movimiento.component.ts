@@ -340,7 +340,6 @@ export class BusquedaMovimientoComponent implements OnInit {
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
         this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
-      
       })
     } else {
       this.openSnackBar('Seleccione una fecha de inicio y una fecha final ', 'Aviso');
