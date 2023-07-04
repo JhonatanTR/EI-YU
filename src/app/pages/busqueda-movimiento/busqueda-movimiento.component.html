@@ -54,20 +54,11 @@
         <mat-label>Estatus</mat-label>
         <input matInput [(ngModel)]="estatus">
     </mat-form-field>
-<<<<<<< HEAD
     <mat-form-field style="width:25%; left: 130px; top: 11px; padding-left: 10px;">
       <mat-label>Monto</mat-label>
       <span matPrefix>$ &nbsp;</span>
       <input matInput type="text" [(ngModel)]="monto" placeholder="0" (input)="separarNumeros($event)" (blur)="revisarValor()">
     </mat-form-field>
-=======
-
-    <mat-form-field class="example-form-field" style="width: 24%; top: 11px; right: 12px; left:120px; ">
-      <mat-label>Monto</mat-label>
-      <input matInput type="number" [(ngModel)]="monto">
-  </mat-form-field>
-
->>>>>>> 354d0384003e599370f2f0d42b302cf88236d5da
     <button mat-raised-button
         style="color: #FAF8FF; background-color: #45B39D; width: 15%; left: 147px; top: 8px; padding-top: 4px; padding-left: 10px; "
         (click)="filtar()"  ><mat-icon>search</mat-icon></button>
