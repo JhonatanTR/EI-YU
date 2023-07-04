@@ -8,4 +8,5 @@ export class InfoMovimientoDetalle{
     conscepto: string="";
     ref_num:string="";
     info_adicional:string="";
+    monto:number=0;
 }
