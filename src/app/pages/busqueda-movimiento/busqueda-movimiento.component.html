@@ -27,11 +27,6 @@
         <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)">
     </mat-form-field>
 
-    <mat-form-field class="example-form-field" style="width: 24%; top: 11px; right: 12px; left:120px; ">
-        <mat-label>Monto</mat-label>
-        <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)">
-    </mat-form-field>
-
     <mat-form-field style="width: 15%; left: 120px; top: 11px; padding-left: 30px; ">
         <mat-label>Institución beneficiaria</mat-label>
         <input type="text" matInput placeholder="Institución beneficiaria" [formControl]="institucionControl"
@@ -55,6 +50,12 @@
         <mat-label>Estatus</mat-label>
         <input matInput [(ngModel)]="estatus">
     </mat-form-field>
+
+    <mat-form-field class="example-form-field" style="width: 24%; top: 11px; right: 12px; left:120px; ">
+      <mat-label>Monto</mat-label>
+      <input matInput type="number" [(ngModel)]="monto">
+  </mat-form-field>
+
     <button mat-raised-button
         style="color: #FAF8FF; background-color: #45B39D; width: 15%; left: 140px; top: 8px; padding-top: 4px; padding-left: 10px; "
         (click)="filtar()"  ><mat-icon>search</mat-icon></button>
@@ -114,6 +115,11 @@
                 <button mat-button color="primary"  *ngIf="row.estatus === 'Rechazado ASP' || row.estatus === 'Retorno' || row.estatus === 'Cancelado'" (click)="opendialogo2(row)">{{row.estatus}}</button>
                 <p  *ngIf="row.estatus !== 'Rechazado ASP' && row.estatus !== 'Retorno' && row.estatus !== 'Cancelado' ">{{row.estatus}}</p>
               </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Monto">
+              <th mat-header-cell *matHeaderCellDef > Monto </th>
+              <td mat-cell *matCellDef="let row" style="text-align: center; ">{{row.monto}}</td>
             </ng-container>
 
 
