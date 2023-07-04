@@ -42,7 +42,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   filteredBancos: any[] = [];//aqui se almacenan los filtros de banco
   filteredCuentas: any[] = [];//aqui se almacenan los filtros de las cuentas
   institucionControl = new FormControl();
-  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento', 'Institucióm', 'estatus', 'Opciones'];
+  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento','Monto', 'Institucióm', 'estatus', 'Opciones'];
   cantidad: number = 0;//es la cantidad de elementos de la consulta
   inicio!: Date;
   final!: Date;
@@ -53,7 +53,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   selecc: InfoMovimiento[] = [];//Es un auxiliar
   @ViewChild('myInput') myInput!: ElementRef;
   datess = new InfoMovimiento();
-
+  monto:string="0";
   maximaFecha!: Date;
   constructor(private _snackBar: MatSnackBar, private localStorageService: LocalStorageService, private dialog: MatDialog, private infoBancosService: InfoBancosService, private infoBancoService: InfoBancosService) {
     (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -72,6 +72,11 @@ export class BusquedaMovimientoComponent implements OnInit {
       day: '2-digit',
     });
 
+  }
+  revisarValor() {
+    if (!this.monto.trim()) {
+      this.monto = "0";
+    }
   }
   onFechaFinalChange(event: MatDatepickerInputEvent<Date>): void {
     const feche: any = event.value;
@@ -311,6 +316,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   }
   req = new RequestMovimientos();
   filtar() {//Aqui se hace el filtrado de fechas y de todos los inputs disponibles
+ 
     if (this.inicio != null && this.final != null) { // Este if hace que si la fecha final y la fecha de incio no estan seleccionado los obligue a seleccionar alguna
       this.deseleccionados = [];
       this.selecc = [];
@@ -332,11 +338,11 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.req.tipoMovimiento = this.datos.trim();
       this.req.claveRastreo = this.claveDeRastreo.trim();
       this.req.estatus = this.estatus.trim();
-      this.req.monto =1;
+      this.req.monto =parseFloat(this.monto);
       console.log(this.req)
       this.infoBancoService.listarMovimientoFiltradosPageable(this.req, 0, 10).pipe(
         catchError((error) => {
-          this.openSnackBar('', 'Aviso');
+          this.openSnackBar('Error de conexion', 'Aviso');
           return of(null);
         })).subscribe(data => {
         let mov = JSON.parse(JSON.stringify(data))?.content
@@ -351,6 +357,20 @@ export class BusquedaMovimientoComponent implements OnInit {
 
   }
 
+  separarNumeros(event: any) {
+    let numero = event.target.value.replace(/[^0-9\.]/g, ''); // Eliminar caracteres no numéricos del valor
+    let parts = numero.split('.'); // Dividir el número en partes separadas por puntos
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Agregar comas para separar los miles
+    if (parts.length === 2) {
+      let decimalPart = parts[1];
+      if (decimalPart.length > 2) {
+        decimalPart = decimalPart.slice(0, 2); // Limitar a 2 decimales
+      }
+      parts[1] = decimalPart;
+    }
+    event.target.value = parts.join('.'); // Unir las partes del número con un punto nuevamente
+   // Llamar a la función para separar y formatear el valor del IVA
+  }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
     this._snackBar.open(da1, da2, {
       duration: 6000,
