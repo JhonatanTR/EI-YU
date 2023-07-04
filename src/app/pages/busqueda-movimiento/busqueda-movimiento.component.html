@@ -36,7 +36,7 @@
         </mat-autocomplete>
     </mat-form-field>
     <br>
-    
+
     <mat-form-field style="width: 18%; top: 11px; right: 20px; left: 30px;">
       <mat-label>Tipo movimientos</mat-label>
       <mat-select [(value)]="datos">
@@ -45,11 +45,17 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    
+
     <mat-form-field style="width: 18%; top: 11px;  left: 95px; ">
         <mat-label>Estatus</mat-label>
         <input matInput [(ngModel)]="estatus">
     </mat-form-field>
+
+    <mat-form-field class="example-form-field" style="width: 24%; top: 11px; right: 12px; left:120px; ">
+      <mat-label>Monto</mat-label>
+      <input matInput type="text" [(ngModel)]="claveDeRastreo" (ngModelChange)="mayusculas($event)">
+  </mat-form-field>
+
     <button mat-raised-button
         style="color: #FAF8FF; background-color: #45B39D; width: 15%; left: 140px; top: 8px; padding-top: 4px; padding-left: 10px; "
         (click)="filtar()"  ><mat-icon>search</mat-icon></button>
@@ -82,27 +88,27 @@
               <th mat-header-cell *matHeaderCellDef> Clave de rastreo </th>
               <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.cve_rastreo}}</td>
             </ng-container>
-          
+
             <ng-container matColumnDef="Concepto">
               <th mat-header-cell *matHeaderCellDef> Concepto </th>
               <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.concepto_pago}}</td>
             </ng-container>
-          
+
             <ng-container matColumnDef="Fecha de creacion">
               <th mat-header-cell *matHeaderCellDef> Fecha de creación </th>
               <td mat-cell *matCellDef="let row"  style="text-align: center; ">{{row.fecha_creacion}}</td>
             </ng-container>
-          
+
             <ng-container matColumnDef="Tipo de movimiento">
               <th mat-header-cell *matHeaderCellDef> Tipo de movimiento </th>
               <td mat-cell *matCellDef="let row" style="text-align: center; ">{{row.tipomoviiento}}</td>
             </ng-container>
-          
+
             <ng-container matColumnDef="Institucióm">
               <th mat-header-cell *matHeaderCellDef > Institución </th>
               <td mat-cell *matCellDef="let row" style="text-align: center; ">{{row.institucion}}</td>
             </ng-container>
-          
+
             <ng-container matColumnDef="estatus">
               <th mat-header-cell *matHeaderCellDef> Estatus </th>
               <td mat-cell *matCellDef="let row" style="text-align: center; ">
@@ -110,8 +116,8 @@
                 <p  *ngIf="row.estatus !== 'Rechazado ASP' && row.estatus !== 'Retorno' && row.estatus !== 'Cancelado' ">{{row.estatus}}</p>
               </td>
             </ng-container>
-            
-            
+
+
             <!-- Progress Column -->
             <ng-container matColumnDef="Opciones">
               <th mat-header-cell *matHeaderCellDef>Opciones</th>
@@ -119,13 +125,13 @@
                 <button mat-button color="primary" (click)="opendialogo(row)">Ver detalle</button>
               </td>
             </ng-container>
-          
+
             <!-- Progress Column -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             <!-- Row shown when there is no matching data. -->
           </table>
-         
+
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons [length]="cantidad"
             (page)="mostrarMas($event)"></mat-paginator>
 
@@ -137,7 +143,7 @@
             Descargar PDF
         </button>
         <button mat-icon-button style="left:110px;" (click)="exportarExcel()" [disabled]="exDisp()">
-            <mat-icon>table_chart</mat-icon> 
+            <mat-icon>table_chart</mat-icon>
             Descargar Excel
         </button>
         <br>
