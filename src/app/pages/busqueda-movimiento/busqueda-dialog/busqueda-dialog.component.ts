@@ -27,6 +27,7 @@ export class BusquedaDialogComponent implements OnInit {
     requestMovimientoDetalle.cve_rastreo = infoMovimiento.cve_rastreo;
     requestMovimientoDetalle.id_pblu = this.localStorageService.getUsuario("pblu").toString();
     requestMovimientoDetalle.tipoMovimiento = this.data.tipomoviiento;
+    requestMovimientoDetalle.monto = this.data.monto
     this.bancosService.listarMovientosDetalle(requestMovimientoDetalle).subscribe(data => {
       this.infoMovimientoDetalle = data;
       console.log(this.infoMovimientoDetalle)
