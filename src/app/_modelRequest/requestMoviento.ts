@@ -6,5 +6,6 @@ export class RequestMovimientos {
     claveRastreo:string="";
 	institucion:string="";
     tipoMovimiento:string="";
+    monto:number=0;
 	
 }
