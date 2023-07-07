@@ -233,7 +233,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de
     let data = [];
     // Agregamos las columnas del encabezado
-    data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento', 'Institución', 'Estatus']);
+    data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento','Monto', 'Institución', 'Estatus']);
     // Agregamos las filas con los datos de los movimientos seleccionados
     for (let movimiento of movimientos) {
       data.push([
@@ -241,6 +241,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         { text: movimiento.concepto_pago, width: 'auto' },
         { text: movimiento.fecha_creacion, width: 'auto' },
         { text: movimiento.tipomoviiento, width: 'auto' },
+        { text:"$"+ movimiento.monto, width: 'auto' },
         { text: movimiento.institucion, width: 'auto' },
         { text: movimiento.estatus, width: 'auto' }
       ]);
@@ -254,7 +255,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         {
           table: {
             headerRows: 1,
-            widths: ['18%', '16%', 'auto', '10%', 'auto', 'auto'],
+            widths: ['18%', '16%', 'auto', '10%', '10%', 'auto', 'auto'],
             body: data,
             layout: {
               fillColor: function (rowIndex: number, node: any, columnIndex: number) {
