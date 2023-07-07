@@ -17,6 +17,7 @@ export class VerEstadoComponent implements OnInit {
 
   infoMovimientoDetalle!: InfoMovimientoDetalle;
   clabe: string = " ";
+  infoAdi:string="";
   ngOnInit(): void {
     this.infoMovimientoDetalle = new InfoMovimientoDetalle();
     let infoMovimiento = new InfoMovimiento();
@@ -28,14 +29,14 @@ export class VerEstadoComponent implements OnInit {
     requestMovimientoDetalle.id_pblu = this.localStorageService.getUsuario("pblu").toString();
     requestMovimientoDetalle.tipoMovimiento = this.data.tipomoviiento;
     this.bancosService.listarMovientosDetalle(requestMovimientoDetalle).subscribe(data => {
-      this.infoMovimientoDetalle = data;
+      this.infoAdi = this.quitarCorchetes(data.info_adicional);
     })
   }
   Salir() {
     this.dialogRef.close();
 
   }
-  quitarCorchetes(texto: string): string | null {
+  quitarCorchetes(texto: string): string  {
     // Verifica si el texto contiene corchetes
     if (texto.includes('{') || texto.includes('}') || texto==="") {
       return "Favor de comunicarse con el equipo de Soporte EIYU para obtener más información.";

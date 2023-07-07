@@ -73,7 +73,7 @@ export class EnviarPagoComponent implements OnInit {
       this.adm = true;
     }
     this.listarCuentasClabes();
-
+    this.localStorageService.removeExecel();
   }
 
   listarCuentasClabes() {//Lista las cuentas clabes que tenemos en configuraciíon de cuenta
