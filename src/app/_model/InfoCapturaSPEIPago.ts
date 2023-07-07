@@ -1,17 +1,17 @@
 export class InfoCapturaSPEIPago {
-    username: string = "part_1";
-    password: string = "password";
-    certificado: string = "asp-eiyu-participante1.cer";
-    llave: string = "participante1-eiyu.key";
-    phrase: string = "participante1-eiyu.key.txt";
-    bancoDestino: string = "40012";
-    clabe: string = "659433001000000069";
-    nombreDestino: string = "NOMBREBEN";
+    username: string = "";
+    password: string = "";
+    certificado: string = "";
+    llave: string = "";
+    phrase: string = "";
+    bancoDestino: string = "";
+    clabe: string = "";
+    nombreDestino: string = "";
     idTipoCtaDestino: string = "40";
-    ctaDestino: string = "012010001000060098";
+    ctaDestino: string = "";
     rfcDestino: string = "LETJ960811XXX";
     conceptoPago: string = "Referencianumericavacia";
-    monto: string = "1";
+    monto: string = "";
     iva: string = "16";
     refNum: string = "0";
     refCob: string = "refCob";

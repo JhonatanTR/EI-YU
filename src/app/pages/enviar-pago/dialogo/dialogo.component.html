@@ -1,8 +1,11 @@
 <button mat-raised-button style="left: 93%; background-color: crimson; color: #FAF8FF; "
     (click)="Salir()">Regresar</button>
+ 
 <button mat-button color="primary" onclick="document.getElementById('fileToUpload').click()"
     style="border: 1px solid #45B39D; position: relative; left: -90px;">Seleccionar archivo</button>
-<input id="fileToUpload" type="file" (change)="cargarArchivo($event)" style="display:none;">
+<input id="fileToUpload" type="file" (change)="cargarArchivo2($event)" style="display:none;">
+
+<p>Carga Masiva</p> 
 <br>
 <div [hidden]="divEscondido"><mat-form-field>
         <mat-label>Filtrar</mat-label>
@@ -11,59 +14,40 @@
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
             <!-- ID Column -->
-            <ng-container matColumnDef="Instituto">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Instituto </th>
-                <td mat-cell *matCellDef="let row" style="width: 16%;"> {{row.institucion}} </td>
+            <ng-container matColumnDef="Destino">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Destino </th>
+                <td mat-cell *matCellDef="let row"> {{row.ctaDestino}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="monto">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
-                <td mat-cell *matCellDef="let row"  style="width: 8%;"> ${{row.monto}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="iva" >
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                <td mat-cell *matCellDef="let row" style="width: 5%;"> ${{row.iva}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="claveDeRastreo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Clave de rastreo </th>
-                <td mat-cell *matCellDef="let row"  style="width: 8%;"> {{row.claveDeRastreo}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="conceptoPago">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto de pago </th>
-                <td mat-cell *matCellDef="let row" style="width: 20%;"> {{row.conceptoPago}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="refNumerica">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Referencia Numerica </th>
-                <td mat-cell *matCellDef="let row" style="width: 9%; align-self: center ;"> {{row.refNumerica}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="cobranza">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cobranza </th>
-                <td mat-cell *matCellDef="let row" style="width: 9%;"> {{row.cobranza}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="origen">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Origen </th>
-                <td mat-cell *matCellDef="let row" style="width: 9%;"> {{row.origen}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="nomBeneficiario">
+            <ng-container matColumnDef="Beneficiario">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
-                <td mat-cell *matCellDef="let row" style="width: 17%;"> {{row.nomBeneficiario}} </td>
+                <td mat-cell *matCellDef="let row"  > {{row.nombreDestino}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="rfcBeneficiario">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> RFC Beneficiario </th>
-                <td mat-cell *matCellDef="let row" style="width: 9%;"> {{row.rfcBeneficiario}} </td>
+            <ng-container matColumnDef="Número de Cuenta" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de Cuenta </th>
+                <td mat-cell *matCellDef="let row"> {{row.clabe}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="cuentaBancaria">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuenta Bancaria </th>
-                <td mat-cell *matCellDef="let row" style="width: 9%;"> {{row.cuentaBancaria}} </td>
+            <ng-container matColumnDef="Banco">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Banco </th>
+                <td mat-cell *matCellDef="let row"  > {{row.bancoDestino}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Monto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+                <td mat-cell *matCellDef="let row"> ${{row.monto}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Ref. Num">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ref. Num </th>
+                <td mat-cell *matCellDef="let row" > {{row.refNum}} </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="Concepto Pago">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto Pago </th>
+                <td mat-cell *matCellDef="let row"> {{row.conceptoPago}} </td>
             </ng-container>
             <!-- Progress Column -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
