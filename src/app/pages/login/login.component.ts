@@ -29,9 +29,10 @@ export class LoginComponent implements OnInit {
   password: string = "";
   showError: boolean = false;
   errorMessage: string = 'Error: Credenciales inválidas. Intente de nuevo.';
+  loading: boolean;
   constructor(private infoCuentaClabeService: InfoCuentaclabeService, private _snackBar: MatSnackBar, private des: InfoBancosService, private dialog: MatDialog,
    private loginServices: InfoLoginService, private loginService: LoginService, private router: Router, private localStorageService: LocalStorageService) {
-
+    this.loading = false;
   }
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
@@ -74,7 +75,7 @@ export class LoginComponent implements OnInit {
             this.showError = false;
           }, 3000);
         } else {
-
+          this.loading = true
           let dato = { "peiyu": da.usuario.idParticipante };
           let rql = new RequestLogin();
           rql.username = da.usuario.apiPassword.username;
@@ -93,14 +94,14 @@ export class LoginComponent implements OnInit {
               this.loginService.rol.next(true)
               this.localStorageService.setDat("rol", true)
             } else {
-            
+
               this.loginService.rol.next(false)
               this.localStorageService.setDat("rol", false)
               if(da.usuario.usuarios_permisos[0].id==2){
-              
+
                 this.localStorageService.setDesc("permiso", da.usuario.usuarios_permisos[0].id.toString());
               }else if(da.usuario.usuarios_permisos[0].id==3){
-             
+
                 this.localStorageService.setDesc("permiso",  da.usuario.usuarios_permisos[0].id.toString())
                  this.localStorageService.setDesc("idUser_1",  da.usuario.id)
               }
@@ -110,6 +111,7 @@ export class LoginComponent implements OnInit {
               if (data.clabe_pblu == "") {
                 this.openSnackBar('PARTICIPANTE NO CONFIGURADO. FAVOR DE COMUNICARSE CON SOPORTE EIYU.', 'Aviso');
               } else {
+                this.loading = false;
                 this.router.navigate(['dashboard']);
                 let cli = new Cliente;
                 let InfoSpe = new InfoSpei();
@@ -124,7 +126,7 @@ export class LoginComponent implements OnInit {
                 this.localStorageService.setDat("log", true)
                 this.loginService.cli.next(cli);
                 if (da.usuario.token?.activo == true || da.usuario.token != null) {
-
+                  //TODO: Do something
                 } else {
                   if (da.usuario.token == null) {
                     if (da.usuario.rol.idRol == 1 || da.usuario.usuarios_permisos[0].id==3) {
@@ -147,7 +149,7 @@ export class LoginComponent implements OnInit {
     })
 
   }
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });
