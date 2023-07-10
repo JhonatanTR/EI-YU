@@ -30,7 +30,6 @@ export class BusquedaDialogComponent implements OnInit {
     requestMovimientoDetalle.monto = this.data.monto
     this.bancosService.listarMovientosDetalle(requestMovimientoDetalle).subscribe(data => {
       this.infoMovimientoDetalle = data;
-      console.log(this.infoMovimientoDetalle)
     })
   }
   obtenerCuentaEnmascarada(cuenta: string): string {
