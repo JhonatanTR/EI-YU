@@ -9,6 +9,7 @@ import { TransferenciaComponent } from './pages/transferencia/transferencia.comp
 import { AutorizarSpeiComponent } from './pages/autorizar-spei/autorizar-spei.component';
 import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
 import { GuardServiceService } from './_service/guard-service.service';
+import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
 
 const routes: Routes = [
   {path:"login",component:LoginComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
   {path: "busqueda_movimiento", component: BusquedaMovimientoComponent},
   {path: "trasferencia", component: TransferenciaComponent},
   {path: "autorizarspei", component: AutorizarSpeiComponent},
-  {path: "configuracion", component: ConfiguracionesComponent}
+  {path: "configuracion", component: ConfiguracionesComponent},
+  {path: "cargar_cuenta", component: CargarCuentaComponent}
 ];
 
 @NgModule({

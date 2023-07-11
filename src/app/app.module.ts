@@ -21,7 +21,8 @@ import { DialogErrorListPagoComponent } from './pages/autorizar-spei/dialog-erro
 import { NgxMaskModule } from 'ngx-mask';
 import { IConfig } from 'ngx-mask';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
-import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-estado.component'; // import NgxQRCodeModule
+import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-estado.component';
+import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component'; // import NgxQRCodeModule
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-e
     EnrolarTokenComponent,
     DialogErrorListPagoComponent,
     VerEstadoComponent,
+    CargarCuentaComponent,
     
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
