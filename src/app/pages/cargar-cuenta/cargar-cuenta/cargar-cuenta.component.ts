@@ -114,6 +114,7 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.telefono = element['telefono'];
             dataPersona.nombre = element['nombre'];
             dataPersona.idOcupacion = element['idOcupacion'];
+            dataPersona.celular = element['celular']
             dataPersona.sexo = element['sexo'];
             dataPersona.entidadNacimiento = element['entidadNacimiento'];
             dataPersona.apellidoPaterno = element['apellidoPaterno'];
@@ -219,6 +220,7 @@ export class CargarCuentaComponent implements OnInit {
                 p.correo = this.datosExcel[i].correo;
                 p.telefono = this.datosExcel[i].telefono;
                 p.nombre = this.datosExcel[i].nombre;
+                p.celular = this.datosExcel[i].celular;
                 p.idOcupacion = this.datosExcel[i].idOcupacion;
                 p.sexo = this.datosExcel[i].sexo;
                 p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
