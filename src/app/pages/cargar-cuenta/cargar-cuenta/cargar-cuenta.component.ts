@@ -299,9 +299,50 @@ export class CargarCuentaComponent implements OnInit {
                 req.persona = p;
                 req.domicilio = d;
                 req.perfil = perf;
-                this.cuentaService
-                  .crearCuenta(req)
-                  .pipe(
+                const cuentserv = this.cuentaService
+                  .crearCuenta(req).subscribe(
+                  (data) => {
+                    if (data!=null) {
+                    this.cuentasCreadas++;
+                    console.log("Creadooo")
+                    this.datosExcel[i].estatus = 'CREADA';
+                    this.datosExcel[i].clabe = data.mensaje;
+                    console.log(data.mensaje);
+                  }},
+                  (error) => {
+                    console.log(error)
+                  this.datosExcel[i].estatus = 'ERROR';
+                  this.datosExcel[i].clabe = 'N/A';
+                  this.cuentasNoCreadas++;
+                  this.snackBar.open(
+                    'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
+                    'Cerrar'
+                  )}
+                  )
+                  cuentserv.add(() => {
+                    if (this.datosExcel.length-1 == i) {
+                      const workbook = XLSX.utils.book_new();
+                      const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
+                      XLSX.utils.book_append_sheet(
+                        workbook,
+                        worksheet,
+                        'Datos de la tabla'
+                      );
+                      //Exportar la hoja de cálculo en formato Excel
+                      const excelBuffer: any = XLSX.write(workbook, {
+                        bookType: 'xlsx',
+                        type: 'array',
+                      });
+                      const dataBlob: Blob = new Blob([excelBuffer], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+
+                      // Exportar la hoja de cálculo en formato Excel
+                      this.creados = true;
+                      FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
+                    }
+                  });
+                  /*.pipe(
                     catchError(() => {
                       this.datosExcel[i].estatus = 'ERROR';
                       this.datosExcel[i].clabe = 'N/A';
@@ -330,7 +371,7 @@ export class CargarCuentaComponent implements OnInit {
                           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         });
 
-                        /* Exportar la hoja de cálculo en formato Excel */
+                        // Exportar la hoja de cálculo en formato Excel
                         this.creados = true;
                         FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
                       }
@@ -343,7 +384,7 @@ export class CargarCuentaComponent implements OnInit {
                       this.datosExcel[i].clabe = data.mensaje;
                       console.log(data.mensaje);
                     }
-                  });
+                  });*/
               }
             } else {
               this.divEscondido = false;
