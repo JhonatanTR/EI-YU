@@ -302,7 +302,7 @@ export class CargarCuentaComponent implements OnInit {
                 const cuentserv = this.cuentaService
                   .crearCuenta(req).subscribe(
                   (data) => {
-                    if (data!=null) {
+                    if (data!=null || data?.ok!=false) {
                     this.cuentasCreadas++;
                     console.log("Creadooo")
                     this.datosExcel[i].estatus = 'CREADA';
@@ -320,7 +320,7 @@ export class CargarCuentaComponent implements OnInit {
                   )}
                   )
                   cuentserv.add(() => {
-                    if (this.datosExcel.length-1 == i) {
+                    setTimeout(() => {
                       const workbook = XLSX.utils.book_new();
                       const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
                       XLSX.utils.book_append_sheet(
@@ -340,7 +340,9 @@ export class CargarCuentaComponent implements OnInit {
                       // Exportar la hoja de cálculo en formato Excel
                       this.creados = true;
                       FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-                    }
+                    
+                    }, 9000);
+                 
                   });
                   /*.pipe(
                     catchError(() => {
