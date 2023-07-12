@@ -215,7 +215,7 @@ export class CargarCuentaComponent implements OnInit {
       }
     });
   }
-
+   auxExcelLista: InfoPersonaFisica[]=[];
   createAccounts() {
     if (this.codigoOTP != '') {
       let InfSpei = new InfoSpei();
@@ -250,6 +250,7 @@ export class CargarCuentaComponent implements OnInit {
             dialogRef.afterClosed().subscribe((result) => {
               if (result) {
                 for (let i = 0; i < this.datosExcel.length; i++) {
+                  let auxExcel = new InfoPersonaFisica();
                   let req = new requestPersonaFisica();
                   let p = new persona();
                   let d = new domicilio();
@@ -293,8 +294,10 @@ export class CargarCuentaComponent implements OnInit {
                     .crearCuenta(req)
                     .pipe(
                       catchError((error) => {
+                        auxExcel.estatus="Error"
+                        this.auxExcelLista.push(auxExcel);
                         this.cuentasNoCreadas++;
-                        req.estatus = 'ERROR';
+                       
                         req.clabe = 'N/A';
                         this.snackBar.open(
                           'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
@@ -321,21 +324,18 @@ export class CargarCuentaComponent implements OnInit {
                     });
                   this.creados = true;
                 }
+
                 const workbook = XLSX.utils.book_new();
-                const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-                XLSX.utils.book_append_sheet(
-                  workbook,
-                  worksheet,
-                  'Resultados de cuentas referencia'
-                );
+                const worksheet = XLSX.utils.json_to_sheet(this.auxExcelLista);
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
                 /* Exportar la hoja de cálculo en formato Excel */
-                const excelBuffer: any = XLSX.write(workbook, {
-                  bookType: 'xlsx',
-                  type: 'array',
-                });
-                const dataBlob: Blob = new Blob([excelBuffer], {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                });
+                const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+               
+
+               
+             
+                /* Exportar la hoja de cálculo en formato Excel */
                 FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
               } else {
                 this.divEscondido = false;

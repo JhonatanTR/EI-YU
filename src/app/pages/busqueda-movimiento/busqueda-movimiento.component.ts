@@ -411,7 +411,6 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.selection.clear();
       let mov = JSON.parse(JSON.stringify(bancos))?.content
       this.cantidad = JSON.parse(JSON.stringify(bancos))?.totalElements
-
       this.listaMovimiento = [];
       this.listaMovimiento = mov;
       this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);

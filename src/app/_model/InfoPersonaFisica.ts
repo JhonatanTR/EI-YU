@@ -18,4 +18,5 @@ export class InfoPersonaFisica{
   colonia: string = "";
   codPostal: string = "";
   fechaNacimiento: string = "";
+  estatus:string="";
 }

@@ -263,6 +263,7 @@ export class EnviarPagoComponent implements OnInit {
           speiout.certificado = InfSpei.certificado;
           speiout.llave = InfSpei.llave;
           speiout.phrase = InfSpei.phrase;
+          
           speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
           speiout.ctaDestino = this.destinatario.toString();
           speiout.nombreDestino = this.nomBeneficiario;
