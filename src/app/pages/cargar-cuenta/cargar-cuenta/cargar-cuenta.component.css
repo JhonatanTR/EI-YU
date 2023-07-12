@@ -21,6 +21,10 @@
 table {
   width: 100%;
 }
+.tabla-container{
+  overflow: auto;
+  margin-right: 18px;
+}
 .foot{
   display: flex;
   height: 5%;
@@ -35,15 +39,23 @@ table {
   gap: 2em;
   height: auto;
   width: 100%;
-  margin: 3em 0em;
+  margin: 3em 0 1em 0em;
 }
-.table-container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: auto;
-}
+
 .otp-container{
   width: 20%;
+}
+
+:host ::ng-deep {
+  .mat-sort-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1.5em;
+
+  }
+.mat-header-cell {
+    text-align: center;
+    margin: 0 10px;
+}
 }
