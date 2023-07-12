@@ -35,7 +35,7 @@ export class CargarCuentaComponent implements OnInit {
   codigoOTP: string = '';
   arregloPersonas: object[] = [];
   primeraCasillaSeleccionada = false;//La casilla principal es selecciona o no
-  creados: boolean = true;
+  creados: boolean = false;
   cuentasCreadas: number = 0;
   cuentasNoCreadas: number = 0;
   option: boolean = false;
@@ -311,6 +311,7 @@ export class CargarCuentaComponent implements OnInit {
                         );
                       }
                     });
+                  this.creados = true;
                 }
                 const workbook = XLSX.utils.book_new();
                 const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
