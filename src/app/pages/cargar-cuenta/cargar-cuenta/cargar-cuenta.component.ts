@@ -183,7 +183,6 @@ export class CargarCuentaComponent implements OnInit {
           }
         }
         if(!flag) {
-          console.log('entre')
           this.localStorageService.setExcel('datosExcel', this.datosExcel);
           this.divEscondido = false;
           this.ngAfterViewInit();
