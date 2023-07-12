@@ -230,6 +230,10 @@ export class CargarCuentaComponent implements OnInit {
                 p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
                 p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
                 p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                p.idNacionalidad=1;
+                p.idPaisNac=117;
+                p.serieFirmaElect="xxxxx"
+                p.tipoIdentificacionOf =1;
                 p.rfc = this.datosExcel[i].rfc;
                 p.curp = this.datosExcel[i].curp;
                 d.callePrincipal = this.datosExcel[i].callePrincipal;
@@ -238,9 +242,11 @@ export class CargarCuentaComponent implements OnInit {
                 d.colonia = this.datosExcel[i].colonia;
                 d.codPostal = this.datosExcel[i].codPostal;
                 p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
+                req.comprobantes =[];
                 req.persona = p;
                 req.domicilio = d;
                 req.perfil = perf;
+                console.log(req)
                 this.cuentaService.crearCuenta(req).pipe(
                   catchError((error) => {
                     this.snackBar.open('Error al generar la operación, Intente nuevamente', 'Cerrar');
