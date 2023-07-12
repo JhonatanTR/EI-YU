@@ -328,19 +328,15 @@ export class CargarCuentaComponent implements OnInit {
                     })
                   )
                   .subscribe((data) => {
-                    if (data) {
+                    if (data!=null) {
                       this.cuentasCreadas++;
                       console.log("Creadooo")
                       this.datosExcel[i].estatus = 'CREADA';
                       this.datosExcel[i].clabe = data.mensaje;
-                      console.log(data.mensaje);
-                      this.snackBar.open(
-                        'Cuentas creadas exitosamente',
-                        'Cerrar',
-                        {
-                          duration: 2000,
-                        }
-                      );
+                      console.log(data.mensaje);  
+                    }else{ 
+                      this.datosExcel[i].estatus = 'ERROR';
+                      this.datosExcel[i].clabe = 'N/A';
                     }
                   });
                 this.creados = true;
