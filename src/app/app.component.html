@@ -57,7 +57,7 @@
 				<span>Búsqueda de movimiento</span>
 			</button>
 			<p class="id" style="font-size: 14px; font-weight: 600;">SPEI</p>
-		
+
 			<!--<button mat-menu-item style="cursor: pointer">
 					<mat-icon>healing</mat-icon>
 					<span  >Unidades de negocio</span>
@@ -97,6 +97,13 @@
 					<mat-icon>assessment</mat-icon>
 					<span  >Plantillas cargadas</span>
 				</button-->
+        <div *ngIf="adm">
+          <p class="id" style="font-size: 14px; font-weight: 600;">CUENTA</p>
+          <button mat-menu-item style="cursor: pointer" routerLink="/cargar_cuenta">
+            <mat-icon>supervisor_account</mat-icon>
+            <span>Cargar cuentas</span>
+          </button>
+        </div>
 			<div *ngIf="adm">
 				<p class="id" style="font-size: 14px; font-weight: 600;">TESORERÍA</p>
 				<button mat-menu-item style="cursor: pointer" routerLink="/trasferencia">
@@ -111,13 +118,14 @@
 
 
 
+
 		</mat-sidenav>
 
 		<mat-sidenav-content autosize>
 			<router-outlet></router-outlet>
-			
+
 		</mat-sidenav-content>
 
 	</mat-sidenav-container>
-	
+
 </div>
