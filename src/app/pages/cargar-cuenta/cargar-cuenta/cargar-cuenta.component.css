@@ -25,6 +25,11 @@ table {
   overflow: auto;
   margin-right: 18px;
 }
+.table-container_mesage{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
 .foot{
   display: flex;
   height: 5%;
