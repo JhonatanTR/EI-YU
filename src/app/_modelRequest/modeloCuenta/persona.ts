@@ -7,9 +7,9 @@ export class persona{
   curp: string = "";
   telefono: string = "";
   celular: string = "";
-  idNacionalidad: number = 0;
+  idNacionalidad: number = 1;
   idPaisNac: number = 117;
-  entidadNacimiento: number = 0;
+  entidadNacimiento: number = 91;
   idOcupacion: number = 0;
   fechaNacimiento: string = "";
   correo: string = "";
