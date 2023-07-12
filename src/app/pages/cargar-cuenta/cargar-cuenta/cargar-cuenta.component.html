@@ -18,7 +18,8 @@
     <button mat-flat-button matTooltip="Crear Cuentas" color="primary" (click)="createAccounts()">
       Crear Cuentas
     </button>
-    <button mat-flat-button matTooltip="Remover Cuentas" color="warn" (click)="removeXLSX()">
+    <button mat-flat-button matTooltip="Remover Cuentas" color="warn" (click)="removeXLSX()"
+    *ngIf="!divEscondido">
       Remover Cuentas
     </button>
     <div class="otp-container">
@@ -157,7 +158,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           <!-- Row shown when there is no matching data. -->
           <tr class="mat-row" *matNoDataRow style="text-align: center;">
-            <td class="mat-cell" colspan="4">
+            <td class="mat-cell" colspan="4" style="text-align: center;">
               No hay datos cargados
             </td>
           </tr>
@@ -167,6 +168,9 @@
           [pageSizeOptions]="[5, 10, 25, 100]"
         ></mat-paginator>
       </div>
+    </div>
+    <div [hidden]="!divEscondido" class="table-container_mesage">
+      <h3>No hay datos cargados</h3>
     </div>
   </div>
 </div>
