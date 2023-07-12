@@ -108,7 +108,6 @@ export class CargarCuentaComponent implements OnInit {
           this.datosExcel.splice(i, 1);
         }
       }
-      //this.datosExcel = this.datosExcel.filter( item => {item.id === this.selecc[i].id})
     }
     console.log(this.datosExcel)
     this.localStorageService.setExcel('datosExcel', this.datosExcel);
@@ -133,14 +132,26 @@ export class CargarCuentaComponent implements OnInit {
         //for (const [index, element] of this.datos.entries()) {
         for(let i = 0; i < this.datos.length; i++){
           aux++
-          //if (
-            /*this.datos[i]['correo'] &&
+          if (
+            this.datos[i]['correo'] &&
             this.datos[i]['telefono'] &&
+            this.datos[i]['nombre'] &&
             this.datos[i]['idOcupacion'] &&
             this.datos[i]['celular'] &&
             this.datos[i]['entidadNacimiento'] &&
-            this.datos[i]['numIdentificacionOf']*/
-          //) {
+            this.datos[i]['numIdentificacionOf'] &&
+            this.datos[i]['apellidoPaterno'] &&
+            this.datos[i]['apellidoMaterno'] &&
+            this.datos[i]['numIdentificacionOf'] &&
+            this.datos[i]['rfc'] &&
+            this.datos[i]['callePrincipal'] &&
+            this.datos[i]['numExterior'] &&
+            this.datos[i]['numInterior'] &&
+            this.datos[i]['colonia'] &&
+            this.datos[i]['codPostal'] &&
+            this.datos[i]['fechaNacimiento']
+
+          ) {
             let dataPersona = new InfoPersonaFisica();
             dataPersona.id = aux;
             dataPersona.correo = this.datos[i]['correo'];
@@ -162,7 +173,9 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.codPostal = this.datos[i]['codPostal'];
             dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
             this.datosExcel.push(dataPersona);
-         // }
+          }else{
+          this.snackBar.open('Carga interrumpida: Campos incompletos, favor de verificar documento.', 'Cerrar');
+         }
         }
         this.localStorageService.setExcel('datosExcel', this.datosExcel);
         this.divEscondido = false;
