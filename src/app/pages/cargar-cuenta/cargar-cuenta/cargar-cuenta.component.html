@@ -15,14 +15,14 @@
       style="display: none"
       onclick="this.value=null;"
     />
-    <button mat-flat-button matTooltip="Crear Cuentas" color="primary" (click)="createAccounts()">
+    <button mat-flat-button matTooltip="Crear Cuentas" color="primary" *ngIf="!divEscondido" (click)="createAccounts()">
       Crear Cuentas
     </button>
     <button mat-flat-button matTooltip="Remover Cuentas" color="warn" (click)="removeXLSX()"
     *ngIf="!divEscondido">
       Remover Cuentas
     </button>
-    <div class="otp-container">
+    <div class="otp-container" *ngIf="!divEscondido">
       <mat-form-field>
         <mat-label>Código OTP</mat-label>
         <input matInput placeholder="Código OTP" [(ngModel)]="codigoOTP" #myInput  />
