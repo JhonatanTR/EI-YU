@@ -12,7 +12,7 @@ import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import * as XLSX from 'xlsx';
 import { CargarCuentaRemoveDialogComponent } from '../cargar-cuenta-remove-dialog/cargar-cuenta-remove-dialog.component';
 import { InfoLoginService } from 'src/app/_service/info-login.service';
-import { catchError, of } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 import { persona } from '../../../_modelRequest/modeloCuenta/persona';
 import { domicilio } from 'src/app/_modelRequest/modeloCuenta/domicilio';
 import { perfil } from 'src/app/_modelRequest/modeloCuenta/perfil';
@@ -148,7 +148,9 @@ export class CargarCuentaComponent implements OnInit {
             this.datos[i]['numInterior'] &&
             this.datos[i]['colonia'] &&
             this.datos[i]['codPostal'] &&
-            this.datos[i]['fechaNacimiento']
+            this.datos[i]['fechaNacimiento'] &&
+            !this.datos[i]['estatus'] &&
+            !this.datos[i]['fechaclabeNacimiento']
           ) {
             let dataPersona = new InfoPersonaFisica();
             dataPersona.id = aux;
@@ -185,6 +187,9 @@ export class CargarCuentaComponent implements OnInit {
         if (!flag) {
           this.localStorageService.setExcel('datosExcel', this.datosExcel);
           this.divEscondido = false;
+          this.cuentasCreadas = 0;
+          this.cuentasNoCreadas = 0;
+          this.creados = false;
           this.ngAfterViewInit();
         }
       };
@@ -207,6 +212,9 @@ export class CargarCuentaComponent implements OnInit {
       if (result) {
         this.localStorageService.removeExcel();
         this.ngAfterViewInit();
+        this.creados = false;
+        this.cuentasCreadas = 0;
+        this.cuentasNoCreadas = 0;
         this.snackBar.open('Cuentas Removidas', 'Cerrar', {
           duration: 2000,
         });
@@ -294,16 +302,17 @@ export class CargarCuentaComponent implements OnInit {
                 this.cuentaService
                   .crearCuenta(req)
                   .pipe(
-                    catchError((error) => {
-
+                    catchError(() => {
                       this.datosExcel[i].estatus = 'ERROR';
                       this.datosExcel[i].clabe = 'N/A';
-                      console.log(this.datosExcel[i].estatus)
                       this.cuentasNoCreadas++;
                       this.snackBar.open(
                         'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
                         'Cerrar'
-                      );
+                      )
+                      return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
+                    }),
+                    finalize(()=> {
                       if (this.datosExcel.length-1 == i) {
                         const workbook = XLSX.utils.book_new();
                         const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
@@ -322,24 +331,19 @@ export class CargarCuentaComponent implements OnInit {
                         });
 
                         /* Exportar la hoja de cálculo en formato Excel */
+                        this.creados = true;
                         FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
                       }
-                      return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
                     })
-                  )
-                  .subscribe((data) => {
+                  ).subscribe(data => {
                     if (data!=null) {
                       this.cuentasCreadas++;
                       console.log("Creadooo")
                       this.datosExcel[i].estatus = 'CREADA';
                       this.datosExcel[i].clabe = data.mensaje;
-                      console.log(data.mensaje);  
-                    }else{ 
-                      this.datosExcel[i].estatus = 'ERROR';
-                      this.datosExcel[i].clabe = 'N/A';
+                      console.log(data.mensaje);
                     }
                   });
-                this.creados = true;
               }
             } else {
               this.divEscondido = false;
