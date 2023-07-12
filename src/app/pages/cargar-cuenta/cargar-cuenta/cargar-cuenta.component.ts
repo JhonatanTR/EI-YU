@@ -188,7 +188,10 @@ export class CargarCuentaComponent implements OnInit {
       .verificarOtp(request)
       .pipe(
         catchError((error) => {
-          this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Aviso');
+          this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Cerrar',
+          {
+            duration: 2000,
+          });
           return of(null);
         })
       )
@@ -247,7 +250,7 @@ export class CargarCuentaComponent implements OnInit {
                 ).subscribe((data) => {
                   if (data) {
                     console.log(data.mensaje)
-                    this.snackBar.open('Cuentas creadas', 'Cerrar',
+                    this.snackBar.open('Cuentas creadas exitosamente', 'Cerrar',
                     {
                       duration: 2000,
                     });
