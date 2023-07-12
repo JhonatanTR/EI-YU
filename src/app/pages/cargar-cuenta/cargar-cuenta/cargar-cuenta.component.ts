@@ -30,11 +30,11 @@ export class CargarCuentaComponent implements OnInit {
   datosExcel: InfoPersonaFisica[] = [];
   datos: any[] = []; //datos que trae el excel
   selection = new SelectionModel<InfoPersonaFisica>(true, []);
-  selecc: InfoPersonaFisica[] = [];//Es un auxiliar
-  deseleccionados: InfoPersonaFisica[] = [];//Los datos deseleecionados
+  selecc: InfoPersonaFisica[] = []; //Es un auxiliar
+  deseleccionados: InfoPersonaFisica[] = []; //Los datos deseleecionados
   codigoOTP: string = '';
   arregloPersonas: object[] = [];
-  primeraCasillaSeleccionada = false;//La casilla principal es selecciona o no
+  primeraCasillaSeleccionada = false; //La casilla principal es selecciona o no
   creados: boolean = false;
   cuentasCreadas: number = 0;
   cuentasNoCreadas: number = 0;
@@ -100,26 +100,25 @@ export class CargarCuentaComponent implements OnInit {
       this.divEscondido = true;
     }
   }
-  eliminar(){
-    console.log(this.selecc)
+  eliminar() {
+    console.log(this.selecc);
     for (let i = 0; i < this.datosExcel.length; i++) {
       for (let j = 0; j < this.selecc.length; j++) {
-        if(this.datosExcel[i].id === this.selecc[j].id){
+        if (this.datosExcel[i].id === this.selecc[j].id) {
           this.datosExcel.splice(i, 1);
         }
       }
     }
-    console.log(this.datosExcel)
+    console.log(this.datosExcel);
     this.localStorageService.setExcel('datosExcel', this.datosExcel);
     this.ngAfterViewInit();
     this.selecc = [];
     this.selection = new SelectionModel<InfoPersonaFisica>(true, []);
-
-
   }
   cargarXLSX(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     let archivo = inputElement.files;
+    let flag = false;
     if (archivo != null) {
       this.datosExcel = [];
       const lector = new FileReader();
@@ -130,8 +129,8 @@ export class CargarCuentaComponent implements OnInit {
         this.datos = XLSX.utils.sheet_to_json(hoja);
         let aux = 0;
         //for (const [index, element] of this.datos.entries()) {
-        for(let i = 0; i < this.datos.length; i++){
-          aux++
+        for (let i = 0; i < this.datos.length; i++) {
+          aux++;
           if (
             this.datos[i]['correo'] &&
             this.datos[i]['telefono'] &&
@@ -150,7 +149,6 @@ export class CargarCuentaComponent implements OnInit {
             this.datos[i]['colonia'] &&
             this.datos[i]['codPostal'] &&
             this.datos[i]['fechaNacimiento']
-
           ) {
             let dataPersona = new InfoPersonaFisica();
             dataPersona.id = aux;
@@ -163,7 +161,8 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.entidadNacimiento = this.datos[i]['entidadNacimiento'];
             dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
             dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
-            dataPersona.numIdentificacionOf = this.datos[i]['numIdentificacionOf'];
+            dataPersona.numIdentificacionOf =
+              this.datos[i]['numIdentificacionOf'];
             dataPersona.rfc = this.datos[i]['rfc'];
             dataPersona.curp = this.datos[i]['curp'];
             dataPersona.callePrincipal = this.datos[i]['callePrincipal'];
@@ -173,13 +172,22 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.codPostal = this.datos[i]['codPostal'];
             dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
             this.datosExcel.push(dataPersona);
-          }else{
-          this.snackBar.open('Carga interrumpida: Campos incompletos, favor de verificar documento.', 'Cerrar');
-         }
+          } else {
+            flag = true;
+            this.divEscondido = true;
+            this.datos = [];
+            this.snackBar.open(
+              'Carga interrumpida: Campos incompletos, favor de verificar documento.',
+              'Cerrar'
+            );
+          }
         }
-        this.localStorageService.setExcel('datosExcel', this.datosExcel);
-        this.divEscondido = false;
-        this.ngAfterViewInit();
+        if(!flag) {
+          console.log('entre')
+          this.localStorageService.setExcel('datosExcel', this.datosExcel);
+          this.divEscondido = false;
+          this.ngAfterViewInit();
+        }
       };
     } else {
       this.divEscondido = true;
@@ -210,7 +218,7 @@ export class CargarCuentaComponent implements OnInit {
   }
 
   createAccounts() {
-    if(this.codigoOTP != ''){
+    if (this.codigoOTP != '') {
       let InfSpei = new InfoSpei();
       InfSpei = this.localStorageService.getUsuario('userE');
       let pblu = this.localStorageService.getIdPblu('pblu');
@@ -263,7 +271,8 @@ export class CargarCuentaComponent implements OnInit {
                   p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
                   p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
                   p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
-                  p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                  p.numIdentificacionOf =
+                    this.datosExcel[i].numIdentificacionOf;
                   p.idNacionalidad = 1;
                   p.idPaisNac = 117;
                   p.serieFirmaElect = 'xxxxx';
@@ -286,8 +295,8 @@ export class CargarCuentaComponent implements OnInit {
                     .pipe(
                       catchError((error) => {
                         this.cuentasNoCreadas++;
-                        req.estatus = "ERROR";
-                        req.clabe = "N/A"
+                        req.estatus = 'ERROR';
+                        req.clabe = 'N/A';
                         this.snackBar.open(
                           'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
                           'Cerrar'
@@ -299,7 +308,7 @@ export class CargarCuentaComponent implements OnInit {
                     .subscribe((data) => {
                       if (data) {
                         this.cuentasCreadas++;
-                        req.estatus = "CREADA";
+                        req.estatus = 'CREADA';
                         req.clabe = data.mensaje;
                         console.log(data.mensaje);
                         this.snackBar.open(
@@ -337,7 +346,7 @@ export class CargarCuentaComponent implements OnInit {
             this.codigoOTP = '';
           }
         });
-    }else{
+    } else {
       this.myInput.nativeElement.focus();
       this.snackBar.open(
         'Es necesario ingresar el código OTP para continuar',
@@ -346,7 +355,6 @@ export class CargarCuentaComponent implements OnInit {
           duration: 2000,
         }
       );
-
     }
   }
   /*enviar() {
@@ -477,71 +485,76 @@ export class CargarCuentaComponent implements OnInit {
       });
   }*/
 
-    //Estos son metodos para que funcione los seleccionadores de la tabla
-    isAllSelected() {
-      const numSelected = this.selection.selected.length;
-      const numRows = this.dataSource.data.length;
-      return numSelected === numRows;
+  //Estos son metodos para que funcione los seleccionadores de la tabla
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      this.deseleccionados = [];
+      this.selecc = [];
+      return;
     }
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    toggleAllRows() {
-      if (this.isAllSelected()) {
-        this.selection.clear();
-        this.deseleccionados = [];
-        this.selecc = [];
-        return;
-      }
-      this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.dataSource.data);
+  }
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: InfoPersonaFisica): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: InfoPersonaFisica): string {
-      if (!row) {
-        return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-      }
-      return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
-    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.id + 1
+    }`;
+  }
 
-    chekeador(row: InfoPersonaFisica) {//Chekea los que estan en la lista
-      if (this.primeraCasillaSeleccionada) {
-        return true
-      } else {
-        for (let i = 0; i < this.selecc.length; i++) {
-          if (row.id == this.selecc[i].id) {
-            return true;
-          }
-        }
-        return false
-      }
-    }
-    chekeador2(row: InfoPersonaFisica) {//Deschequea los que no estan chekeaos
-      if (this.primeraCasillaSeleccionada) {
-        for (let i = 0; i < this.deseleccionados.length; i++) {
-          if (row.id == this.deseleccionados[i].id) {
-            return false;
-          }
-        }
-      }
+  chekeador(row: InfoPersonaFisica) {
+    //Chekea los que estan en la lista
+    if (this.primeraCasillaSeleccionada) {
       return true;
-    }
-    ver(row: InfoPersonaFisica) {//Este metodo realiza una seleccion dependiendo de la pagina en que este  Ya que si los datos deseleccionados estan
-      //dentro de la tabla pues los mantenga deseleccionado
-      if (this.primeraCasillaSeleccionada) {
-        const index = this.deseleccionados.findIndex(item => item.id === row.id);
-        if (index !== -1) {
-          this.deseleccionados.splice(index, 1);
-        } else {
-          this.deseleccionados.push(row);
+    } else {
+      for (let i = 0; i < this.selecc.length; i++) {
+        if (row.id == this.selecc[i].id) {
+          return true;
         }
-      } else {
-        const index = this.selecc.findIndex(item => item.id === row.id);
-        if (index !== -1) {
-          this.selecc.splice(index, 1);
-        } else {
-          this.selecc.push(row);
-        }
-        this.deseleccionados = [];
-
       }
-
+      return false;
     }
+  }
+  chekeador2(row: InfoPersonaFisica) {
+    //Deschequea los que no estan chekeaos
+    if (this.primeraCasillaSeleccionada) {
+      for (let i = 0; i < this.deseleccionados.length; i++) {
+        if (row.id == this.deseleccionados[i].id) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  ver(row: InfoPersonaFisica) {
+    //Este metodo realiza una seleccion dependiendo de la pagina en que este  Ya que si los datos deseleccionados estan
+    //dentro de la tabla pues los mantenga deseleccionado
+    if (this.primeraCasillaSeleccionada) {
+      const index = this.deseleccionados.findIndex(
+        (item) => item.id === row.id
+      );
+      if (index !== -1) {
+        this.deseleccionados.splice(index, 1);
+      } else {
+        this.deseleccionados.push(row);
+      }
+    } else {
+      const index = this.selecc.findIndex((item) => item.id === row.id);
+      if (index !== -1) {
+        this.selecc.splice(index, 1);
+      } else {
+        this.selecc.push(row);
+      }
+      this.deseleccionados = [];
+    }
+  }
 }

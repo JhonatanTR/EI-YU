@@ -15,21 +15,21 @@
       style="display: none"
       onclick="this.value=null;"
     />
-    <button mat-flat-button color="primary"(click)="createAccounts()">
+    <button mat-flat-button color="primary"(click)="createAccounts()" *ngIf="!divEscondido">
       Crear Cuentas
     </button>
-    <button mat-flat-button color="basic" (click)="removeXLSX()"
->    Limpiar
-    </button>
+    <button mat-flat-button color="warn" [disabled]="selecc.length >= 1 || !selection.isEmpty()? false : true" (click)="eliminar()"
+      *ngIf="!divEscondido">
+        Eliminar Seleccionados
+      </button>
     <div class="otp-container" *ngIf="!divEscondido">
       <mat-form-field>
         <mat-label>Código OTP</mat-label>
         <input matInput placeholder="Código OTP" [(ngModel)]="codigoOTP" #myInput  />
       </mat-form-field>
     </div>
-    <button mat-flat-button color="warn" [disabled]="selecc.length >= 1 || !selection.isEmpty()? false : true" (click)="eliminar()"
-    *ngIf="!divEscondido">
-      Eliminar Seleccionados
+    <button mat-flat-button color="basic" (click)="removeXLSX()" *ngIf="!divEscondido">
+      Limpiar
     </button>
   </div>
   <div class="table-container">
@@ -182,7 +182,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           <!-- Row shown when there is no matching data. -->
           <tr class="mat-row" *matNoDataRow style="text-align: center;">
-            <td class="mat-cell" colspan="4" style="text-align: center;">
+            <td class="mat-cell" colspan="10" style="text-align: center;">
               No hay datos cargados
             </td>
           </tr>
