@@ -13,17 +13,18 @@
       type="file"
       (change)="cargarXLSX($event)"
       style="display: none"
+      onclick="this.value=null;"
     />
-    <button mat-flat-button matTooltip="Crear Cuentas" color="primary">
-      Agregar Cuenta
+    <button mat-flat-button matTooltip="Crear Cuentas" color="primary" (click)="createAccounts()">
+      Crear Cuentas
     </button>
-    <button mat-flat-button matTooltip="Remover Cuentas" color="warn">
+    <button mat-flat-button matTooltip="Remover Cuentas" color="warn" (click)="removeXLSX()">
       Remover Cuentas
     </button>
     <div class="otp-container">
       <mat-form-field>
         <mat-label>Código OTP</mat-label>
-        <input matInput placeholder="Código OTP" #myInput />
+        <input matInput placeholder="Código OTP" [(ngModel)]="codigoOTP" #myInput />
       </mat-form-field>
       <button mat-icon-button style="color: #45b39d">
         <mat-icon matTooltip="Enviar">send</mat-icon>

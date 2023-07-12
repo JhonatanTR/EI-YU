@@ -1,10 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { InfoPersonaFisica } from 'src/app/_model/InfoPersonaFisica';
+import { InfoSpei } from 'src/app/_model/InfoSpei';
+import { requestOtp } from 'src/app/_modelRequest/requestOtp';
+import { requestPersonaFisica } from 'src/app/_modelRequest/requestPersonaFisica';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import * as XLSX from 'xlsx';
+import { CargarCuentaRemoveDialogComponent } from '../cargar-cuenta-remove-dialog/cargar-cuenta-remove-dialog.component';
+import { InfoLoginService } from 'src/app/_service/info-login.service';
+import { catchError, of } from 'rxjs';
+
 
 @Component({
   selector: 'app-cargar-cuenta',
@@ -14,6 +23,8 @@ import * as XLSX from 'xlsx';
 export class CargarCuentaComponent implements OnInit {
   datosExcel: InfoPersonaFisica[] = [];
   datos: any[] = []; //datos que trae el excel
+  codigoOTP: string = '';
+  option: boolean = false;
   divEscondido: boolean = true; //la variable del div que contiene la tabla de los datos del excel
   displayedColumns: string[] = [
     'Correo',
@@ -32,20 +43,25 @@ export class CargarCuentaComponent implements OnInit {
     'Num. Interior',
     'Colonia',
     'Código Postal',
-    'Fecha de Nacimiento'
+    'Fecha de Nacimiento',
   ];
   dataSource!: MatTableDataSource<InfoPersonaFisica>;
+  @ViewChild('myInput') myInput!: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private localStorageService: LocalStorageService) {}
+  constructor(
+    //private dialogRef: MatDialogRef<DialogoConfUdnComponent>,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private loginServices: InfoLoginService,
+    private localStorageService: LocalStorageService) {}
 
   ngOnInit(): void {
     if (this.localStorageService.getExcel('datosExcel') != null) {
       this.datosExcel = this.localStorageService.getExcel('datosExcel');
       this.dataSource = new MatTableDataSource(this.datosExcel);
       this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
       this.divEscondido = false;
     } else {
       this.dataSource = new MatTableDataSource(this.datosExcel);
@@ -53,13 +69,18 @@ export class CargarCuentaComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dataSource = new MatTableDataSource(this.datosExcel);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    console.log(this.datosExcel);
-    /*for (let m of this.datosExcel) {
+    if (this.localStorageService.getExcel('datosExcel') != null) {
+      this.datosExcel = this.localStorageService.getExcel('datosExcel');
+      this.dataSource = new MatTableDataSource(this.datosExcel);
+      this.dataSource.paginator = this.paginator;
+      this.divEscondido = false;
+      console.log(this.datosExcel);
+      /*for (let m of this.datosExcel) {
       this.montoTotal = this.montoTotal + parseFloat(m.monto);
     }*/
+    }else{
+      this.divEscondido = true;
+    }
   }
   cargarXLSX(event: Event) {
     const inputElement = event.target as HTMLInputElement;
@@ -106,7 +127,52 @@ export class CargarCuentaComponent implements OnInit {
         this.divEscondido = false;
         this.ngAfterViewInit();
       };
+    } else {
+      this.divEscondido = true;
     }
   }
 
+  removeXLSX() {
+    this.localStorageService.removeExcel();
+    this.ngAfterViewInit()
+  }
+
+  createAccounts(){
+    this.codigoOTP = '';
+    this.myInput.nativeElement.focus();
+    this.snackBar.open('Es necesario ingresar el código OTP para continuar', 'CERRAR', {
+      duration: 2000,
+    });
+
+  }
+  enviar(){
+    let InfSpei = new InfoSpei();
+    InfSpei = this.localStorageService.getUsuario("userE");
+    let request = new requestOtp();
+    request.idUsuario = InfSpei.idUsuario;
+    request.otp = this.codigoOTP.trim();
+
+
+    this.loginServices.verificarOtp(request).pipe(
+      catchError((error) => {
+        this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Aviso');
+        return of(null);
+      })
+    ).subscribe(data => {
+      if (data?.mensaje == "Otp validado correctamente") {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.data = this.option;
+        dialogConfig.width = '40%';
+        dialogConfig.height = '85%';
+        dialogConfig.disableClose = false;
+        const dialogRef = this.dialog.open(
+          CargarCuentaRemoveDialogComponent,
+          dialogConfig
+        );
+      } else {
+        this.codigoOTP = "";
+      }
+    })
+
+  }
 }

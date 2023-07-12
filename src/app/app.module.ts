@@ -22,7 +22,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { IConfig } from 'ngx-mask';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-estado.component';
-import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component'; // import NgxQRCodeModule
+import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
+import { CargarCuentaRemoveDialogComponent } from './pages/cargar-cuenta/cargar-cuenta-remove-dialog/cargar-cuenta-remove-dialog.component'; // import NgxQRCodeModule
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/carga
     DialogErrorListPagoComponent,
     VerEstadoComponent,
     CargarCuentaComponent,
+    CargarCuentaRemoveDialogComponent,
     
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
