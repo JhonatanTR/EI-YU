@@ -182,7 +182,7 @@ export class CargarCuentaComponent implements OnInit {
             );
           }
         }
-        if(!flag) {
+        if (!flag) {
           this.localStorageService.setExcel('datosExcel', this.datosExcel);
           this.divEscondido = false;
           this.ngAfterViewInit();
@@ -215,7 +215,7 @@ export class CargarCuentaComponent implements OnInit {
       }
     });
   }
-   auxExcelLista: InfoPersonaFisica[]=[];
+  auxExcelLista: InfoPersonaFisica[] = [];
   createAccounts() {
     if (this.codigoOTP != '') {
       let InfSpei = new InfoSpei();
@@ -225,6 +225,8 @@ export class CargarCuentaComponent implements OnInit {
       let request = new requestOtp();
       request.idUsuario = InfSpei.idUsuario;
       request.otp = this.codigoOTP.trim();
+
+      ////////////////////////////
 
       this.loginServices
         .verificarOtp(request)
@@ -289,16 +291,14 @@ export class CargarCuentaComponent implements OnInit {
                   req.persona = p;
                   req.domicilio = d;
                   req.perfil = perf;
-                  console.log(req);
                   this.cuentaService
                     .crearCuenta(req)
                     .pipe(
                       catchError((error) => {
-                        auxExcel.estatus="Error"
-                        this.auxExcelLista.push(auxExcel);
+                        this.datosExcel[i].estatus = 'ERROR';
+                        this.datosExcel[i].clabe = 'N/A';
+                        console.log(this.datosExcel[i].estatus)
                         this.cuentasNoCreadas++;
-                       
-                        req.clabe = 'N/A';
                         this.snackBar.open(
                           'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
                           'Cerrar'
@@ -310,8 +310,8 @@ export class CargarCuentaComponent implements OnInit {
                     .subscribe((data) => {
                       if (data) {
                         this.cuentasCreadas++;
-                        req.estatus = 'CREADA';
-                        req.clabe = data.mensaje;
+                        this.datosExcel[i].estatus = 'CREADA';
+                        this.datosExcel[i].clabe = data.mensaje;
                         console.log(data.mensaje);
                         this.snackBar.open(
                           'Cuentas creadas exitosamente',
@@ -324,17 +324,24 @@ export class CargarCuentaComponent implements OnInit {
                     });
                   this.creados = true;
                 }
-
+                console.log(this.datosExcel[0].estatus)
+                console.log(this.datosExcel[1].estatus)
                 const workbook = XLSX.utils.book_new();
-                const worksheet = XLSX.utils.json_to_sheet(this.auxExcelLista);
-                XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
-                /* Exportar la hoja de cálculo en formato Excel */
-                const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-                const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-               
+                const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
+                XLSX.utils.book_append_sheet(
+                  workbook,
+                  worksheet,
+                  'Datos de la tabla'
+                );
+                //Exportar la hoja de cálculo en formato Excel
+                const excelBuffer: any = XLSX.write(workbook, {
+                  bookType: 'xlsx',
+                  type: 'array',
+                });
+                const dataBlob: Blob = new Blob([excelBuffer], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                });
 
-               
-             
                 /* Exportar la hoja de cálculo en formato Excel */
                 FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
               } else {

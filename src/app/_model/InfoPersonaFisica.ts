@@ -19,4 +19,5 @@ export class InfoPersonaFisica{
   codPostal: string = "";
   fechaNacimiento: string = "";
   estatus:string="";
+  clabe: string = "";
 }
