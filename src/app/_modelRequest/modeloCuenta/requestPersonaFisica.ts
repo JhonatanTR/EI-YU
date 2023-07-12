@@ -14,5 +14,8 @@ export class requestPersonaFisica {
   perfil!: perfil;
   udnId: number = 60;
   uuid: string = '';
-  nivel_cuenta: number = 0;
+  nivel_cuenta: number = 1;
+  clabe: string = "";
+  estatus: string = "";
+
 }

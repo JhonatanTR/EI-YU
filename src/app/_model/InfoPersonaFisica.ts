@@ -1,4 +1,5 @@
 export class InfoPersonaFisica{
+  id: number = 1;
   correo: string = "";
   telefono: string = "";
   nombre: string = "";
