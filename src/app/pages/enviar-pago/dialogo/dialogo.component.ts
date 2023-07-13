@@ -32,7 +32,7 @@ export class DialogoComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.envioMazivo);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    console.log(this.envioMazivo)
+   
     for (let m of this.envioMazivo) {
       this.montoTotal = this.montoTotal + parseFloat(m.monto);
     }

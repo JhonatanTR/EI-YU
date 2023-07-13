@@ -108,7 +108,6 @@ export class BusquedaMovimientoComponent implements OnInit {
           return of(null);
         }))
       .subscribe(data => {
-        console.log(data)
         let mov = JSON.parse(JSON.stringify(data))?.content
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
@@ -340,7 +339,7 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.req.claveRastreo = this.claveDeRastreo.trim();
       this.req.estatus = this.estatus.trim();
       this.req.monto =parseFloat(this.monto);
-      console.log(this.req)
+    
       this.infoBancoService.listarMovimientoFiltradosPageable(this.req, 0, 10).pipe(
         catchError((error) => {
           this.openSnackBar('Error de conexion', 'Aviso');
@@ -350,7 +349,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
         this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
-        console.log(data)
+       
       })
     } else {
       this.openSnackBar('Seleccione una fecha de inicio y una fecha final ', 'Aviso');

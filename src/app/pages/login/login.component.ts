@@ -76,6 +76,7 @@ export class LoginComponent implements OnInit {
           }, 3000);
         } else {
           this.loading = true
+          console.log(da)
           let dato = { "peiyu": da.usuario.idParticipante };
           let rql = new RequestLogin();
           rql.username = da.usuario.apiPassword.username;
