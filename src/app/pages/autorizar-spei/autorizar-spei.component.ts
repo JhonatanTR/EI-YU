@@ -16,6 +16,8 @@ import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { DialogErrorListPagoComponent } from './dialog-error-list-pago/dialog-error-list-pago.component';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { InfoBancosService } from 'src/app/_service/info-bancos.service';
+import { InfoBancos } from 'src/app/_model/InfoBancos';
 
 @Component({
   selector: 'app-autorizar-spei',
@@ -139,11 +141,12 @@ export class AutorizarSpeiComponent implements OnInit {
   listaErroSpeiTabla: InfoAutorizarSpei[] = [];//Este es un Aux que las guarda
 
   mostrarSpinner = false;
-  constructor(private localStorageService: LocalStorageService, private dialog: MatDialog, private storage: LocalStorageService, private _snackBar: MatSnackBar, private infoPagosService: InfoPagosService, private infoLoginService: InfoLoginService) {
+  constructor(private infoBancoService: InfoBancosService, private localStorageService: LocalStorageService, private dialog: MatDialog, private storage: LocalStorageService, private _snackBar: MatSnackBar, private infoPagosService: InfoPagosService, private infoLoginService: InfoLoginService) {
     this.dataSource = new MatTableDataSource<InfoAutorizarSpei>([]); // Inicialización de la fuente de datos de la tabla
   }
   rol: number = 0;
   ngOnInit(): void {
+    this.listarBanaco();
     this.selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Inicialización de la selección de filas
     // Obtener la lista de pagos
     if (this.localStorageService.getDat("permiso") != 3) {
@@ -300,7 +303,13 @@ export class AutorizarSpeiComponent implements OnInit {
     const dosUltimos = cuenta.slice(-4);
     return `***${dosUltimos}`;
   }
+  listaBancos: InfoBancos[] = [];
+  listarBanaco() {//aqui se carga la lista de los bancos disponibles
+    this.infoBancoService.listar().subscribe(bancos => {
+      this.listaBancos = bancos;
+    })
 
+  }
   /*  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
       this.listaErroSpei = [];
       this.mostrarSpinner = true;
@@ -359,7 +368,19 @@ export class AutorizarSpeiComponent implements OnInit {
         this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
       });
     }*/
-  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
+ 
+    buscarIdBanco(a: string): number {
+      const primerasTresLetras: string = a.substring(0, 3);
+      const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
+    
+      if (bancoEncontrado) {
+        return bancoEncontrado.id_banco;
+      }
+    
+      return 0;
+    }
+    
+    enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
     this.listaErroSpei = []
     this.mostrarSpinner = true;
     let InfSpei = new InfoSpei();
@@ -374,8 +395,8 @@ export class AutorizarSpeiComponent implements OnInit {
         return of(null);
       })
     ).subscribe((data) => {
-
-      if (data != null) {
+     
+      if (data?.mensaje == "Otp validado correctamente") {
         const pagosObservables = this.info.map(info => {
           let speiout = new InfoCapturaSPEIPago();
           speiout.username = InfSpei.username;
@@ -390,7 +411,8 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.refNum = info.refnumerica;
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
-
+          speiout.bancoDestino= this.buscarIdBanco(info.destino).toString();
+          
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
           );

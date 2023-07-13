@@ -263,7 +263,6 @@ export class EnviarPagoComponent implements OnInit {
           speiout.certificado = InfSpei.certificado;
           speiout.llave = InfSpei.llave;
           speiout.phrase = InfSpei.phrase;
-          
           speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
           speiout.ctaDestino = this.destinatario.toString();
           speiout.nombreDestino = this.nomBeneficiario;
@@ -273,7 +272,7 @@ export class EnviarPagoComponent implements OnInit {
           // speiout.refCobranza = this.cobranza;
           speiout.cveRastreo = this.claveDeRastreo;
           speiout.conceptoPago = this.conceptoPago;
-     
+          console.log(speiout);
           this.infoPagos.realizarPago(speiout).pipe(
             catchError((error) => {
               this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
