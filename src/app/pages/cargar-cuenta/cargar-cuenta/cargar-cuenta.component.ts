@@ -300,7 +300,10 @@ export class CargarCuentaComponent implements OnInit {
                 req.domicilio = d;
                 req.perfil = perf;
                 const cuentserv = this.cuentaService
-                  .crearCuenta(req).subscribe(
+                  .crearCuenta(req);
+
+const promise = new Promise<void>((resolve, reject) => {
+                  cuentserv.subscribe(
                   (data) => {
                     if (data!=null || data?.ok!=false) {
                     this.cuentasCreadas++;
@@ -317,33 +320,37 @@ export class CargarCuentaComponent implements OnInit {
                   this.snackBar.open(
                     'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
                     'Cerrar'
-                  )}
-                  )
-                  cuentserv.add(() => {
-                    setTimeout(() => {
-                      const workbook = XLSX.utils.book_new();
-                      const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-                      XLSX.utils.book_append_sheet(
-                        workbook,
-                        worksheet,
-                        'Datos de la tabla'
-                      );
-                      //Exportar la hoja de cálculo en formato Excel
-                      const excelBuffer: any = XLSX.write(workbook, {
-                        bookType: 'xlsx',
-                        type: 'array',
-                      });
-                      const dataBlob: Blob = new Blob([excelBuffer], {
-                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                      });
+                  )},
+                  () => {
+                    resolve(); // Resuelve la promesa cuando el `subscribe` ha terminado
+                  }
+                  );
+                });
 
-                      // Exportar la hoja de cálculo en formato Excel
-                      this.creados = true;
-                      FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-                    
-                    }, 9000);
-                 
-                  });
+                promise.then(() => {
+                    const workbook = XLSX.utils.book_new();
+                    const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
+
+                    // Exportar la hoja de cálculo en formato Excel
+                    const excelBuffer: any = XLSX.write(workbook, {
+                      bookType: 'xlsx',
+                      type: 'array',
+                    });
+
+                    const dataBlob: Blob = new Blob([excelBuffer], {
+                      type:
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+
+                    // Exportar la hoja de cálculo en formato Excel
+                    this.creados = true;
+                    FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
+                });
+
+                  /*cuentserv.add(() => {
+
+                  });*/
                   /*.pipe(
                     catchError(() => {
                       this.datosExcel[i].estatus = 'ERROR';
