@@ -247,7 +247,7 @@ export class CargarCuentaComponent implements OnInit {
           })
         )
         .subscribe((data) => {
-          //if (data?.mensaje == 'Otp validado correctamente') {
+          if (data?.mensaje == 'Otp validado correctamente') {
           const dialogConfig = new MatDialogConfig();
           dialogConfig.data = this.arregloPersonas;
           dialogConfig.width = '40%';
@@ -259,6 +259,8 @@ export class CargarCuentaComponent implements OnInit {
           );
           dialogRef.afterClosed().subscribe((result) => {
             if (result) {
+              let contador =0;
+
               for (let i = 0; i < this.datosExcel.length; i++) {
                 let auxExcel = new InfoPersonaFisica();
                 let req = new requestPersonaFisica();
@@ -300,10 +302,7 @@ export class CargarCuentaComponent implements OnInit {
                 req.domicilio = d;
                 req.perfil = perf;
                 const cuentserv = this.cuentaService
-                  .crearCuenta(req);
-
-const promise = new Promise<void>((resolve, reject) => {
-                  cuentserv.subscribe(
+                  .crearCuenta(req).subscribe(
                   (data) => {
                     if (data!=null || data?.ok!=false) {
                     this.cuentasCreadas++;
@@ -320,37 +319,36 @@ const promise = new Promise<void>((resolve, reject) => {
                   this.snackBar.open(
                     'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
                     'Cerrar'
-                  )},
-                  () => {
-                    resolve(); // Resuelve la promesa cuando el `subscribe` ha terminado
-                  }
-                  );
-                });
+                  )}
+                  )
+                  cuentserv.add(() => {
+                    
+                      contador++;
+                    if(contador==this.datosExcel.length){
+                      const workbook = XLSX.utils.book_new();
+                      const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
+                      XLSX.utils.book_append_sheet(
+                        workbook,
+                        worksheet,
+                        'Datos de la tabla'
+                      );
+                      //Exportar la hoja de cálculo en formato Excel
+                      const excelBuffer: any = XLSX.write(workbook, {
+                        bookType: 'xlsx',
+                        type: 'array',
+                      });
+                      const dataBlob: Blob = new Blob([excelBuffer], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
 
-                promise.then(() => {
-                    const workbook = XLSX.utils.book_new();
-                    const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
-
-                    // Exportar la hoja de cálculo en formato Excel
-                    const excelBuffer: any = XLSX.write(workbook, {
-                      bookType: 'xlsx',
-                      type: 'array',
-                    });
-
-                    const dataBlob: Blob = new Blob([excelBuffer], {
-                      type:
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    });
-
-                    // Exportar la hoja de cálculo en formato Excel
-                    this.creados = true;
-                    FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-                });
-
-                  /*cuentserv.add(() => {
-
-                  });*/
+                      // Exportar la hoja de cálculo en formato Excel
+                      this.creados = true;
+                      FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
+                    
+                    }
+                      
+                                    
+                  });
                   /*.pipe(
                     catchError(() => {
                       this.datosExcel[i].estatus = 'ERROR';
@@ -399,9 +397,9 @@ const promise = new Promise<void>((resolve, reject) => {
               this.divEscondido = false;
             }
           });
-          /* } else {
+          } else {
              this.codigoOTP = '';
-           }*/
+           }
         });
     } else {
       this.myInput.nativeElement.focus();
