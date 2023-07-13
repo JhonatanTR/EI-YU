@@ -93,9 +93,6 @@ export class CargarCuentaComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.divEscondido = false;
       console.log(this.datosExcel);
-      /*for (let m of this.datosExcel) {
-      this.montoTotal = this.montoTotal + parseFloat(m.monto);
-    }*/
     } else {
       this.divEscondido = true;
     }
@@ -128,7 +125,6 @@ export class CargarCuentaComponent implements OnInit {
         const hoja = libro.Sheets[libro.SheetNames[0]];
         this.datos = XLSX.utils.sheet_to_json(hoja);
         let aux = 0;
-        //for (const [index, element] of this.datos.entries()) {
         for (let i = 0; i < this.datos.length; i++) {
           aux++;
           if (
@@ -148,9 +144,7 @@ export class CargarCuentaComponent implements OnInit {
             this.datos[i]['numInterior'] &&
             this.datos[i]['colonia'] &&
             this.datos[i]['codPostal'] &&
-            this.datos[i]['fechaNacimiento'] &&
-            !this.datos[i]['estatus'] &&
-            !this.datos[i]['fechaclabeNacimiento']
+            this.datos[i]['fechaNacimiento']
           ) {
             let dataPersona = new InfoPersonaFisica();
             dataPersona.id = aux;
@@ -163,8 +157,7 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.entidadNacimiento = this.datos[i]['entidadNacimiento'];
             dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
             dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
-            dataPersona.numIdentificacionOf =
-              this.datos[i]['numIdentificacionOf'];
+            dataPersona.numIdentificacionOf = this.datos[i]['numIdentificacionOf'];
             dataPersona.rfc = this.datos[i]['rfc'];
             dataPersona.curp = this.datos[i]['curp'];
             dataPersona.callePrincipal = this.datos[i]['callePrincipal'];
@@ -234,8 +227,6 @@ export class CargarCuentaComponent implements OnInit {
       request.idUsuario = InfSpei.idUsuario;
       request.otp = this.codigoOTP.trim();
 
-      ////////////////////////////
-
       this.loginServices
         .verificarOtp(request)
         .pipe(
@@ -260,9 +251,7 @@ export class CargarCuentaComponent implements OnInit {
           dialogRef.afterClosed().subscribe((result) => {
             if (result) {
               let contador =0;
-
               for (let i = 0; i < this.datosExcel.length; i++) {
-                let auxExcel = new InfoPersonaFisica();
                 let req = new requestPersonaFisica();
                 let p = new persona();
                 let d = new domicilio();
@@ -283,8 +272,7 @@ export class CargarCuentaComponent implements OnInit {
                 p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
                 p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
                 p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
-                p.numIdentificacionOf =
-                  this.datosExcel[i].numIdentificacionOf;
+                p.numIdentificacionOf =this.datosExcel[i].numIdentificacionOf;
                 p.idNacionalidad = 1;
                 p.idPaisNac = 117;
                 p.serieFirmaElect = 'xxxxx';
@@ -306,10 +294,13 @@ export class CargarCuentaComponent implements OnInit {
                   (data) => {
                     if (data!=null || data?.ok!=false) {
                     this.cuentasCreadas++;
-                    console.log("Creadooo")
                     this.datosExcel[i].estatus = 'CREADA';
                     this.datosExcel[i].clabe = data.mensaje;
                     console.log(data.mensaje);
+                    this.snackBar.open(
+                      'Cuenta creada.',
+                      'Cerrar'
+                    )
                   }},
                   (error) => {
                     console.log(error)
@@ -322,9 +313,8 @@ export class CargarCuentaComponent implements OnInit {
                   )}
                   )
                   cuentserv.add(() => {
-                    
                       contador++;
-                    if(contador==this.datosExcel.length){
+                    if(contador === this.datosExcel.length){
                       const workbook = XLSX.utils.book_new();
                       const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
                       XLSX.utils.book_append_sheet(
@@ -340,58 +330,13 @@ export class CargarCuentaComponent implements OnInit {
                       const dataBlob: Blob = new Blob([excelBuffer], {
                         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                       });
-
                       // Exportar la hoja de cálculo en formato Excel
                       this.creados = true;
                       FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-                    
-                    }
-                      
-                                    
-                  });
-                  /*.pipe(
-                    catchError(() => {
-                      this.datosExcel[i].estatus = 'ERROR';
-                      this.datosExcel[i].clabe = 'N/A';
-                      this.cuentasNoCreadas++;
-                      this.snackBar.open(
-                        'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
-                        'Cerrar'
-                      )
-                      return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
-                    }),
-                    finalize(()=> {
-                      if (this.datosExcel.length-1 == i) {
-                        const workbook = XLSX.utils.book_new();
-                        const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-                        XLSX.utils.book_append_sheet(
-                          workbook,
-                          worksheet,
-                          'Datos de la tabla'
-                        );
-                        //Exportar la hoja de cálculo en formato Excel
-                        const excelBuffer: any = XLSX.write(workbook, {
-                          bookType: 'xlsx',
-                          type: 'array',
-                        });
-                        const dataBlob: Blob = new Blob([excelBuffer], {
-                          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                        });
 
-                        // Exportar la hoja de cálculo en formato Excel
-                        this.creados = true;
-                        FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-                      }
-                    })
-                  ).subscribe(data => {
-                    if (data!=null) {
-                      this.cuentasCreadas++;
-                      console.log("Creadooo")
-                      this.datosExcel[i].estatus = 'CREADA';
-                      this.datosExcel[i].clabe = data.mensaje;
-                      console.log(data.mensaje);
                     }
-                  });*/
+                  });
+
               }
             } else {
               this.divEscondido = false;
@@ -412,133 +357,6 @@ export class CargarCuentaComponent implements OnInit {
       );
     }
   }
-  /*enviar() {
-    let InfSpei = new InfoSpei();
-    InfSpei = this.localStorageService.getUsuario('userE');
-    let pblu = this.localStorageService.getIdPblu('pblu');
-    let token = this.localStorageService.getDesc('token');
-    let request = new requestOtp();
-    request.idUsuario = InfSpei.idUsuario;
-    request.otp = this.codigoOTP.trim();
-
-    this.loginServices
-      .verificarOtp(request)
-      .pipe(
-        catchError((error) => {
-          this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Cerrar', {
-            duration: 2000,
-          });
-          return of(null);
-        })
-      )
-      .subscribe((data) => {
-        if (data?.mensaje == 'Otp validado correctamente') {
-          const dialogConfig = new MatDialogConfig();
-          dialogConfig.data = this.arregloPersonas;
-          dialogConfig.width = '40%';
-          dialogConfig.height = '40%';
-          dialogConfig.disableClose = false;
-          const dialogRef = this.dialog.open(
-            CargarCuentaCreateDialogComponent,
-            dialogConfig
-          );
-          dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-              for (let i = 0; i < this.datosExcel.length; i++) {
-                let req = new requestPersonaFisica();
-                let p = new persona();
-                let d = new domicilio();
-                let perf = new perfil();
-                req.certificado = InfSpei.certificado;
-                req.llave = InfSpei.llave;
-                req.phrase = InfSpei.phrase;
-                req.token = token;
-                req.pblu = pblu;
-                req.udnId = 0;
-                req.nivel_cuenta = 1;
-                p.correo = this.datosExcel[i].correo;
-                p.telefono = this.datosExcel[i].telefono;
-                p.nombre = this.datosExcel[i].nombre;
-                p.celular = this.datosExcel[i].celular;
-                p.idOcupacion = this.datosExcel[i].idOcupacion;
-                p.sexo = this.datosExcel[i].sexo;
-                p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
-                p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
-                p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
-                p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
-                p.idNacionalidad = 1;
-                p.idPaisNac = 117;
-                p.serieFirmaElect = 'xxxxx';
-                p.tipoIdentificacionOf = 1;
-                p.rfc = this.datosExcel[i].rfc;
-                p.curp = this.datosExcel[i].curp;
-                d.callePrincipal = this.datosExcel[i].callePrincipal;
-                d.numExterior = this.datosExcel[i].numExterior;
-                d.numInterior = this.datosExcel[i].numInterior;
-                d.colonia = this.datosExcel[i].colonia;
-                d.codPostal = this.datosExcel[i].codPostal;
-                p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
-                req.comprobantes = [];
-                req.persona = p;
-                req.domicilio = d;
-                req.perfil = perf;
-                console.log(req);
-                this.cuentaService
-                  .crearCuenta(req)
-                  .pipe(
-                    catchError((error) => {
-                      this.cuentasNoCreadas++;
-                      req.estatus = "ERROR";
-                      req.clabe = "N/A"
-                      this.snackBar.open(
-                        'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
-                        'Cerrar'
-                      );
-
-                      return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
-                    })
-                  )
-                  .subscribe((data) => {
-                    if (data) {
-                      this.cuentasCreadas++;
-                      req.estatus = "CREADA";
-                      req.clabe = data.mensaje;
-                      console.log(data.mensaje);
-                      this.snackBar.open(
-                        'Cuentas creadas exitosamente',
-                        'Cerrar',
-                        {
-                          duration: 2000,
-                        }
-                      );
-                    }
-                  });
-              }
-              const workbook = XLSX.utils.book_new();
-              const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-              XLSX.utils.book_append_sheet(
-                workbook,
-                worksheet,
-                'Resultados de cuentas referencia'
-              );
-              // Exportar la hoja de cálculo en formato Excel
-              const excelBuffer: any = XLSX.write(workbook, {
-                bookType: 'xlsx',
-                type: 'array',
-              });
-              const dataBlob: Blob = new Blob([excelBuffer], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              });
-              FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-            } else {
-              this.divEscondido = false;
-            }
-          });
-        } else {
-          this.codigoOTP = '';
-        }
-      });
-  }*/
 
   //Estos son metodos para que funcione los seleccionadores de la tabla
   isAllSelected() {
