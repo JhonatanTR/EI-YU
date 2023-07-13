@@ -3,6 +3,7 @@ import { Transacciones } from '../_model/transacciones';
 import { InfoCapturaSPEI } from '../_model/InfoCapturaSPEI';
 import { InfoSpei } from '../_model/InfoSpei';
 import { InfoCapturaSPEIPago } from '../_model/InfoCapturaSPEIPago';
+import { InfoPersonaFisica } from '../_model/InfoPersonaFisica';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,17 @@ export class LocalStorageService {
     this.window.localStorage.clear();
   }
 
+  // Control de datos de la tabla Cargar Cuentas
+  removeExcel(): void {
+    this.window.localStorage.removeItem("datosExcel");
+  }
+  setExcel(key: string, list: InfoPersonaFisica[]): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getExcel(key: string): [] {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
 
   //codigo otp
   setDat(key: string, log: boolean): void {

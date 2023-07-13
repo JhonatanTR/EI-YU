@@ -1,48 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Slider Form</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container" id="container">
-        <div class="form-container sign-in-container">
-            <form [formGroup]="form" (ngSubmit)="operar() " #frmExamen="ngForm" class="example-form">
-                <h1 class="p-bienvenido">BIENVENIDO</h1>
-                <div class="social-container">
-                </div>
-                <span style="color:  #FAF8FF;">INGRESAR CON TU CUENTA</span>
-                <input type="email" placeholder="Usuario" formControlName="user" required class="input-with-underline">
-                 
-                <input type="password" placeholder="Password" formControlName="password" required
-                    class="input-with-underline">
-                <!--input type="password" placeholder="Código OTP" formControlName="otp"-->
-                <br>
-                <br>
-                <br>
-                <button type="submit" [disabled]="frmExamen.invalid">Acceder </button>
-
-                <div class="error" *ngIf="showError">
-                    {{errorMessage}}
-                </div>
-            </form>
+      <div class="form-container sign-in-container">
+        <div class="loader" [ngClass]="loading == true ? 'visible' : 'hidden'">
+          <svg viewBox="25 25 50 50">
+            <circle r="20" cy="50" cx="50"></circle>
+          </svg>
         </div>
-        <div class="overlay-container">
+        <div class="tabla" [ngClass]="loading == false ? 'visible' : 'hidden'">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="operar()"
+          #frmExamen="ngForm"
+          class="example-form"
+        >
+          <h1 class="p-bienvenido">BIENVENIDO</h1>
+          <div class="social-container"></div>
+          <span style="color: #faf8ff">INGRESAR CON TU CUENTA</span>
+          <input
+            type="email"
+            placeholder="Usuario"
+            formControlName="user"
+            required
+            class="input-with-underline"
+          />
 
-            <div class="overlay">
-                <img src="assets\ImagenLogin\EiYu-54.jpg" class="imgEi">
-                <div class="overlay-panel overlay-right"><br><br><br><br>
-                    <h1 style="color: #17161a;font-size: 36px;"> <br> <br> <br> CONTÁCTANOS </h1>
-                    <p style="color: #17161a; font-size: 16px;">EMAIL: info@aspintegraopciones.com <br> <br> TELÉFONO:
-                        800 462 7373 </p>
-                </div>
-            </div>
+          <input
+            type="password"
+            placeholder="Password"
+            formControlName="password"
+            required
+            class="input-with-underline"
+          />
+          <!--input type="password" placeholder="Código OTP" formControlName="otp"-->
+          <br />
+          <br />
+          <br />
+          <button type="submit" [disabled]="frmExamen.invalid">Acceder</button>
 
+          <div class="error" *ngIf="showError">
+            {{ errorMessage }}
+          </div>
+        </form>
         </div>
+      </div>
+      <div class="overlay-container">
+        <div class="overlay">
+          <img src="assets\ImagenLogin\EiYu-54.jpg" class="imgEi" />
+          <div class="overlay-panel overlay-right">
+            <br /><br /><br /><br />
+            <h1 style="color: #17161a; font-size: 36px">
+              <br />
+              <br />
+              <br />
+              CONTÁCTANOS
+            </h1>
+            <p style="color: #17161a; font-size: 16px">
+              EMAIL: info@aspintegraopciones.com <br />
+              <br />
+              TELÉFONO: 800 462 7373
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="main.js"></script>
     <script src="https://unpkg.com/ionicons@4.2.2/dist/ionicons.js"></script>
+  </body>
 </body>
-
 </html>

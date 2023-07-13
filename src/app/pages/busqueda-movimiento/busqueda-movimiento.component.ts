@@ -316,7 +316,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   }
   req = new RequestMovimientos();
   filtar() {//Aqui se hace el filtrado de fechas y de todos los inputs disponibles
- 
+
     if (this.inicio != null && this.final != null) { // Este if hace que si la fecha final y la fecha de incio no estan seleccionado los obligue a seleccionar alguna
       this.deseleccionados = [];
       this.selecc = [];
@@ -371,7 +371,7 @@ export class BusquedaMovimientoComponent implements OnInit {
     event.target.value = parts.join('.'); // Unir las partes del número con un punto nuevamente
    // Llamar a la función para separar y formatear el valor del IVA
   }
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });
@@ -410,7 +410,6 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.selection.clear();
       let mov = JSON.parse(JSON.stringify(bancos))?.content
       this.cantidad = JSON.parse(JSON.stringify(bancos))?.totalElements
-
       this.listaMovimiento = [];
       this.listaMovimiento = mov;
       this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);

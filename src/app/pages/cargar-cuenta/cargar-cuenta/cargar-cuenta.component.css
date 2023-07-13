@@ -1,0 +1,69 @@
+.body {
+  padding: 18px;
+  width: 95%;
+  border-radius: 2px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  margin: 20px auto 20px;
+  max-width: 100%;/* Añadir 50px de margen superior */
+  padding-right: 0%;
+}
+
+.tabla {
+  padding: 8px;
+  width: 95%;
+  max-width: 95%;
+  border-radius: 3px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  margin: 20px auto 10px;
+  /* Añadir 50px de margen superior */
+  text-align: justify;
+}
+table {
+  width: 100%;
+}
+.tabla-container{
+  overflow: auto;
+  margin-right: 18px;
+}
+.table-container_mesage{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.foot{
+  display: flex;
+  height: 5%;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 1em;
+  }
+
+.account-options-buttons{
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  height: auto;
+  width: 100%;
+  margin: 3em 0 1em 0em;
+}
+
+.otp-container{
+  width: 20%;
+}
+.total-accounts{
+  margin-left: 1em ;
+  margin-top: 1em;
+}
+:host ::ng-deep {
+  .mat-sort-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1.5em;
+
+  }
+.mat-header-cell {
+    text-align: center;
+    margin: 0 10px;
+}
+}
