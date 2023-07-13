@@ -170,6 +170,8 @@ export class CargarCuentaComponent implements OnInit {
           } else {
             flag = true;
             this.divEscondido = true;
+            this.cuentasCreadas = 0;
+            this.cuentasNoCreadas = 0;
             this.datos = [];
             this.snackBar.open(
               'Carga interrumpida: Campos incompletos, favor de verificar documento.',
