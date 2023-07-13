@@ -2,14 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { login } from '../_model/InfoLogin';
 import { requestOtp } from '../_modelRequest/requestOtp';
-import { HOST } from '../_shared/var.constant';
+import { HOST, HOSTLOGIN } from '../_shared/var.constant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoLoginService {
 
-  url: string = "http://localhost:8092";
+  url: string = `${HOSTLOGIN}`;
   urlValidacionToken: string = "http://localhost:8090/encriptacion/token"
   urlSaldo:string=`${HOST}`
   constructor(private http: HttpClient) { }
