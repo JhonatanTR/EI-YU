@@ -300,7 +300,7 @@ export class CargarCuentaComponent implements OnInit {
                     this.datosExcel[i].clabe = data.mensaje;
                     console.log(data.mensaje);
                     this.snackBar.open(
-                      'Cuenta creada.',
+                      'Operación completada con éxito.',
                       'Cerrar'
                     )
                   }},
@@ -310,7 +310,7 @@ export class CargarCuentaComponent implements OnInit {
                   this.datosExcel[i].clabe = 'N/A';
                   this.cuentasNoCreadas++;
                   this.snackBar.open(
-                    'Error al crear cuentas, favor de verificar que los datos esten verificados correctamente en el documento XLSX.',
+                    "Operación parcial exitosa. Verifica datos faltantes o incorrectos y revisa los detalles del error.",
                     'Cerrar'
                   )}
                   )
