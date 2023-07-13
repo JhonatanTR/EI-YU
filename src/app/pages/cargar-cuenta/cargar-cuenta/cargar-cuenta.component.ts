@@ -92,13 +92,13 @@ export class CargarCuentaComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.datosExcel);
       this.dataSource.paginator = this.paginator;
       this.divEscondido = false;
-      console.log(this.datosExcel);
+    
     } else {
       this.divEscondido = true;
     }
   }
   eliminar() {
-    console.log(this.selecc);
+   
     for (let i = 0; i < this.datosExcel.length; i++) {
       for (let j = 0; j < this.selecc.length; j++) {
         if (this.datosExcel[i].id === this.selecc[j].id) {
@@ -106,7 +106,7 @@ export class CargarCuentaComponent implements OnInit {
         }
       }
     }
-    console.log(this.datosExcel);
+    
     this.localStorageService.setExcel('datosExcel', this.datosExcel);
     this.ngAfterViewInit();
     this.selecc = [];
@@ -300,14 +300,14 @@ export class CargarCuentaComponent implements OnInit {
                     this.cuentasCreadas++;
                     this.datosExcel[i].estatus = 'CREADA';
                     this.datosExcel[i].clabe = data.mensaje;
-                    console.log(data.mensaje);
+                   
                     this.snackBar.open(
                       'Operación completada con éxito.',
                       'Cerrar'
                     )
                   }},
                   (error) => {
-                    console.log(error)
+                  
                   this.datosExcel[i].estatus = 'ERROR';
                   this.datosExcel[i].clabe = 'N/A';
                   this.cuentasNoCreadas++;

@@ -272,7 +272,7 @@ export class EnviarPagoComponent implements OnInit {
           // speiout.refCobranza = this.cobranza;
           speiout.cveRastreo = this.claveDeRastreo;
           speiout.conceptoPago = this.conceptoPago;
-          console.log(speiout);
+         
           this.infoPagos.realizarPago(speiout).pipe(
             catchError((error) => {
               this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
