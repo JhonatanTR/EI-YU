@@ -220,6 +220,8 @@ export class CargarCuentaComponent implements OnInit {
   }
   auxExcelLista: InfoPersonaFisica[] = [];
   createAccounts() {
+    this.cuentasCreadas = 0;
+    this.cuentasNoCreadas = 0;
     if (this.codigoOTP != '') {
       let InfSpei = new InfoSpei();
       InfSpei = this.localStorageService.getUsuario('userE');
