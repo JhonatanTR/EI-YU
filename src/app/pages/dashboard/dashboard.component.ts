@@ -87,7 +87,7 @@ export class DashboardComponent implements OnDestroy {
         this.pas = dato;
         let to ={"token":this.token}
         this.infoLog.saldo(to).subscribe(sal => {
-          console.log(sal)
+         
           this.token = this.localStorageService.getDesc("token")
           this.sn = sal;
         })

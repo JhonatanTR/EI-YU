@@ -26,107 +26,6 @@ import { InfoBancos } from 'src/app/_model/InfoBancos';
 })
 
 export class AutorizarSpeiComponent implements OnInit {
-  bancosConstante: Bancos[] = [//Lista de los bancos disponibles dependiendo su inicializacion
-    { clave: '002', nomBanco: 'BANAMEX' },
-    { clave: '006', nomBanco: 'BANCOMEXT' },
-    { clave: '009', nomBanco: 'BANOBRAS' },
-    { clave: '012', nomBanco: 'BBVA BANCOMER' },
-    { clave: '014', nomBanco: 'SANTANDER' },
-    { clave: '019', nomBanco: 'BANJERCITO' },
-    { clave: '021', nomBanco: 'HSBC' },
-    { clave: '030', nomBanco: 'BAJÍO' },
-    { clave: '036', nomBanco: 'INBURSA' },
-    { clave: '042', nomBanco: 'MIFEL' },
-    { clave: '044', nomBanco: 'SCOTIABANK' },
-    { clave: '058', nomBanco: 'BANREGIO' },
-    { clave: '059', nomBanco: 'INVEX' },
-    { clave: '060', nomBanco: 'BANSI' },
-    { clave: '062', nomBanco: 'AFIRME' },
-    { clave: '072', nomBanco: 'BANORTE' },
-    { clave: '106', nomBanco: 'BANK OF AMERICA' },
-    { clave: '108', nomBanco: 'MUFG' },
-    { clave: '110', nomBanco: 'JP MORGAN' },
-    { clave: '112', nomBanco: 'BMONEX' },
-    { clave: '113', nomBanco: 'VE POR MAS' },
-    { clave: '126', nomBanco: 'CREDIT SUISSE' },
-    { clave: '127', nomBanco: 'AZTECA' },
-    { clave: '128', nomBanco: 'AUTOFIN' },
-    { clave: '129', nomBanco: 'BARCLAYS' },
-    { clave: '130', nomBanco: 'COMPARTAMOS' },
-    { clave: '132', nomBanco: 'MULTIVA BANCO' },
-    { clave: '133', nomBanco: 'ACTINVER' },
-    { clave: '135', nomBanco: 'NAFIN' },
-    { clave: '136', nomBanco: 'INTERCAM BANCO' },
-    { clave: '137', nomBanco: 'BANCOPPEL' },
-    { clave: '138', nomBanco: 'ABC CAPITAL' },
-    { clave: '140', nomBanco: 'CONSUBANCO' },
-    { clave: '141', nomBanco: 'VOLKSWAGEN' },
-    { clave: '143', nomBanco: 'CIBanco' },
-    { clave: '145', nomBanco: 'BBASE' },
-    { clave: '147', nomBanco: 'BANKAOOL' },
-    { clave: '148', nomBanco: 'PagaTodo' },
-    { clave: '150', nomBanco: 'INMOBILIARIO' },
-    { clave: '151', nomBanco: 'Donde' },
-    { clave: '152', nomBanco: 'BANCREA' },
-    { clave: '154', nomBanco: 'BANCO COVALTO' },
-    { clave: '155', nomBanco: 'ICBC' },
-    { clave: '156', nomBanco: 'SABADELL' },
-    { clave: '157', nomBanco: 'SHINHAN' },
-    { clave: '158', nomBanco: 'MIZUHO BANK' },
-    { clave: '159', nomBanco: 'BANK OF CHINA' },
-    { clave: '160', nomBanco: 'BANCO S3' },
-    { clave: '166', nomBanco: 'Banco del Bienestar' },
-    { clave: '168', nomBanco: 'HIPOTECARIA FEDERAL' },
-    { clave: '600', nomBanco: 'MONEXCB' },
-    { clave: '601', nomBanco: 'GBM' },
-    { clave: '602', nomBanco: 'MASARI CB' },
-    { clave: '605', nomBanco: 'VALUÉ' },
-    { clave: '608', nomBanco: 'VECTOR' },
-    { clave: '610', nomBanco: 'B&B' },
-    { clave: '613', nomBanco: 'MULTIVA CBOLSA' },
-    { clave: '616', nomBanco: 'FINAMEX' },
-    { clave: '617', nomBanco: 'VALMEX' },
-    { clave: '618', nomBanco: 'ÚNICA' },
-    { clave: '619', nomBanco: 'MAPFRE' },
-    { clave: '620', nomBanco: 'PROFUTURO' },
-    { clave: '621', nomBanco: 'CB ACTINBER' },
-    { clave: '622', nomBanco: 'OACTIN' },
-    { clave: '623', nomBanco: 'SKANDIA' },
-    { clave: '626', nomBanco: 'CBDEUTSCHE' },
-    { clave: '627', nomBanco: 'ZURICH' },
-    { clave: '628', nomBanco: 'ZURICHVI' },
-    { clave: '629', nomBanco: 'SU CASITA' },
-    { clave: '630', nomBanco: 'C.B. INTERCAM' },
-    { clave: '631', nomBanco: 'C.I. BOLSA' },
-    { clave: '632', nomBanco: 'BULLTICK C.B.' },
-    { clave: '633', nomBanco: 'STERLING' },
-    { clave: '634', nomBanco: 'FINCOMUN' },
-    { clave: '636', nomBanco: 'HDI SEGUROS' },
-    { clave: '637', nomBanco: 'ORDER' },
-    { clave: '638', nomBanco: 'AKALA' },
-    { clave: '640', nomBanco: 'C.B. JP MORGAN' },
-    { clave: '642', nomBanco: 'REFORMA' },
-    { clave: '646', nomBanco: 'STP' },
-    { clave: '647', nomBanco: 'TELECOMM' },
-    { clave: '648', nomBanco: 'EVERCORE' },
-    { clave: '649', nomBanco: 'SKANDIA' },
-    { clave: '651', nomBanco: 'SEGMTY' },
-    { clave: '652', nomBanco: 'ASEA' },
-    { clave: '653', nomBanco: 'KUSPIT' },
-    { clave: '655', nomBanco: 'SOFIEXPRESS' },
-    { clave: '656', nomBanco: 'UNAGRA' },
-    { clave: '659', nomBanco: 'OPCIONES EMPRESARIALES DEL NOROESTE' },
-    { clave: '670', nomBanco: 'LIBERTAD' },
-    { clave: '674', nomBanco: 'AXA' },
-    { clave: '677', nomBanco: 'CAJA POP MEXICA' },
-    { clave: '679', nomBanco: 'FND' },
-    { clave: '684', nomBanco: 'TRANSFER' },
-    { clave: '901', nomBanco: 'CLS' },
-    { clave: '902', nomBanco: 'INDEVAL' },
-    { clave: '999', nomBanco: 'N/A' },
-    { clave: '860', nomBanco: 'Banxico Beta' },
-  ];
-  // Importaciones y declaración de variables
 
   selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Selección de filas en la tabla
   @ViewChild(MatPaginator) paginator!: MatPaginator; // Referencia al paginador de la tabla
@@ -294,10 +193,6 @@ export class AutorizarSpeiComponent implements OnInit {
     return this.selection.selected.length <= 0;
   }
 
-  obtenerIdBanco(nombreBanco: string): string | "" {
-    const banco = this.bancosConstante.find(b => b.clave === nombreBanco);
-    return banco ? banco.clave : "";
-  }
   obtenerCuentaEnmascarada(cuenta: string): string {
     const tresPrimeros = cuenta.slice(0, 3);
     const dosUltimos = cuenta.slice(-4);
@@ -310,65 +205,7 @@ export class AutorizarSpeiComponent implements OnInit {
     })
 
   }
-  /*  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
-      this.listaErroSpei = [];
-      this.mostrarSpinner = true;
-      let cont = 0;
-      let InfSpei = new InfoSpei();
-      InfSpei = this.storage.getUsuario("userE");
-      let request = new requestOtp();
-      request.idUsuario = InfSpei.idUsuario;
-      request.otp = this.otp.trim()
-      this.infoLoginService.verificarOtp(request).pipe(
-        catchError((error) => {
-          this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
-          this.otp = "";
-          return of(null);
-        })
-      ).subscribe((data) => {
-       if (data != null) {
-          const pagosObservables = this.info.map(info => {  
-            let speiout = new InfoCapturaSPEIPago();
-            speiout.nombreDestino = info.beneficiario;
-            speiout.ctaDestino = info.destino;
-            speiout.clabe = info.numerodecuenta;
-            speiout.monto = info.monto.toString();
-            speiout.refNum = info.refnumerica;
-            speiout.cveRastreo = info.claberastreo;
-            speiout.conceptoPago = info.conceptopago;
-            return this.infoPagosService.realizarPago(speiout).pipe(
-              catchError(() => of(null))
-            );
-          });
-          forkJoin(pagosObservables).pipe(
-            finalize(() => {
-              this.mostrarSpinner = false;
-              if (this.listaErroSpei.length > 0) {
-                this.openDiaCuenta(this.listaErroSpei);
-              }
-            })
-          ).subscribe(results => {
-            for (let i = 0; i < results.length; i++) {
-              if (results[i] !== null) {
-                this.info[i].estatus = true;
-                this.infoPagosService.actualizarPagados(this.info[i]).subscribe(() => {
-                  this.listaDeSpeiOut();
-                });
-                this.openSnackBar('Pago realizado', 'Aviso');
-              } else {            
-                this.listaErroSpei.push(this.info[i]);
-              }
-            }
-          }, () => {
-            this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
-          });
-        }
-        this.mostrarSpinner = false;
-      }, () => {
-        this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
-      });
-    }*/
- 
+  
     buscarIdBanco(a: string): number {
       const primerasTresLetras: string = a.substring(0, 3);
       const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
@@ -376,7 +213,6 @@ export class AutorizarSpeiComponent implements OnInit {
       if (bancoEncontrado) {
         return bancoEncontrado.id_banco;
       }
-    
       return 0;
     }
     
@@ -495,9 +331,4 @@ export class AutorizarSpeiComponent implements OnInit {
       duration: 6000,
     });
   }
-}
-
-interface Bancos {
-  clave: string,
-  nomBanco: string
 }
