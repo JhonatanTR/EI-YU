@@ -2,14 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InfoCapturaSPEIPago } from '../_model/InfoCapturaSPEIPago';
 import { InfoAutorizarSpei } from '../_model/InfoAutorizarSpei';
-import { HOST } from '../_shared/var.constant';
+import { HOST, HOSTPAGO } from '../_shared/var.constant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoPagosService {
 
-  urlPago: string = "http://localhost:8090/encriptacion/pago" //Esta url Hace el envio del pago apuntando al micro
+  urlPago: string = `${HOSTPAGO}/encriptacion/pago` //Esta url Hace el envio del pago apuntando al micro
   urlEnlistar: string = `${HOST}/spei`;//Esta url Hace el listado de Autorizar Spei
   constructor(private http: HttpClient) { }
 
