@@ -128,23 +128,16 @@ export class CargarCuentaComponent implements OnInit {
         for (let i = 0; i < this.datos.length; i++) {
           aux++;
           if (
-            this.datos[i]['correo'] &&
-            this.datos[i]['telefono'] &&
             this.datos[i]['nombre'] &&
-            this.datos[i]['idOcupacion'] &&
-            this.datos[i]['celular'] &&
-            this.datos[i]['entidadNacimiento'] &&
-            this.datos[i]['numIdentificacionOf'] &&
             this.datos[i]['apellidoPaterno'] &&
             this.datos[i]['apellidoMaterno'] &&
-            this.datos[i]['numIdentificacionOf'] &&
             this.datos[i]['rfc'] &&
+            this.datos[i]['curp'] &&
             this.datos[i]['callePrincipal'] &&
             this.datos[i]['numExterior'] &&
             this.datos[i]['numInterior'] &&
             this.datos[i]['colonia'] &&
-            this.datos[i]['codPostal'] &&
-            this.datos[i]['fechaNacimiento']
+            this.datos[i]['codPostal']
           ) {
             let dataPersona = new InfoPersonaFisica();
             dataPersona.id = aux;
