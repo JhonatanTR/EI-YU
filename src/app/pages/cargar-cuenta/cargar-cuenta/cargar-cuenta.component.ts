@@ -92,13 +92,13 @@ export class CargarCuentaComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.datosExcel);
       this.dataSource.paginator = this.paginator;
       this.divEscondido = false;
-    
+
     } else {
       this.divEscondido = true;
     }
   }
   eliminar() {
-   
+
     for (let i = 0; i < this.datosExcel.length; i++) {
       for (let j = 0; j < this.selecc.length; j++) {
         if (this.datosExcel[i].id === this.selecc[j].id) {
@@ -106,7 +106,7 @@ export class CargarCuentaComponent implements OnInit {
         }
       }
     }
-    
+
     this.localStorageService.setExcel('datosExcel', this.datosExcel);
     this.ngAfterViewInit();
     this.selecc = [];
@@ -178,6 +178,17 @@ export class CargarCuentaComponent implements OnInit {
               'Cerrar'
             );
           }
+        }
+        if(this.datosExcel.length===0){
+          flag = true;
+          this.divEscondido = true;
+          this.cuentasCreadas = 0;
+          this.cuentasNoCreadas = 0;
+          this.datos = [];
+          this.snackBar.open(
+            'Carga interrumpida: Archivo sin datos, favor de verificar documento.',
+            'Cerrar'
+          );
         }
         if (!flag) {
           this.localStorageService.setExcel('datosExcel', this.datosExcel);
@@ -300,14 +311,14 @@ export class CargarCuentaComponent implements OnInit {
                     this.cuentasCreadas++;
                     this.datosExcel[i].estatus = 'CREADA';
                     this.datosExcel[i].clabe = data.mensaje;
-                   
+
                     this.snackBar.open(
                       'Operación completada con éxito.',
                       'Cerrar'
                     )
                   }},
                   (error) => {
-                  
+
                   this.datosExcel[i].estatus = 'ERROR';
                   this.datosExcel[i].clabe = 'N/A';
                   this.cuentasNoCreadas++;
