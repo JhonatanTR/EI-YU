@@ -80,6 +80,13 @@
             <td mat-cell *matCellDef="let row" style="text-align: center; padding: 0 1em;">{{ row.nombre }}</td>
           </ng-container>
 
+          <ng-container matColumnDef="Celular">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Celular
+            </th>
+            <td mat-cell *matCellDef="let row" style="text-align: center; padding: 0 1em;">{{ row.celular }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="ID Ocupación">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Ocupación</th>
             <td mat-cell *matCellDef="let row" style="text-align: center; padding: 0 1em;">{{ row.idOcupacion }}</td>

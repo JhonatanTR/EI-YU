@@ -46,6 +46,7 @@ export class CargarCuentaComponent implements OnInit {
     'Correo',
     'Teléfono',
     'Nombre',
+    'Celular',
     'ID Ocupación',
     'Sexo',
     'Entidad de Nacimiento',

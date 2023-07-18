@@ -14,7 +14,7 @@ import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { catchError, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
-import { SHA256 } from 'crypto-js';
+//import { SHA256 } from 'crypto-js';
 
 
 @Component({
@@ -58,8 +58,8 @@ export class LoginComponent implements OnInit {
     let log = new login();
     this.username = this.form.value['user'];
     this.password = this.form.value['password'];
-    this.password = this.encryptPassword(this.password);
-    console.log("Contraseña encriptada: ", this.password);
+   // this.password = this.encryptPassword(this.password);
+   // console.log("Contraseña encriptada: ", this.password);
     this.otp = this.form.value['otp'];
     if (this.otp != "") {
       log.otp = this.otp.trim();
@@ -170,9 +170,9 @@ export class LoginComponent implements OnInit {
     this.dialog.open(EnrolarTokenComponent, dialogConfig);
   }
   // Función para encriptar un texto usando SHA256
-  encryptPassword(text: string): string {
+  /*encryptPassword(text: string): string {
     return SHA256(text).toString();
-  }
+  }*/
 }
 interface Usuario {
   username: string;
