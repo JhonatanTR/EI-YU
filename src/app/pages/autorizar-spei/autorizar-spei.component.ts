@@ -36,7 +36,7 @@ export class AutorizarSpeiComponent implements OnInit {
   total: number = 0; // Total de los montos de los pagos seleccionados
   letraColor = 'black'; // Color del texto
   adm = false; // Variable de control para el acceso administrativo
-  listaErroSpei: InfoAutorizarSpei[] = [];//Aqui se enlista de los spei que no se pudieron enviar 
+  listaErroSpei: InfoAutorizarSpei[] = [];//Aqui se enlista de los spei que no se pudieron enviar
   listaErroSpeiTabla: InfoAutorizarSpei[] = [];//Este es un Aux que las guarda
 
   mostrarSpinner = false;
@@ -69,8 +69,6 @@ export class AutorizarSpeiComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator; // Configuración del paginador de la tabla
   }
-
-  // Resto del código...
 
   aver: InfoAutorizarSpei[] = [];
   listaDeSpeiOut() {//Se consulta la lista de todos los spei out
@@ -124,7 +122,7 @@ export class AutorizarSpeiComponent implements OnInit {
             return of([]);
           })).subscribe(lista => {
             this.aver = lista;
-            this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setea los datos a la tabla con la consulta
+            this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(lista); //aqui se setean los datos a la tabla con la consulta
             this.dataSource.paginator = this.paginator;
           })
 
@@ -189,7 +187,7 @@ export class AutorizarSpeiComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
-  btnBloquear() {//SEbloquea el boton del envio del pago si no se a seleccionado 
+  btnBloquear() {//SEbloquea el boton del envio del pago si no se a seleccionado
     return this.selection.selected.length <= 0;
   }
 
@@ -205,17 +203,17 @@ export class AutorizarSpeiComponent implements OnInit {
     })
 
   }
-  
+
     buscarIdBanco(a: string): number {
       const primerasTresLetras: string = a.substring(0, 3);
       const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
-    
+
       if (bancoEncontrado) {
         return bancoEncontrado.id_banco;
       }
       return 0;
     }
-    
+
     enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
     this.listaErroSpei = []
     this.mostrarSpinner = true;
@@ -231,7 +229,7 @@ export class AutorizarSpeiComponent implements OnInit {
         return of(null);
       })
     ).subscribe((data) => {
-     
+
       if (data?.mensaje == "Otp validado correctamente") {
         const pagosObservables = this.info.map(info => {
           let speiout = new InfoCapturaSPEIPago();
@@ -248,7 +246,7 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
           speiout.bancoDestino= this.buscarIdBanco(info.destino).toString();
-          
+
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
           );
@@ -326,7 +324,7 @@ export class AutorizarSpeiComponent implements OnInit {
     }
     return false
   }
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });
