@@ -8,6 +8,7 @@ import { Cliente } from '../_model/cliente';
 export class LoginService {
   cli = new Subject<Cliente>();
   rol = new Subject<boolean>();
+  roln3=new Subject<boolean>();
   idPblu =new Subject<any>();
   descripcion=new Subject<string>();
   token=new Subject<string>();

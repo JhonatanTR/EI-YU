@@ -103,12 +103,12 @@ export class LoginComponent implements OnInit {
               this.loginService.rol.next(false)
               this.localStorageService.setDat("rol", false)
               if(da.usuario.usuarios_permisos[0].id==2){
-
                 this.localStorageService.setDesc("permiso", da.usuario.usuarios_permisos[0].id.toString());
               }else if(da.usuario.usuarios_permisos[0].id==3){
-
+                this.loginService.roln3.next(true);
+                this.localStorageService.setDat("rolPermisoNivel3", true);
                 this.localStorageService.setDesc("permiso",  da.usuario.usuarios_permisos[0].id.toString())
-                 this.localStorageService.setDesc("idUser_1",  da.usuario.id)
+                this.localStorageService.setDesc("idUser_1",  da.usuario.id)
               }
             }
             let res = { "peiyu": da.usuario.idParticipante }
