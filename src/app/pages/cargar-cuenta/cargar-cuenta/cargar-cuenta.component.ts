@@ -99,21 +99,19 @@ export class CargarCuentaComponent implements OnInit {
     }
   }
   eliminar() {
-    console.log(this.isAllSelected());
     if (this.isAllSelected() != false) {
       this.removeXLSX();
 
     } else {
-      console.log(this.selecc)
-      if(this.selecc.length===0){
+      if (this.selecc.length === 0) {
         this.datosExcel = this.datosExcel.filter((dato) => {
           // Comprueba si el id del dato está presente en this.deseleccionados
           return this.deseleccionados.some((deseleccionado) => deseleccionado.id === dato.id);
         });
-        
 
 
-      }else{
+
+      } else {
         for (let i = 0; i < this.datosExcel.length; i++) {
           for (let j = 0; j < this.selecc.length; j++) {
             if (this.datosExcel[i].id === this.selecc[j].id) {
@@ -121,9 +119,9 @@ export class CargarCuentaComponent implements OnInit {
             }
           }
         }
-  
+
       }
-     
+
       this.localStorageService.setExcel('datosExcel', this.datosExcel);
       this.ngAfterViewInit();
       this.selecc = [];
@@ -132,10 +130,9 @@ export class CargarCuentaComponent implements OnInit {
   }
   cargarXLSX(event: Event) {
     this.deseleccionados = [];
-    this.selecc=[];
+    this.selecc = [];
     this.datosExcel = [];
     this.primeraCasillaSeleccionada = false;
-
     this.selection = new SelectionModel<InfoPersonaFisica>(true, []);
     this.selection.clear;
     this.localStorageService.removeExcel();
@@ -260,7 +257,9 @@ export class CargarCuentaComponent implements OnInit {
     });
   }
   auxExcelLista: InfoPersonaFisica[] = [];
+  requestList: requestPersonaFisica[] = [];
   createAccounts() {
+    this.requestList = [];
     this.cuentasCreadas = 0;
     this.cuentasNoCreadas = 0;
     if (this.codigoOTP != '') {
@@ -283,115 +282,84 @@ export class CargarCuentaComponent implements OnInit {
           })
         )
         .subscribe((data) => {
-          if (data?.mensaje == 'Otp validado correctamente') {
-            const dialogConfig = new MatDialogConfig();
-            dialogConfig.data = this.arregloPersonas;
-            dialogConfig.width = '40%';
-            dialogConfig.height = '40%';
-            dialogConfig.disableClose = false;
-            const dialogRef = this.dialog.open(
-              CargarCuentaCreateDialogComponent,
-              dialogConfig
-            );
-            dialogRef.afterClosed().subscribe((result) => {
-              if (result) {
-                let contador = 0;
-                for (let i = 0; i < this.datosExcel.length; i++) {
-                  let req = new requestPersonaFisica();
-                  let p = new persona();
-                  let d = new domicilio();
-                  let perf = new perfil();
-                  req.certificado = InfSpei.certificado;
-                  req.llave = InfSpei.llave;
-                  req.phrase = InfSpei.phrase;
-                  req.token = token;
-                  req.pblu = pblu;
-                  req.udnId = 0;
-                  req.nivel_cuenta = 1;
-                  p.correo = this.datosExcel[i].correo;
-                  p.telefono = this.datosExcel[i].telefono;
-                  p.nombre = this.datosExcel[i].nombre;
-                  p.celular = this.datosExcel[i].celular;
-                  p.idOcupacion = this.datosExcel[i].idOcupacion;
-                  p.sexo = this.datosExcel[i].sexo;
-                  p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
-                  p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
-                  p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
-                  p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
-                  p.idNacionalidad = 1;
-                  p.idPaisNac = 117;
-                  p.serieFirmaElect = 'xxxxx';
-                  p.tipoIdentificacionOf = 1;
-                  p.rfc = this.datosExcel[i].rfc;
-                  p.curp = this.datosExcel[i].curp;
-                  d.callePrincipal = this.datosExcel[i].callePrincipal;
-                  d.numExterior = this.datosExcel[i].numExterior;
-                  d.numInterior = this.datosExcel[i].numInterior;
-                  d.colonia = this.datosExcel[i].colonia;
-                  d.codPostal = this.datosExcel[i].codPostal;
-                  p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
-                  req.comprobantes = [];
-                  req.persona = p;
-                  req.domicilio = d;
-                  req.perfil = perf;
-                  const cuentserv = this.cuentaService
-                    .crearCuenta(req).subscribe(
-                      (data) => {
-                        if (data != null || data?.ok != false) {
-                          this.cuentasCreadas++;
-                          this.datosExcel[i].estatus = 'CREADA';
-                          this.datosExcel[i].clabe = data.mensaje;
-
-                          this.snackBar.open(
-                            'Operación completada con éxito.',
-                            'Cerrar'
-                          )
-                        }
-                      },
-                      (error) => {
-
-                        this.datosExcel[i].estatus = 'ERROR';
-                        this.datosExcel[i].clabe = 'N/A';
-                        this.cuentasNoCreadas++;
-                        this.snackBar.open(
-                          "Operación parcial exitosa. Verifica datos faltantes o incorrectos y revisa los detalles del error.",
-                          'Cerrar'
-                        )
-                      }
-                    )
-                  cuentserv.add(() => {
-                    contador++;
-                    if (contador === this.datosExcel.length) {
-                      const workbook = XLSX.utils.book_new();
-                      const worksheet = XLSX.utils.json_to_sheet(this.datosExcel);
-                      XLSX.utils.book_append_sheet(
-                        workbook,
-                        worksheet,
-                        'Datos de la tabla'
-                      );
-                      //Exportar la hoja de cálculo en formato Excel
-                      const excelBuffer: any = XLSX.write(workbook, {
-                        bookType: 'xlsx',
-                        type: 'array',
-                      });
-                      const dataBlob: Blob = new Blob([excelBuffer], {
-                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                      });
-                      // Exportar la hoja de cálculo en formato Excel
-                      this.creados = true;
-                      FileSaver.saveAs(dataBlob, 'cuentas.xlsx');
-
-                    }
-                  });
-
-                }
-              } else {
-                this.divEscondido = false;
+         if (data?.mensaje == 'Otp validado correctamente') {
+          const dialogConfig = new MatDialogConfig();
+          dialogConfig.data = this.arregloPersonas;
+          dialogConfig.width = '40%';
+          dialogConfig.height = '40%';
+          dialogConfig.disableClose = false;
+          const dialogRef = this.dialog.open(
+            CargarCuentaCreateDialogComponent,
+            dialogConfig
+          );
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              for (let i = 0; i < this.datosExcel.length; i++) {
+                let req = new requestPersonaFisica();
+                let p = new persona();
+                let d = new domicilio();
+                let perf = new perfil();
+                req.certificado = InfSpei.certificado;
+                req.llave = InfSpei.llave;
+                req.phrase = InfSpei.phrase;
+                req.token = token;
+                req.pblu = pblu;
+                req.udnId = 0;
+                req.nivel_cuenta = 1;
+                p.correo = this.datosExcel[i].correo;
+                p.telefono = this.datosExcel[i].telefono;
+                p.nombre = this.datosExcel[i].nombre;
+                p.celular = this.datosExcel[i].celular;
+                p.idOcupacion = this.datosExcel[i].idOcupacion;
+                p.sexo = this.datosExcel[i].sexo;
+                p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
+                p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
+                p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
+                p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                p.idNacionalidad = 1;
+                p.idPaisNac = 117;
+                p.serieFirmaElect = 'xxxxx';
+                p.tipoIdentificacionOf = 1;
+                p.rfc = this.datosExcel[i].rfc;
+                p.curp = this.datosExcel[i].curp;
+                d.callePrincipal = this.datosExcel[i].callePrincipal;
+                d.numExterior = this.datosExcel[i].numExterior;
+                d.numInterior = this.datosExcel[i].numInterior;
+                d.colonia = this.datosExcel[i].colonia;
+                d.codPostal = this.datosExcel[i].codPostal;
+                p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
+                req.comprobantes = [];
+                req.persona = p;
+                req.domicilio = d;
+                req.perfil = perf;
+                this.requestList.push(req);
               }
-            });
-          } else {
-            this.codigoOTP = '';
-          }
+              this.cuentaService.crearCuenta(this.requestList).pipe(
+                finalize(() => {
+
+                  // Este bloque se ejecutará al final de la suscripción, una vez que se completen todas las solicitudes.
+                })
+              ).subscribe(
+                (data) => {
+                  // Este bloque se ejecutará si la solicitud se completa sin errores.
+                  this.generarExcel(this.datosExcel, data);
+                  // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
+                },
+                (error) => {
+                  // Este bloque se ejecutará si ocurre un error durante la solicitud.
+                  console.error('Error en la solicitud:', error);
+                  // Aquí puedes realizar acciones para manejar el error, si es necesario.
+                  // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
+                }
+              );
+
+            } else {
+              this.divEscondido = false;
+            }
+          });
+           } else {
+              this.codigoOTP = '';
+            }
         });
     } else {
       this.myInput.nativeElement.focus();
@@ -404,6 +372,65 @@ export class CargarCuentaComponent implements OnInit {
       );
     }
   }
+  generarExcel(excelDeSubida: InfoPersonaFisica[], cuentasCreadas: any[]) {
+    let execlAux: InfoPersonaFisica[] = [];
+    for (let i = 0; i < excelDeSubida.length; i++) {
+      let execlAux2 = new InfoPersonaFisica;
+      if (cuentasCreadas[i]?.ok == true) {
+        execlAux2.clabe = cuentasCreadas[i].mensaje;
+        execlAux2.estatus = "CREADO";
+      } else if (cuentasCreadas[i]?.ok == false) {
+        const responseText: string = cuentasCreadas[i].response;
+        const responseJson = JSON.parse(responseText);
+        const mensaje: string = responseJson.mensaje;
+        execlAux2.clabe = "N/A";
+        if (mensaje != null) {
+          execlAux2.estatus = mensaje
+        } else {
+          execlAux2.estatus = "ERROR AL CREAR LA CUENTA"
+        }
+      }
+      execlAux2.telefono = excelDeSubida[i].telefono;
+      execlAux2.apellidoMaterno = excelDeSubida[i].apellidoMaterno;
+      execlAux2.apellidoPaterno = excelDeSubida[i].apellidoPaterno;
+      execlAux2.callePrincipal = excelDeSubida[i].callePrincipal;
+      execlAux2.celular = excelDeSubida[i].celular;
+      execlAux2.codPostal = excelDeSubida[i].codPostal;
+      execlAux2.colonia = excelDeSubida[i].colonia;
+      execlAux2.correo = excelDeSubida[i].correo;
+      execlAux2.curp = excelDeSubida[i].curp;
+      execlAux2.entidadNacimiento = excelDeSubida[i].entidadNacimiento;
+      execlAux2.fechaNacimiento = excelDeSubida[i].fechaNacimiento;
+      execlAux2.idOcupacion = excelDeSubida[i].idOcupacion;
+      execlAux2.nombre = excelDeSubida[i].nombre;
+      execlAux2.numExterior = excelDeSubida[i].numExterior;
+      execlAux2.numIdentificacionOf = excelDeSubida[i].numIdentificacionOf;
+      execlAux2.numInterior = excelDeSubida[i].numInterior;
+      execlAux2.rfc = excelDeSubida[i].rfc;
+      execlAux2.sexo = excelDeSubida[i].sexo;
+      execlAux2.telefono = excelDeSubida[i].telefono;
+      execlAux.push(execlAux2)
+   }
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(execlAux);
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      'Cuentas Generadas'
+    );
+
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const dataBlob: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    FileSaver.saveAs(dataBlob, 'cuentas_generadas.xlsx');
+  }
+
 
   //Estos son metodos para que funcione los seleccionadores de la tabla
   isAllSelected() {

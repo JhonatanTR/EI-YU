@@ -58,7 +58,10 @@ export class EnviarPagoComponent implements OnInit {
     this.listarBanco();
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
-      let clabe = { "clabe": data.clabe_pblu };
+      let clabe = {
+        "clabe": data.clabe_pblu,
+        "pblu": this.localStorageService.getUsuario("pblu")
+      };
       this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
         if (d == null) {
         } else {

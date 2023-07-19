@@ -10,7 +10,7 @@ export class AccountRefrerenceService {
   url: string = `${HOSTCUENTAS}/crearCuenta`
   constructor(private http: HttpClient) { }
 
-  crearCuenta(request: requestPersonaFisica) {//Movimientos realizado por los clientes
+  crearCuenta(request: requestPersonaFisica[]) {//Movimientos realizado por los clientes
     return this.http.post<any>(`${this.url}/cuenta`, request);
   }
 }
