@@ -176,7 +176,7 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.rfc = this.datos[i]['rfc'];
             if (
               dataPersona.rfc.toString().length > 12 ||
-              dataPersona.rfc.toString().length < 13
+              dataPersona.rfc.toString().length === 13
             ) {
               dataPersona.rfc = this.datos[i]['rfc'];
             } else {
