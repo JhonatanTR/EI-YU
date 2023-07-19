@@ -288,6 +288,7 @@ export class CargarCuentaComponent implements OnInit {
               dataPersona.fechaNacimiento = this.convertirNumeroAStrFecha(
                 parseInt(dataPersona.fechaNacimiento)
               );
+              console.log(dataPersona.fechaNacimiento)
               this.datosExcel.push(dataPersona);
             } else {
               flag = true;
@@ -331,7 +332,8 @@ export class CargarCuentaComponent implements OnInit {
     }
   }
   convertirNumeroAStrFecha(numero: number): string {
-    const fecha = new Date((numero - 25569) * 86400 * 1000);
+    const fecha = new Date((numero - 25568) * 86400 * 1000);
+    fecha.setDate(fecha.getDate() + 1); //Le sumo un dia porque se le resta uno en la linea anterior
     const dia = fecha.getDate().toString().padStart(2, '0');
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const anio = fecha.getFullYear().toString();
