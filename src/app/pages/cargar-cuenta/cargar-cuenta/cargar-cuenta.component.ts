@@ -99,6 +99,8 @@ export class CargarCuentaComponent implements OnInit {
     }
   }
   eliminar() {
+    console.log(this.selecc);
+    console.log(this.deseleccionados);
     if (this.isAllSelected() != false) {
       this.removeXLSX();
 
@@ -108,17 +110,10 @@ export class CargarCuentaComponent implements OnInit {
           // Comprueba si el id del dato está presente en this.deseleccionados
           return this.deseleccionados.some((deseleccionado) => deseleccionado.id === dato.id);
         });
-
-
-
       } else {
-        for (let i = 0; i < this.datosExcel.length; i++) {
-          for (let j = 0; j < this.selecc.length; j++) {
-            if (this.datosExcel[i].id === this.selecc[j].id) {
-              this.datosExcel.splice(i, 1);
-            }
-          }
-        }
+        this.datosExcel = this.datosExcel.filter((dato) => {
+          return !this.selecc.some((item) => item.id === dato.id);
+        });
 
       }
 
@@ -239,7 +234,6 @@ export class CargarCuentaComponent implements OnInit {
         this.deseleccionados = [];
         this.datosExcel = [];
         this.primeraCasillaSeleccionada = false;
-
         this.selection = new SelectionModel<InfoPersonaFisica>(true, []);
         this.selection.clear;
         this.localStorageService.removeExcel();
