@@ -106,6 +106,7 @@ export class LoginComponent implements OnInit {
                 this.localStorageService.setDesc("permiso", da.usuario.usuarios_permisos[0].id.toString());
               }else if(da.usuario.usuarios_permisos[0].id==3){
                 this.loginService.roln3.next(true);
+                
                 this.localStorageService.setDat("rolPermisoNivel3", true);
                 this.localStorageService.setDesc("permiso",  da.usuario.usuarios_permisos[0].id.toString())
                 this.localStorageService.setDesc("idUser_1",  da.usuario.id)
