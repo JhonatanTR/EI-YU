@@ -226,6 +226,7 @@ export class CargarCuentaComponent implements OnInit {
               );
              }
             dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
+            dataPersona.fechaNacimiento = this.formatearFecha(dataPersona.fechaNacimiento);
             this.datosExcel.push(dataPersona);
           } else {
             flag = true;
@@ -263,7 +264,16 @@ export class CargarCuentaComponent implements OnInit {
       this.divEscondido = true;
     }
   }
+  formatearFecha(fecha: any): string {
+    if (typeof fecha !== "string") {
+      fecha = fecha.toString();
+    }
+    const dia = fecha.slice(2, 4);
+    const mes = fecha.slice(0, 2);
+    const anio = fecha.slice(4);
 
+    return `${mes}/${dia}/${anio}`;
+  }
   removeXLSX() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = this.option;
@@ -401,7 +411,6 @@ export class CargarCuentaComponent implements OnInit {
                 d.colonia = this.datosExcel[i].colonia;
                 d.codPostal = this.datosExcel[i].codPostal;
                 let fechaNacimiento = this.datosExcel[i].fechaNacimiento;
-                console.log(p.fechaNacimiento)
                 if(fechaNacimiento == null || fechaNacimiento == undefined || fechaNacimiento == ''){
                   p.fechaNacimiento = 'xx/xx/xxxx';
                 }else{
