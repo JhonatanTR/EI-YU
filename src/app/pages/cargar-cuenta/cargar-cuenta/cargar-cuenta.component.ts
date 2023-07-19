@@ -39,6 +39,7 @@ export class CargarCuentaComponent implements OnInit {
   cuentasCreadas: number = 0;
   cuentasNoCreadas: number = 0;
   option: boolean = false;
+  mostrarSpinner:boolean = false;
   divEscondido: boolean = true; //la variable del div que contiene la tabla de los datos del excel
   displayedColumns: string[] = [
     'select',
@@ -168,18 +169,62 @@ export class CargarCuentaComponent implements OnInit {
             dataPersona.nombre = this.datos[i]['nombre'];
             dataPersona.idOcupacion = this.datos[i]['idOcupacion'];
             dataPersona.celular = this.datos[i]['celular'];
-            dataPersona.sexo = this.datos[i]['sexo'];
             dataPersona.entidadNacimiento = this.datos[i]['entidadNacimiento'];
             dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
             dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
             dataPersona.numIdentificacionOf = this.datos[i]['numIdentificacionOf'];
             dataPersona.rfc = this.datos[i]['rfc'];
+            if(dataPersona.rfc.toString().length >12 || dataPersona.rfc.toString().length <13){
+              dataPersona.rfc = this.datos[i]['rfc'];
+             }else {
+              //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
+              flag = true;
+              this.divEscondido = true;
+              this.cuentasCreadas = 0;
+              this.cuentasNoCreadas = 0;
+              this.snackBar.open(
+                 `Carga interrumpida: RFC de la fila ${aux} no válido, favor de verificar documento.`,
+                 'Cerrar'
+              );
+             }
             dataPersona.curp = this.datos[i]['curp'];
+            if(dataPersona.curp.toString().length ===18){
+              dataPersona.curp = this.datos[i]['curp'];
+             }else {
+              //Si el CURP no tiene 18 digitos, salte del ciclo y no agregue el registro
+              flag = true;
+              this.divEscondido = true;
+              this.cuentasCreadas = 0;
+              this.cuentasNoCreadas = 0;
+              this.snackBar.open(
+                 `Carga interrumpida: CURP de la fila ${aux} no válido, favor de verificar documento.`,
+                 'Cerrar'
+              );
+             }
+            dataPersona.sexo = dataPersona.curp.charAt(10).toUpperCase();
+            if(dataPersona.sexo === 'H'){
+              dataPersona.sexo = 'M';
+            }else if(dataPersona.sexo === 'M'){
+              dataPersona.sexo = 'F';
+            }
             dataPersona.callePrincipal = this.datos[i]['callePrincipal'];
             dataPersona.numExterior = this.datos[i]['numExterior'];
             dataPersona.numInterior = this.datos[i]['numInterior'];
             dataPersona.colonia = this.datos[i]['colonia'];
             dataPersona.codPostal = this.datos[i]['codPostal'];
+            if(dataPersona.codPostal.toString().length === 5){
+              dataPersona.codPostal = this.datos[i]['codPostal'];
+             }else {
+              //Si el Código Postal no tiene 5 digitos, salte del ciclo y no agregue el registro
+              flag = true;
+              this.divEscondido = true;
+              this.cuentasCreadas = 0;
+              this.cuentasNoCreadas = 0;
+              this.snackBar.open(
+                 `Carga interrumpida: Código Postal de la fila ${aux} no válido, favor de verificar documento.`,
+                 'Cerrar'
+              );
+             }
             dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
             this.datosExcel.push(dataPersona);
           } else {
@@ -194,7 +239,7 @@ export class CargarCuentaComponent implements OnInit {
             );
           }
         }
-        if (this.datosExcel.length === 0) {
+        if (this.datos.length === 0) {
           flag = true;
           this.divEscondido = true;
           this.cuentasCreadas = 0;
@@ -257,6 +302,7 @@ export class CargarCuentaComponent implements OnInit {
     this.cuentasCreadas = 0;
     this.cuentasNoCreadas = 0;
     if (this.codigoOTP != '') {
+      this.mostrarSpinner = true;
       let InfSpei = new InfoSpei();
       InfSpei = this.localStorageService.getUsuario('userE');
       let pblu = this.localStorageService.getIdPblu('pblu');
@@ -269,6 +315,7 @@ export class CargarCuentaComponent implements OnInit {
         .verificarOtp(request)
         .pipe(
           catchError((error) => {
+            this.mostrarSpinner = false;
             this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Cerrar', {
               duration: 2000,
             });
@@ -276,6 +323,7 @@ export class CargarCuentaComponent implements OnInit {
           })
         )
         .subscribe((data) => {
+          this.mostrarSpinner = true;
          if (data?.mensaje == 'Otp validado correctamente') {
           const dialogConfig = new MatDialogConfig();
           dialogConfig.data = this.arregloPersonas;
@@ -300,16 +348,47 @@ export class CargarCuentaComponent implements OnInit {
                 req.pblu = pblu;
                 req.udnId = 0;
                 req.nivel_cuenta = 1;
-                p.correo = this.datosExcel[i].correo;
-                p.telefono = this.datosExcel[i].telefono;
+
+                let correo = this.datosExcel[i].correo;
+                if(correo == null || correo == undefined || correo == ''){
+                  p.correo = 'xxxxx@xxx.com';
+                }else{
+                  p.correo = this.datosExcel[i].correo;
+                }
+                let telefono = this.datosExcel[i].telefono;
+                if(telefono == null || telefono == undefined || telefono == ''){
+                  p.telefono = 'xxxxxxxxxx';
+                }else{
+                  p.telefono = this.datosExcel[i].telefono;
+                }
                 p.nombre = this.datosExcel[i].nombre;
-                p.celular = this.datosExcel[i].celular;
-                p.idOcupacion = this.datosExcel[i].idOcupacion;
+                let celular = this.datosExcel[i].celular;
+                if(celular == null || celular == undefined || celular == ''){
+                  p.celular = 'xxxxxxxxxx';
+                }else{
+                  p.celular = this.datosExcel[i].celular;
+                }
+                let idOcupacion = this.datosExcel[i].idOcupacion;
+                if(idOcupacion == null || idOcupacion == undefined){
+                  p.idOcupacion = 0;
+                }else{
+                  p.idOcupacion = this.datosExcel[i].idOcupacion;
+                }
                 p.sexo = this.datosExcel[i].sexo;
-                p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
+                let entidadNacimiento = this.datosExcel[i].entidadNacimiento;
+                if(entidadNacimiento == null || entidadNacimiento == undefined){
+                  p.entidadNacimiento = 0;
+                }else{
+                  p.entidadNacimiento = this.datosExcel[i].entidadNacimiento;
+                }
                 p.apellidoPaterno = this.datosExcel[i].apellidoPaterno;
                 p.apellidoMaterno = this.datosExcel[i].apellidoMaterno;
-                p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                let numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                if(numIdentificacionOf == null || numIdentificacionOf == undefined || numIdentificacionOf == ''){
+                  p.numIdentificacionOf = 'xxxxx';
+                }else{
+                  p.numIdentificacionOf = this.datosExcel[i].numIdentificacionOf;
+                }
                 p.idNacionalidad = 1;
                 p.idPaisNac = 117;
                 p.serieFirmaElect = 'xxxxx';
@@ -321,7 +400,13 @@ export class CargarCuentaComponent implements OnInit {
                 d.numInterior = this.datosExcel[i].numInterior;
                 d.colonia = this.datosExcel[i].colonia;
                 d.codPostal = this.datosExcel[i].codPostal;
-                p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
+                let fechaNacimiento = this.datosExcel[i].fechaNacimiento;
+                console.log(p.fechaNacimiento)
+                if(fechaNacimiento == null || fechaNacimiento == undefined || fechaNacimiento == ''){
+                  p.fechaNacimiento = 'xx/xx/xxxx';
+                }else{
+                  p.fechaNacimiento = this.datosExcel[i].fechaNacimiento;
+                }
                 req.comprobantes = [];
                 req.persona = p;
                 req.domicilio = d;
@@ -330,7 +415,8 @@ export class CargarCuentaComponent implements OnInit {
               }
               this.cuentaService.crearCuenta(this.requestList).pipe(
                 finalize(() => {
-
+                  //Fin de la animacion
+                  this.mostrarSpinner = false;
                   // Este bloque se ejecutará al final de la suscripción, una vez que se completen todas las solicitudes.
                 })
               ).subscribe(
@@ -353,6 +439,7 @@ export class CargarCuentaComponent implements OnInit {
           });
            } else {
               this.codigoOTP = '';
+              this.mostrarSpinner = false;
             }
         });
     } else {
@@ -371,9 +458,11 @@ export class CargarCuentaComponent implements OnInit {
     for (let i = 0; i < excelDeSubida.length; i++) {
       let execlAux2 = new InfoPersonaFisica;
       if (cuentasCreadas[i]?.ok == true) {
+        this.cuentasCreadas++;
         execlAux2.clabe = cuentasCreadas[i].mensaje;
         execlAux2.estatus = "CREADO";
       } else if (cuentasCreadas[i]?.ok == false) {
+        this.cuentasNoCreadas++;
         const responseText: string = cuentasCreadas[i].response;
         const responseJson = JSON.parse(responseText);
         const mensaje: string = responseJson.mensaje;
@@ -384,6 +473,7 @@ export class CargarCuentaComponent implements OnInit {
           execlAux2.estatus = "ERROR AL CREAR LA CUENTA"
         }
       }
+      execlAux2.id = excelDeSubida[i].id;
       execlAux2.telefono = excelDeSubida[i].telefono;
       execlAux2.apellidoMaterno = excelDeSubida[i].apellidoMaterno;
       execlAux2.apellidoPaterno = excelDeSubida[i].apellidoPaterno;
@@ -423,6 +513,7 @@ export class CargarCuentaComponent implements OnInit {
     });
 
     FileSaver.saveAs(dataBlob, 'cuentas_generadas.xlsx');
+    this.creados = true;
   }
 
 
