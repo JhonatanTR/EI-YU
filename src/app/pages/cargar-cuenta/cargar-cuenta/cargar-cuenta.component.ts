@@ -146,172 +146,184 @@ export class CargarCuentaComponent implements OnInit {
         const hoja = libro.Sheets[libro.SheetNames[0]];
         this.datos = XLSX.utils.sheet_to_json(hoja);
         let aux = 0;
-
-        for (let i = 0; i < this.datos.length; i++) {
-          aux++;
-          if (
-            this.datos[i]['nombre'] &&
-            this.datos[i]['apellidoPaterno'] &&
-            this.datos[i]['apellidoMaterno'] &&
-            this.datos[i]['rfc'] &&
-            this.datos[i]['curp'] &&
-            this.datos[i]['callePrincipal'] &&
-            this.datos[i]['numExterior'] &&
-            this.datos[i]['numInterior'] &&
-            this.datos[i]['colonia'] &&
-            this.datos[i]['codPostal']
-          ) {
-            let dataPersona = new InfoPersonaFisica();
-            dataPersona.id = aux;
-            dataPersona.correo = this.datos[i]['correo'];
-            dataPersona.telefono = this.datos[i]['telefono'];
-            dataPersona.nombre = this.datos[i]['nombre'];
-
-            if (this.validarDatoNoNumeros(dataPersona.nombre.toString())) {
+        if(this.datos.length > 50){
+          this.snackBar.open(
+            `Carga interrumpida: El archivo no puede contener más de 50 registros.`,
+            'Cerrar',
+            { duration: 3000 }
+          );
+        }else{
+          for (let i = 0; i < this.datos.length; i++) {
+            aux++;
+            if (
+              this.datos[i]['nombre'] &&
+              this.datos[i]['apellidoPaterno'] &&
+              this.datos[i]['apellidoMaterno'] &&
+              this.datos[i]['rfc'] &&
+              this.datos[i]['curp'] &&
+              this.datos[i]['callePrincipal'] &&
+              this.datos[i]['numExterior'] &&
+              this.datos[i]['numInterior'] &&
+              this.datos[i]['colonia'] &&
+              this.datos[i]['codPostal']
+            ) {
+              let dataPersona = new InfoPersonaFisica();
+              dataPersona.id = aux;
+              dataPersona.correo = this.datos[i]['correo'];
+              dataPersona.telefono = this.datos[i]['telefono'];
               dataPersona.nombre = this.datos[i]['nombre'];
-            } else {
-              //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
-              flag = true;
-              this.divEscondido = true;
-              this.cuentasCreadas = 0;
-              this.cuentasNoCreadas = 0;
-              this.snackBar.open(
-                `Carga interrumpida: Nombre de la fila ${aux} no válido, favor de verificar documento.`,
-                'Cerrar'
-              );
-              break;
-            }
-            dataPersona.idOcupacion = this.datos[i]['idOcupacion'];
-            dataPersona.celular = this.datos[i]['celular'];
-            dataPersona.entidadNacimiento = this.datos[i]['entidadNacimiento'];
-            dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
 
-            if (this.validarDatoNoNumeros(dataPersona.apellidoPaterno.toString())) {
+              if (this.validarDatoNoNumeros(dataPersona.nombre.toString())) {
+                dataPersona.nombre = this.datos[i]['nombre'];
+              } else {
+                //Si el Nombre no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: Nombre de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
+              dataPersona.idOcupacion = this.datos[i]['idOcupacion'];
+              dataPersona.celular = this.datos[i]['celular'];
+              dataPersona.entidadNacimiento = this.datos[i]['entidadNacimiento'];
               dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
 
-            } else {
-              //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
-              flag = true;
-              this.divEscondido = true;
-              this.cuentasCreadas = 0;
-              this.cuentasNoCreadas = 0;
-              this.snackBar.open(
-                `Carga interrumpida: Apellido Paterno de la fila ${aux} no válido, favor de verificar documento.`,
-                'Cerrar'
-              );
-              break;
-            }
-            dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
-            if (this.validarDatoNoNumeros(dataPersona.apellidoMaterno.toString())) {
+              if (this.validarDatoNoNumeros(dataPersona.apellidoPaterno.toString())) {
+                dataPersona.apellidoPaterno = this.datos[i]['apellidoPaterno'];
+
+              } else {
+                //Si el Apellido Paterno no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: Apellido Paterno de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
               dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
-            } else {
-              //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
-              flag = true;
-              this.divEscondido = true;
-              this.cuentasCreadas = 0;
-              this.cuentasNoCreadas = 0;
-              this.snackBar.open(
-                `Carga interrumpida: Apellido Materno de la fila ${aux} no válido, favor de verificar documento.`,
-                'Cerrar'
-              );
-              break;
-            }
-            dataPersona.numIdentificacionOf = this.datos[i]['numIdentificacionOf'];
-            dataPersona.rfc = this.datos[i]['rfc'];
-            if ((dataPersona.rfc.toString().length <= 13 || dataPersona.rfc.toString().length >= 12) && this.validarRFC(dataPersona.rfc.toString())) {
+              if (this.validarDatoNoNumeros(dataPersona.apellidoMaterno.toString())) {
+                dataPersona.apellidoMaterno = this.datos[i]['apellidoMaterno'];
+              } else {
+                //Si el Apellido Materno no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: Apellido Materno de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
+              dataPersona.numIdentificacionOf = this.datos[i]['numIdentificacionOf'];
               dataPersona.rfc = this.datos[i]['rfc'];
-            } else {
-              //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
-              flag = true;
-              this.divEscondido = true;
-              this.cuentasCreadas = 0;
-              this.cuentasNoCreadas = 0;
-              this.snackBar.open(
-                `Carga interrumpida: RFC de la fila ${aux} no válido, favor de verificar documento.`,
-                'Cerrar'
-              );
-              break;
-            }
-            dataPersona.curp = this.datos[i]['curp'];
-            if (dataPersona.curp.toString().length === 18 && this.validarCurp(dataPersona.curp.toString())) {
+              if ((dataPersona.rfc.toString().length <= 13 || dataPersona.rfc.toString().length >= 12) && this.validarRFC(dataPersona.rfc.toString())) {
+                dataPersona.rfc = this.datos[i]['rfc'];
+              } else {
+                //Si el RFC no tiene mas de 12 o 13 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: RFC de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
               dataPersona.curp = this.datos[i]['curp'];
-            } else {
-              //Si el CURP no tiene 18 digitos, salte del ciclo y no agregue el registro
-              flag = true;
-              this.divEscondido = true;
-              this.cuentasCreadas = 0;
-              this.cuentasNoCreadas = 0;
-              this.snackBar.open(
-                `Carga interrumpida: CURP de la fila ${aux} no válido, favor de verificar documento.`,
-                'Cerrar'
-              );
-              break;
-            }
-            dataPersona.sexo = dataPersona.curp.charAt(10).toUpperCase();
-            if (dataPersona.sexo === 'H') {
-              dataPersona.sexo = 'M';
-            } else if (dataPersona.sexo === 'M') {
-              dataPersona.sexo = 'F';
-            }
-            dataPersona.callePrincipal = this.datos[i]['callePrincipal'];
-            dataPersona.numExterior = this.datos[i]['numExterior'];
-            dataPersona.numInterior = this.datos[i]['numInterior'];
-            dataPersona.colonia = this.datos[i]['colonia'];
-            dataPersona.codPostal = this.datos[i]['codPostal'];
-            if (dataPersona.codPostal.toString().length === 5 && this.validarSoloNumeros(dataPersona.codPostal.toString()) ) {
+              if (dataPersona.curp.toString().length === 18 && this.validarCurp(dataPersona.curp.toString())) {
+                dataPersona.curp = this.datos[i]['curp'];
+              } else {
+                //Si el CURP no tiene 18 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: CURP de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
+              dataPersona.sexo = dataPersona.curp.charAt(10).toUpperCase();
+              if (dataPersona.sexo === 'H') {
+                dataPersona.sexo = 'M';
+              } else if (dataPersona.sexo === 'M') {
+                dataPersona.sexo = 'F';
+              }
+              dataPersona.callePrincipal = this.datos[i]['callePrincipal'];
+              dataPersona.numExterior = this.datos[i]['numExterior'];
+              dataPersona.numInterior = this.datos[i]['numInterior'];
+              dataPersona.colonia = this.datos[i]['colonia'];
               dataPersona.codPostal = this.datos[i]['codPostal'];
+              if (dataPersona.codPostal.toString().length === 5 && this.validarSoloNumeros(dataPersona.codPostal.toString()) ) {
+                dataPersona.codPostal = this.datos[i]['codPostal'];
+              } else {
+                //Si el Código Postal no tiene 5 digitos, salte del ciclo y no agregue el registro
+                flag = true;
+                this.divEscondido = true;
+                this.cuentasCreadas = 0;
+                this.cuentasNoCreadas = 0;
+                this.snackBar.open(
+                  `Carga interrumpida: Código Postal de la fila ${aux} no válido, favor de verificar documento.`,
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
+              dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
+              dataPersona.fechaNacimiento = this.convertirNumeroAStrFecha(
+                parseInt(dataPersona.fechaNacimiento)
+              );
+              this.datosExcel.push(dataPersona);
             } else {
-              //Si el Código Postal no tiene 5 digitos, salte del ciclo y no agregue el registro
               flag = true;
               this.divEscondido = true;
               this.cuentasCreadas = 0;
               this.cuentasNoCreadas = 0;
+              this.datos = [];
               this.snackBar.open(
-                `Carga interrumpida: Código Postal de la fila ${aux} no válido, favor de verificar documento.`,
+                'Carga interrumpida: Campos incompletos, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
               break;
             }
-            dataPersona.fechaNacimiento = this.datos[i]['fechaNacimiento'];
-            dataPersona.fechaNacimiento = this.convertirNumeroAStrFecha(
-              parseInt(dataPersona.fechaNacimiento)
-            );
-            this.datosExcel.push(dataPersona);
-          } else {
+          }
+          if (this.datos.length === 0) {
             flag = true;
             this.divEscondido = true;
             this.cuentasCreadas = 0;
             this.cuentasNoCreadas = 0;
             this.datos = [];
             this.snackBar.open(
-              'Carga interrumpida: Campos incompletos, favor de verificar documento.',
+              'Carga interrumpida: Archivo sin datos, favor de verificar documento.',
               'Cerrar',
               { duration: 3000 }
             );
-            break;
-          }
-        }
-        if (this.datos.length === 0) {
-          flag = true;
-          this.divEscondido = true;
-          this.cuentasCreadas = 0;
-          this.cuentasNoCreadas = 0;
-          this.datos = [];
-          this.snackBar.open(
-            'Carga interrumpida: Archivo sin datos, favor de verificar documento.',
-            'Cerrar',
-            { duration: 3000 }
-          );
 
-        }
-        if (!flag) {
-          this.localStorageService.setExcel('datosExcel', this.datosExcel);
-          this.divEscondido = false;
-          this.cuentasCreadas = 0;
-          this.cuentasNoCreadas = 0;
-          this.creados = false;
-          this.ngAfterViewInit();
+          }
+          if (!flag) {
+            this.localStorageService.setExcel('datosExcel', this.datosExcel);
+            this.divEscondido = false;
+            this.cuentasCreadas = 0;
+            this.cuentasNoCreadas = 0;
+            this.creados = false;
+            this.ngAfterViewInit();
+          }
         }
       };
     } else {
@@ -505,7 +517,10 @@ export class CargarCuentaComponent implements OnInit {
                   },
                   (error) => {
                     // Este bloque se ejecutará si ocurre un error durante la solicitud.
-                    console.error('Error en la solicitud:', error);
+                    console.error('Error en la solicitud, intente nuevamente:', error);
+                    this.snackBar.open('Error en la solicitud, intente nuevamente', 'Cerrar', {
+                      duration: 3000,
+                    });
                     // Aquí puedes realizar acciones para manejar el error, si es necesario.
                     // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
                   }
