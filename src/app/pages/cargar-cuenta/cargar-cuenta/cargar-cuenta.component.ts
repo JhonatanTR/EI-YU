@@ -288,7 +288,6 @@ export class CargarCuentaComponent implements OnInit {
               dataPersona.fechaNacimiento = this.convertirNumeroAStrFecha(
                 parseInt(dataPersona.fechaNacimiento)
               );
-              console.log(dataPersona.fechaNacimiento)
               this.datosExcel.push(dataPersona);
             } else {
               flag = true;
@@ -529,6 +528,7 @@ export class CargarCuentaComponent implements OnInit {
                 );
 
               } else {
+                this.mostrarSpinner = false;
                 this.divEscondido = false;
               }
             });
