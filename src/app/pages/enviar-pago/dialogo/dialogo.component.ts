@@ -32,7 +32,7 @@ export class DialogoComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.envioMazivo);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-   
+
     for (let m of this.envioMazivo) {
       this.montoTotal = this.montoTotal + parseFloat(m.monto);
     }
@@ -59,7 +59,7 @@ export class DialogoComponent implements OnInit {
     }
   }
   enviar() { }
-  
+
 
   cargarArchivo2(event: any) {
     this.montoTotal = 0;
@@ -72,24 +72,29 @@ export class DialogoComponent implements OnInit {
       const hoja = libro.Sheets[libro.SheetNames[0]];
       this.datos = XLSX.utils.sheet_to_json(hoja);
       for (let i = 0; i < this.datos.length; i++) {
-        if (this.datos[i]['Destino'].length == 18) {
-          let trans = new InfoCapturaSPEIPago();
-          trans.ctaDestino = this.datos[i]['Destino'];
-          trans.nombreDestino = this.datos[i]['Nombre Beneficiario'];
-          trans.clabe = this.datos[i]['Numero de cuenta'];
-          trans.bancoDestino = this.datos[i]['Institucion bancaria'];
-          trans.monto = this.datos[i]['Monto'];
-          trans.refNum = this.datos[i]['Referencia Numerica'];
-          trans.conceptoPago = this.datos[i]['Concepto pago'];
-          trans.cveRastreo = "asw2";
-          this.envioMazivo.push(trans)
-        }
-      };
-      this.localStorageService.setExcelList("listExel", this.envioMazivo);
-      this.divEscondido = false;
-      this.ngAfterViewInit();
+
+        let trans = new InfoCapturaSPEIPago();
+        trans.ctaDestino = this.datos[i]['Destino'];
+        trans.nombreDestino = this.datos[i]['Nombre Beneficiario'];
+        trans.clabe = this.datos[i]['Numero de cuenta'];
+        trans.bancoDestino = this.datos[i]['Institucion bancaria'];
+        trans.monto = this.datos[i]['Monto'];
+        trans.refNum = this.datos[i]['Referencia Numerica'];
+        trans.conceptoPago = this.datos[i]['Concepto pago'];
+        trans.cveRastreo = "asw2";
+        this.envioMazivo.push(trans)
+      }
     };
+    for (let j = 0; j < this.envioMazivo.length; j++) {
+      if (this.envioMazivo[j].ctaDestino.length == 18 && this.envioMazivo[j].clabe.length == 18) {
+        console.log
+      }
+    }
+    this.localStorageService.setExcelList("listExel", this.envioMazivo);
+    this.divEscondido = false;
+    this.ngAfterViewInit();
   }
+
 
   Salir() {
     this.dialogRef.close();
