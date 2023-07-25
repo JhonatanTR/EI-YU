@@ -37,6 +37,9 @@ export class InfoLoginService {
   saldo(TOKEN: any) {//para saber el saldo tienes que introducir el token antes devuelto 
     return this.http.post<any>(`${this.urlSaldo}/saldo`,TOKEN)
   }
+  saldoACTUAL(data:any) {//para saber el saldo tienes que introducir el token antes devuelto 
+    return this.http.post<any>(`${this.urlSaldo}/saldoActual`,data)
+  }
 
   buscarNomUsuarioPorId(dato: any) {
     return this.http.post<any>(`${this.url}/buscarIdUsuario`, dato)
