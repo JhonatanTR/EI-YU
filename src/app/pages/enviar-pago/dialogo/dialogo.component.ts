@@ -1,6 +1,6 @@
 import { ConstantPool } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +9,7 @@ import { Transacciones } from 'src/app/_model/transacciones';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { LoginService } from 'src/app/_service/login.service';
 import * as XLSX from 'xlsx';
+import { DialogoDialogCleanComponent } from './dialogo-dialog-clean/dialogo-dialog-clean.component';
 @Component({
   selector: 'app-dialogo',
   templateUrl: './dialogo.component.html',
@@ -26,7 +27,17 @@ export class DialogoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+<<<<<<< HEAD
   constructor(private loginService: LoginService, private dialogRef: MatDialogRef<DialogoComponent>, private localStorageService: LocalStorageService) { }
+=======
+  constructor(
+    private loginService: LoginService,
+    private dialogRef: MatDialogRef<DialogoComponent>,
+    private localStorageService: LocalStorageService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
+>>>>>>> 8750cdd02a27800def15a2bc9657b00b4f5f1613
 
   ngAfterViewInit() {
     this.dataSource = new MatTableDataSource(this.envioMazivo);
@@ -72,6 +83,41 @@ export class DialogoComponent implements OnInit {
       const hoja = libro.Sheets[libro.SheetNames[0]];
       this.datos = XLSX.utils.sheet_to_json(hoja);
       for (let i = 0; i < this.datos.length; i++) {
+<<<<<<< HEAD
+=======
+        aux++;
+        if (
+          this.datos[i]['Destino'] &&
+          this.datos[i]['Nombre Beneficiario'] &&
+          this.datos[i]['Numero de cuenta'] &&
+          this.datos[i]['Institucion bancaria'] &&
+          this.datos[i]['Monto'] &&
+          this.datos[i]['Referencia Numerica'] &&
+          this.datos[i]['Concepto pago']
+        ) {
+          let trans = new InfoCapturaSPEIPago();
+          trans.ctaDestino = this.datos[i]['Destino'];
+
+          trans.nombreDestino = this.datos[i]['Nombre Beneficiario'];
+          trans.clabe = this.datos[i]['Numero de cuenta'];
+          trans.bancoDestino = this.datos[i]['Institucion bancaria'];
+          trans.monto = this.datos[i]['Monto'];
+          trans.refNum = this.datos[i]['Referencia Numerica'];
+          trans.conceptoPago = this.datos[i]['Concepto pago'];
+          trans.cveRastreo = 'asw2';
+          this.envioMazivo.push(trans);
+
+
+
+        }else{
+          this.snackBar.open(
+            `Carga interrumpida: El archivo no puede contener más de 50 registros.`,
+            'Cerrar',
+            { duration: 3000 }
+          );
+          break;
+        }
+>>>>>>> 8750cdd02a27800def15a2bc9657b00b4f5f1613
 
         let trans = new InfoCapturaSPEIPago();
         trans.ctaDestino = this.datos[i]['Destino'];
@@ -99,10 +145,36 @@ export class DialogoComponent implements OnInit {
   Salir() {
     this.dialogRef.close();
   }
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+  removeXLSX() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '40%';
+    dialogConfig.height = '40%';
+    dialogConfig.disableClose = false;
+    const dialogRef = this.dialog.open(
+      DialogoDialogCleanComponent,
+      dialogConfig
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.envioMazivo = [];
+        this.localStorageService.removeExecel();
+        this.ngAfterViewInit();
+        this.divEscondido = true;
+        this.snackBar.open('Datos Removidos', 'Cerrar', {
+          duration: 2000,
+        });
+      } else {
+        this.divEscondido = false;
+      }
+    });
+  }
+>>>>>>> 8750cdd02a27800def15a2bc9657b00b4f5f1613
 }

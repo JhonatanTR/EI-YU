@@ -130,7 +130,7 @@ export class CargarCuentaComponent implements OnInit {
     this.datosExcel = [];
     this.primeraCasillaSeleccionada = false;
     this.selection = new SelectionModel<InfoPersonaFisica>(true, []);
-    this.selection.clear;
+    this.selection.clear();
     this.localStorageService.removeExcel();
     this.ngAfterViewInit();
     const inputElement = event.target as HTMLInputElement;
@@ -358,7 +358,6 @@ export class CargarCuentaComponent implements OnInit {
 
   removeXLSX() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = this.option;
     dialogConfig.width = '40%';
     dialogConfig.height = '40%';
     dialogConfig.disableClose = false;
@@ -372,7 +371,7 @@ export class CargarCuentaComponent implements OnInit {
         this.datosExcel = [];
         this.primeraCasillaSeleccionada = false;
         this.selection = new SelectionModel<InfoPersonaFisica>(true, []);
-        this.selection.clear;
+        this.selection.clear();
         this.localStorageService.removeExcel();
         this.ngAfterViewInit();
         this.creados = false;

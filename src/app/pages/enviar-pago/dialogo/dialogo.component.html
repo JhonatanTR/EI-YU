@@ -1,74 +1,142 @@
-<button mat-raised-button style="left: 93%; background-color: crimson; color: #FAF8FF; "
-    (click)="Salir()">Regresar</button>
- 
-<button mat-button color="primary" onclick="document.getElementById('fileToUpload').click()"
-    style="border: 1px solid #45B39D; position: relative; left: -90px;">Seleccionar archivo</button>
-<input id="fileToUpload" type="file" (change)="cargarArchivo2($event)" style="display:none;">
-
-<p>Carga Masiva</p> 
-<br>
-<div [hidden]="divEscondido"><mat-form-field>
+<div class="body">
+  <div class="header-container">
+      <h2>Carga Masiva</h2>
+      <button
+      mat-icon-button
+      style="background-color: transparent; position: absolute; right: 0; top: 0;"
+      (click)="Salir()"
+    >
+    <mat-icon>clear</mat-icon>
+    </button>
+    <div class="header-container_options">
+        <button
+          *ngIf="!divEscondido"
+          mat-button
+          color="primary"
+          onclick="document.getElementById('fileToUpload').click()"
+          style="border: 1px solid #45b39d;"
+        >
+          Seleccionar archivo
+        </button>
+        <input
+          id="fileToUpload"
+          type="file"
+          (change)="cargarArchivo2($event)"
+          style="display: none"
+          onclick="this.value=null;"
+        />
+        <button mat-flat-button color="basic" (click)="removeXLSX()" *ngIf="!divEscondido">
+          Limpiar
+        </button>
+    </div>
+  </div>
+  <ng-container *ngIf="divEscondido;else hides">
+    <div class="toggle-file-button">
+      <button
+      *ngIf="divEscondido"
+      mat-button
+      color="primary"
+      onclick="document.getElementById('fileToUpload').click()"
+      style="border: 1px solid #45b39d;"
+    >
+      Seleccionar archivo
+    </button>
+    <input
+      id="fileToUpload"
+      type="file"
+      (change)="cargarArchivo2($event)"
+      style="display: none"
+      onclick="this.value=null;"
+    />
+  </div>
+  </ng-container>
+  <ng-template #hides>
+    <div>
+      <mat-form-field>
         <mat-label>Filtrar</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ejem. Mia" #input>
-    </mat-form-field>
-    <div class="mat-elevation-z8">
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Ejem. Mia"
+          #input
+        />
+      </mat-form-field>
+      <div class="mat-elevation-z8" style="overflow: hidden;">
         <table mat-table [dataSource]="dataSource" matSort>
-            <!-- ID Column -->
-            <ng-container matColumnDef="Destino">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Destino </th>
-                <td mat-cell *matCellDef="let row"> {{row.ctaDestino}} </td>
-            </ng-container>
+          <!-- ID Column -->
+          <ng-container matColumnDef="Destino">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Destino</th>
+            <td mat-cell *matCellDef="let row">{{ row.ctaDestino }}</td>
+          </ng-container>
 
-            <ng-container matColumnDef="Beneficiario">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Beneficiario </th>
-                <td mat-cell *matCellDef="let row"  > {{row.nombreDestino}} </td>
-            </ng-container>
+          <ng-container matColumnDef="Beneficiario">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Beneficiario</th>
+            <td mat-cell *matCellDef="let row">{{ row.nombreDestino }}</td>
+          </ng-container>
 
-            <ng-container matColumnDef="Número de Cuenta" >
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de Cuenta </th>
-                <td mat-cell *matCellDef="let row"> {{row.clabe}} </td>
-            </ng-container>
+          <ng-container matColumnDef="Número de Cuenta">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Número de Cuenta
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.clabe }}</td>
+          </ng-container>
 
-            <ng-container matColumnDef="Banco">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Banco </th>
-                <td mat-cell *matCellDef="let row"  > {{row.bancoDestino}} </td>
-            </ng-container>
+          <ng-container matColumnDef="Banco">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Banco</th>
+            <td mat-cell *matCellDef="let row">{{ row.bancoDestino }}</td>
+          </ng-container>
 
-            <ng-container matColumnDef="Monto">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
-                <td mat-cell *matCellDef="let row"> ${{row.monto}} </td>
-            </ng-container>
+          <ng-container matColumnDef="Monto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Monto</th>
+            <td mat-cell *matCellDef="let row">${{ row.monto }}</td>
+          </ng-container>
 
-            <ng-container matColumnDef="Ref. Num">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ref. Num </th>
-                <td mat-cell *matCellDef="let row" > {{row.refNum}} </td>
-            </ng-container>
+          <ng-container matColumnDef="Ref. Num">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ref. Num</th>
+            <td mat-cell *matCellDef="let row">{{ row.refNum }}</td>
+          </ng-container>
 
-            
-            <ng-container matColumnDef="Concepto Pago">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto Pago </th>
-                <td mat-cell *matCellDef="let row"> {{row.conceptoPago}} </td>
-            </ng-container>
-            <!-- Progress Column -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            <!-- Row shown when there is no matching data. -->
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4">No hay datos que coincidan con el filtro"{{input.value}}"</td>
-            </tr>
+          <ng-container matColumnDef="Concepto Pago">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto Pago</th>
+            <td mat-cell *matCellDef="let row">{{ row.conceptoPago }}</td>
+          </ng-container>
+          <!-- Progress Column -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No hay datos que coincidan con el filtro"{{ input.value }}"
+            </td>
+          </tr>
         </table>
-        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-        <div style=" position: relative; padding-top: 20px ; left: 25px;  ">
-            <p style="color: rgb(4, 86, 4); font-size: 21px; font-weight: 500;">MONTO TOTAL DEL ARCHIVO: ${{montoTotal}}
-            </p>
+        <mat-paginator
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+        ></mat-paginator>
+        <div style="position: relative; padding-top: 20px; left: 25px">
+          <p style="color: rgb(4, 86, 4); font-size: 21px; font-weight: 500">
+            MONTO TOTAL DEL ARCHIVO: ${{ montoTotal }}
+          </p>
         </div>
 
-
-        <mat-form-field class="example-full-width" style="width: 20%; padding-left: 34%;">
-            <mat-label>Código OTP</mat-label>
-            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp">
+        <mat-form-field
+          class="example-full-width"
+          style="width: 20%; padding-left: 34%"
+        >
+          <mat-label>Código OTP</mat-label>
+          <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp" />
         </mat-form-field>
-        <button mat-raised-button style="color: #FAF8FF; background-color: #45B39D; width: 9%;"
-            (click)="enviar()">Pagar</button>
+        <button
+          mat-raised-button
+          style="color: #faf8ff; background-color: #45b39d; width: 9%"
+          (click)="enviar()"
+        >
+          Pagar
+        </button>
+      </div>
     </div>
+
+  </ng-template>
 </div>
+
