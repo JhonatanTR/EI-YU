@@ -194,10 +194,10 @@ export class EnviarPagoComponent implements OnInit {
 
   openDialog() {//abre el dialgo de carga masiva
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = '90%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
+    dialogConfig.width = '95%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
     dialogConfig.height = '90%'; // establece la altura del diálogo al 50% del alto de la pantalla
-    dialogConfig.maxWidth = '93%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
-    dialogConfig.maxHeight = '93%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
+    dialogConfig.maxWidth = '95%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
+    dialogConfig.maxHeight = '95%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
     dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
     this.dialog.open(DialogoComponent, dialogConfig);
   }
@@ -275,7 +275,7 @@ export class EnviarPagoComponent implements OnInit {
           // speiout.refCobranza = this.cobranza;
           speiout.cveRastreo = this.claveDeRastreo;
           speiout.conceptoPago = this.conceptoPago;
-         
+
           this.infoPagos.realizarPago(speiout).pipe(
             catchError((error) => {
               this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
@@ -297,7 +297,7 @@ export class EnviarPagoComponent implements OnInit {
       this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
     }
   }
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });

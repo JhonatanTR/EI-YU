@@ -76,7 +76,7 @@ export class TransferenciaComponent implements OnInit {
           this.clabeMadre = d.clabe;
           let lis={"clabe":this.clabeMadre}
           this.clabeP.push(lis);
-       
+
           this.activo = false;
         }
       })
@@ -118,10 +118,10 @@ export class TransferenciaComponent implements OnInit {
   }
 
   seleccionarCuenta(e: any) {
-   
+
     let a =e.value.id_banco
     this.mostrarValorCampo(a);
-  
+
   }
 
   displayIB(val: InfoBancos) {
@@ -179,9 +179,9 @@ export class TransferenciaComponent implements OnInit {
   openDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '90%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
-    dialogConfig.height = '90%'; // establece la altura del diálogo al 50% del alto de la pantalla
-    dialogConfig.maxWidth = '93%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
-    dialogConfig.maxHeight = '93%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
+    dialogConfig.height = '95%'; // establece la altura del diálogo al 50% del alto de la pantalla
+    dialogConfig.maxWidth = '95%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
+    //dialogConfig.maxHeight = '95%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
     dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
     this.dialog.open(DialogoComponent, dialogConfig);
   }
@@ -206,7 +206,7 @@ export class TransferenciaComponent implements OnInit {
         this.codigoOtp = "";
         let m: any = this.monto
         m = m.replace(/,/g, '');
-       
+
         let speiout = new InfoCapturaSPEIPago();
         speiout.username = InfSpei.username;
         speiout.password = InfSpei.password;
@@ -221,10 +221,10 @@ export class TransferenciaComponent implements OnInit {
         speiout.refNum = this.refNumerica;
         speiout.cveRastreo = this.claveDeRastreo;
         speiout.conceptoPago = this.conceptoPago;
-     
+
         this.infoPagos.realizarPago(speiout).pipe(
           catchError((error) => {
-          
+
             this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
             // Aquí puedes realizar las acciones necesarias en caso de error
             return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
@@ -260,7 +260,7 @@ export class TransferenciaComponent implements OnInit {
       this.claveDeRastreo = data.claveRastreo;
     });
   }
-  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar 
+  openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
       duration: 6000,
     });
@@ -284,7 +284,7 @@ export class TransferenciaComponent implements OnInit {
       this.rfcBeneficiario = "";
     }
   }
-  mostrarValorCampo(a:any): void {  
+  mostrarValorCampo(a:any): void {
           for (const bancosList of this.listaBancos) {
             if (bancosList.id_banco ===a) {
               this.institucionSeleccionada = bancosList;

@@ -41,7 +41,7 @@ export class ConfiguracionesComponent implements OnInit {
       dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
       this.dialog.open(DialogoConfCuentaComponent, dialogConfig);
     } else if(this.activo ===true ) {
-      this.openSnackBar('Su cuenta no está completamente configurada, comuníquese con soporte EIYU', 'Aviso');
+      this.openSnackBar('Su cuenta no está completamente configurada, comuníquese con soporte Ei-Yu', 'Aviso');
     }
 
   }

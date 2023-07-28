@@ -1,3 +1,7 @@
+.body{
+  height: 100%;
+  width: 100%;
+}
 table {
   width: 100%;
 }
@@ -5,6 +9,27 @@ table {
   font-size: 14px;
   width: 100%;
 }
-
-
-
+.header-container{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+.header-container_options{
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.toggle-file-button{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100% - 35px);
+}

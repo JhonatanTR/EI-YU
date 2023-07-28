@@ -1,6 +1,6 @@
 import { ConstantPool } from '@angular/compiler';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +10,7 @@ import { Transacciones } from 'src/app/_model/transacciones';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { LoginService } from 'src/app/_service/login.service';
 import * as XLSX from 'xlsx';
+import { DialogoDialogCleanComponent } from './dialogo-dialog-clean/dialogo-dialog-clean.component';
 @Component({
   selector: 'app-dialogo',
   templateUrl: './dialogo.component.html',
@@ -40,6 +41,7 @@ export class DialogoComponent implements OnInit {
     private dialogRef: MatDialogRef<DialogoComponent>,
     private localStorageService: LocalStorageService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngAfterViewInit() {
@@ -118,7 +120,11 @@ export class DialogoComponent implements OnInit {
 
 
         }else{
-          alert("El archivo no contiene todos los datos necesarios")
+          this.snackBar.open(
+            `Carga interrumpida: El archivo no puede contener más de 50 registros.`,
+            'Cerrar',
+            { duration: 3000 }
+          );
           break;
         }
 
@@ -139,5 +145,28 @@ export class DialogoComponent implements OnInit {
 
   Salir() {
     this.dialogRef.close();
+  }
+  removeXLSX() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '40%';
+    dialogConfig.height = '40%';
+    dialogConfig.disableClose = false;
+    const dialogRef = this.dialog.open(
+      DialogoDialogCleanComponent,
+      dialogConfig
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.envioMazivo = [];
+        this.localStorageService.removeExecel();
+        this.ngAfterViewInit();
+        this.divEscondido = true;
+        this.snackBar.open('Datos Removidos', 'Cerrar', {
+          duration: 2000,
+        });
+      } else {
+        this.divEscondido = false;
+      }
+    });
   }
 }
