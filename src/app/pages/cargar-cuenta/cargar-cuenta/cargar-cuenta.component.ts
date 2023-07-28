@@ -525,7 +525,6 @@ export class CargarCuentaComponent implements OnInit {
                     // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
                   }
                 );
-
               } else {
                 this.mostrarSpinner = false;
                 this.divEscondido = false;

@@ -36,11 +36,8 @@ export class DashboardComponent implements OnDestroy {
   sn: string = "0.00"; // Variable de tipo "string" para almacenar un número en forma de cadena de caracteres, con valor inicial de "0.00"
   pblu: string = this.localStorageService.getUsuario("pblu").toString();//Almacena el idPblu del participante
   intervalSubscription: Subscription | null = null;
-  data: number = 15000;
+  data: number = 2000;
   ocult= false;
-  pbluParaSaldo={
-   "pblu": this.localStorageService.getUsuario("pblu")
-  }
   constructor(private loginService: LoginService, private infoLog: InfoLoginService, private Infob: InfoBancosService, private localStorageService: LocalStorageService) {
     this.fechaActual = new Date();
     this.fechaInicio = new Date;
@@ -49,9 +46,6 @@ export class DashboardComponent implements OnDestroy {
   }
 
   ngOnInit(): void {
-    this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe((saldo:any) => {
-      this.sn = saldo;
-    })
     const datePipe = new DatePipe('en-US');
     this.startDataUpdate();
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
@@ -63,7 +57,6 @@ export class DashboardComponent implements OnDestroy {
     this.loginService.mensaje$.subscribe((mensaje: string) => {
       this.token = mensaje;
     });
-    
     this.token = this.localStorageService.getDesc("token")
     this.tipo = "bar"
     //this.dibujar();
@@ -93,8 +86,10 @@ export class DashboardComponent implements OnDestroy {
       this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
         this.pas = dato;
         let to ={"token":this.token}
-        this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
+        this.infoLog.saldo(to).subscribe(sal => {
+          this.token = this.localStorageService.getDesc("token");
           this.sn = sal;
+          
         })
       });
     });
