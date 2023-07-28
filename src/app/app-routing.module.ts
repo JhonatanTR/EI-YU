@@ -20,7 +20,7 @@ const routes: Routes = [
   {path: "trasferencia", component: TransferenciaComponent},
   {path: "autorizarspei", component: AutorizarSpeiComponent},
   {path: "configuracion", component: ConfiguracionesComponent},
-  //{path: "cargar_cuenta", component: CargarCuentaComponent}
+  {path: "cargar_cuenta", component: CargarCuentaComponent}
 ];
 
 @NgModule({

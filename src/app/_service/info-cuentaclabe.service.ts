@@ -13,19 +13,19 @@ export class InfoCuentaclabeService {
   constructor(private http: HttpClient) { }
    //Este servicio es exclusivo de la configuracion en cuenta
   guardarEnLatablaListarPagos(infoAutorizarSpei:InfoCuentaClabe){//Guarda en la tabla de cuentas
-    return this.http.post<InfoCuentaClabe>(`${this.url}/cuenta`,infoAutorizarSpei);
+    return this.http.post<InfoCuentaClabe>(`${this.url}/api/cuenta`,infoAutorizarSpei);
   }
   listarPagosDeAutorizar(){//Listar en la tabla Cuentas
-    return this.http.get<InfoCuentaClabe[]>(`${this.url}/listCuenta`);
+    return this.http.get<InfoCuentaClabe[]>(`${this.url}/api/listCuenta`);
   }
   listarPagosDeAutorizarPblu(dato:any){//Listar en la tabla Cuentas
-    return this.http.post<InfoCuentaClabe[]>(`${this.url}/listPblu`,dato);
+    return this.http.post<InfoCuentaClabe[]>(`${this.url}/api/listPblu`,dato);
   }
   eliminar(infoCuentaClabe:InfoCuentaClabe){//Listar en la tabla Cuentas
-    return this.http.post(`${this.url}/eliminar`,infoCuentaClabe);
+    return this.http.post(`${this.url}/api/eliminar`,infoCuentaClabe);
   }
   modificar(infoCuentaClabe:InfoCuentaClabe){//Modifica la Cuentas clabe 
-    return this.http.put<InfoCuentaClabe>(`${this.url}/modificar`,infoCuentaClabe);
+    return this.http.put<InfoCuentaClabe>(`${this.url}/api/modificar`,infoCuentaClabe);
   }
   buscarCuentaExiste(data:any){
     return this.http.post<any>(`${this.url}/validar/existeCuenta`,data);

@@ -14,8 +14,12 @@ export class InfoLoginService {
   urlSaldo:string=`${HOST}`
   constructor(private http: HttpClient) { }
 
+  
   login(login: login) {//Realiza el login del sistema 
-    return this.http.post<any>(`${this.url}/login`, login)
+
+    // Configurar los encabezados CORS
+   
+    return this.http.post<any>(`${this.url}/iniciar/login`, login)
   }
   optenerIdTokenEnrParticipante(data: any) {//Realiza el login del sistema 
     return this.http.post<any>(`${this.url}/enroladors`, data)
@@ -27,7 +31,7 @@ export class InfoLoginService {
     return this.http.post<any>(`${this.url}/otp/validar`, rtOtp);
   }
   generadorQr(request: any) {//Genera el codigo QR Para realizar el enrolamiento
-    return this.http.post(`${this.url}/tesseract/qrcode`, request, {
+    return this.http.post(`${this.url}/iniciar/tesseract/qrcode`, request, {
       responseType: 'blob' // El tipo de respuesta es "json"
     });
   }
@@ -35,7 +39,10 @@ export class InfoLoginService {
     return this.http.post<any>(this.urlValidacionToken, data);
   }
   saldo(TOKEN: any) {//para saber el saldo tienes que introducir el token antes devuelto 
-    return this.http.post<any>(`${this.urlSaldo}/saldo`,TOKEN)
+    return this.http.post<any>(`${this.urlSaldo}/api/saldo`,TOKEN)
+  }
+  saldoACTUAL(data:any) {//para saber el saldo tienes que introducir el token antes devuelto 
+    return this.http.post<any>(`${this.urlSaldo}/api/saldoActual`,data)
   }
 
   buscarNomUsuarioPorId(dato: any) {
