@@ -1,3 +1,14 @@
+*{
+
+}
+:root{
+  --main-font: 'Montserrat', sans-serif;
+}
+.main-menu-title{
+  font-family: var(--main-font);
+  font-weight: 500;
+  margin-top: 2%;
+}
 .example-container {
   display: flex;
   flex-direction: column;
@@ -11,7 +22,12 @@
 
 .bienvenida {
   font-size: 16px;
-  margin-left: 20%;
+  margin-left: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-family: var(--main-font);
+  font-weight: 500;
 }
 
 .left-size-header {
@@ -32,11 +48,26 @@
 .example-sidenav-container {
   flex: 1;
 }
-
-.example-spacer {
-  flex: 1 1 auto;
+.copyright-container{
+  display: flex;
+  height: 100%;
+  width: 15%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
 }
-
+.copyright-text{
+  font-size: 12px;
+  font-family: var(--main-font);
+  font-weight: 400;
+  margin: 0;
+  height: 25px;
+}
+.imgASP{
+  height: auto;
+  width: 60%;
+}
 .example-toolbar {
   background-color: #eab52F;
 }

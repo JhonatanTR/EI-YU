@@ -116,24 +116,25 @@
         ></mat-paginator>
         <div style="position: relative; padding-top: 20px; left: 25px">
           <p style="color: rgb(4, 86, 4); font-size: 21px; font-weight: 500">
-            MONTO TOTAL DEL ARCHIVO: ${{ montoTotal }}
+            MONTO TOTAL: ${{ montoTotal }}
           </p>
         </div>
 
-        <mat-form-field
-          class="example-full-width"
-          style="width: 20%; padding-left: 34%"
-        >
-          <mat-label>Código OTP</mat-label>
-          <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp" />
-        </mat-form-field>
-        <button
-          mat-raised-button
-          style="color: #faf8ff; background-color: #45b39d; width: 9%"
-          (click)="enviar()"
-        >
-          Pagar
-        </button>
+        <div class="otp-input-container">
+          <mat-form-field
+            class="example-full-width"
+          >
+            <mat-label>Código OTP</mat-label>
+            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp" />
+          </mat-form-field>
+          <button
+            mat-raised-button
+            style="color: #faf8ff; background-color: #45b39d; width: 9%"
+            (click)="enviar()"
+          >
+            Pagar
+          </button>
+        </div>
       </div>
     </div>
 

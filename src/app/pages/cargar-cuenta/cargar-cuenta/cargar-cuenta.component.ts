@@ -139,6 +139,7 @@ export class CargarCuentaComponent implements OnInit {
     if (archivo != null) {
       this.datosExcel = [];
       this.dataSource = new MatTableDataSource(this.datosExcel);
+      this.dataSource.paginator = this.paginator;
       const lector = new FileReader();
       lector.readAsBinaryString(archivo[0]);
       lector.onload = () => {

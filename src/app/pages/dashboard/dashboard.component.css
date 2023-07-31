@@ -1,3 +1,7 @@
+.label-title{
+  flex: 1 1 auto;
+}
+
 mat-form-field {
     max-width: 400px;
     /* Ajusta este valor según tus necesidades */
@@ -35,11 +39,8 @@ mat-form-field {
     /* Agrega una transición suave */
 }
 
-.example-text {
-    margin-top: 12px;
-    margin-bottom: 10px;
-    margin-left: 29px;
-    margin-right: 20px;
+.dashboard-header{
+    margin: 1em;
     display: flex;
     justify-content: flex-start;
 }
@@ -56,26 +57,18 @@ mat-form-field {
 }
 .header-content{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    width: 100%;
-    margin-bottom: 1em;
+    width: 95%;
+    margin: 1em;
 }
-.label-title{
-    padding-left: 1em;
-    font-size: 15px;
-    font-weight: 520;
-}
+
 .lav{
     position: fixed;
     right: 100px;
     top: 84px;;
 }
-.label-toggle{
-    margin-right: 2em;
-    position: relative;
-    left: 90px;
-}
+
 .body-content{
     justify-content: space-around;
     width: 100%;
@@ -93,12 +86,12 @@ mat-form-field {
     width: 30%;
     padding-left: 40px;
     display: inline-block;
-   
+
 }
 
 .example-fechaF {
     display: flex;
-  
+
     white-space: nowrap;
     margin-left: 31px;
     margin-bottom: -10px;
@@ -114,15 +107,15 @@ mat-form-field {
     margin: 8px 0;
     display: block;
   }
-  
+
 .card-container {
     display: flex;
-   
+
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
     margin: 0 -10px;
-    
+
 }
 
 .example-card {
@@ -297,10 +290,5 @@ canvas {
     margin-top: 5px;
 }
 @media (min-width: 600px) and (max-width: 1280px) {
-    .label-toggle{ 
-        margin-right: 2em;
-        position: relative;
-        left: 15em;
-    }
+
   }
-  

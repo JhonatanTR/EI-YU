@@ -16,11 +16,11 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {path:"dashboard",component:DashboardComponent,canActivate:[GuardServiceService]},
   {path: "enviar_pago", component: EnviarPagoComponent,canActivate:[GuardServiceService]},
-  {path: "busqueda_movimiento", component: BusquedaMovimientoComponent},
-  {path: "trasferencia", component: TransferenciaComponent},
-  {path: "autorizarspei", component: AutorizarSpeiComponent},
-  {path: "configuracion", component: ConfiguracionesComponent},
-  {path: "cargar_cuenta", component: CargarCuentaComponent}
+  {path: "busqueda_movimiento", component: BusquedaMovimientoComponent, canActivate:[GuardServiceService]},
+  {path: "trasferencia", component: TransferenciaComponent, canActivate:[GuardServiceService]},
+  {path: "autorizarspei", component: AutorizarSpeiComponent, canActivate:[GuardServiceService]},
+  {path: "configuracion", component: ConfiguracionesComponent, canActivate:[GuardServiceService]},
+  {path: "cargar_cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]}
 ];
 
 @NgModule({

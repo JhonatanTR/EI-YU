@@ -10,8 +10,16 @@ import { LoginService } from './login.service';
 export class GuardServiceService implements CanActivate {
 
   constructor(private router: Router, private localStorageService: LocalStorageService,private loginService: LoginService) { }
-  
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    if (this.localStorageService.getDesc("log") != null) {
+      console.log("token: " + this.localStorageService.getDesc("log"));
       return true;
+    } else {
+      console.log("token: " + this.localStorageService.getDesc("log"));
+      //this.loginService.cerrarSesion();
+      this.router.navigate(['login']);
+      return false;
+    }
   }
 }
