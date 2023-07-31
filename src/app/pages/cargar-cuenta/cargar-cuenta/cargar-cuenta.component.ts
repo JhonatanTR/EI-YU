@@ -418,7 +418,6 @@ export class CargarCuentaComponent implements OnInit {
           this.mostrarSpinner = true;
           if (data?.mensaje == 'Otp validado correctamente') {
             const dialogConfig = new MatDialogConfig();
-            dialogConfig.data = this.arregloPersonas;
             dialogConfig.width = '40%';
             dialogConfig.height = '40%';
             dialogConfig.disableClose = false;

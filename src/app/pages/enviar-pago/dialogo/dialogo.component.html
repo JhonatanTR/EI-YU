@@ -33,7 +33,6 @@
   <ng-container *ngIf="divEscondido;else hides">
     <div class="toggle-file-button">
       <button
-      *ngIf="divEscondido"
       mat-button
       color="primary"
       onclick="document.getElementById('fileToUpload').click()"
@@ -125,7 +124,7 @@
             class="example-full-width"
           >
             <mat-label>Código OTP</mat-label>
-            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOtp" />
+            <input matInput placeholder="Código OTP" [(ngModel)]="codigoOTP" />
           </mat-form-field>
           <button
             mat-raised-button

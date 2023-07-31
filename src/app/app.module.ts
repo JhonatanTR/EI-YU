@@ -25,7 +25,8 @@ import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-e
 import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
 import { CargarCuentaRemoveDialogComponent } from './pages/cargar-cuenta/cargar-cuenta-remove-dialog/cargar-cuenta-remove-dialog.component';
 import { CargarCuentaCreateDialogComponent } from './pages/cargar-cuenta/cargar-cuenta-create-dialog/cargar-cuenta-create-dialog.component';
-import { DialogoDialogCleanComponent } from './pages/enviar-pago/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component'; // import NgxQRCodeModule
+import { DialogoDialogCleanComponent } from './pages/enviar-pago/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component';
+import { DialogoDialogCreateComponent } from './pages/enviar-pago/dialogo/dialogo-dialog-create/dialogo-dialog-create.component'; // import NgxQRCodeModule
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { DialogoDialogCleanComponent } from './pages/enviar-pago/dialogo/dialogo
     CargarCuentaRemoveDialogComponent,
     CargarCuentaCreateDialogComponent,
     DialogoDialogCleanComponent,
+    DialogoDialogCreateComponent,
     
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
