@@ -16,6 +16,10 @@ export class InfoPagosService {
   realizarPago(infoCapturaSPEIPago: InfoCapturaSPEIPago) {//DA DE ALTA UN PAGO
     return this.http.post<any>(this.urlPago, infoCapturaSPEIPago);
   }
+  
+  realizarPagoMazivo(infoCapturaSPEIPago: InfoCapturaSPEIPago[]) {//DA DE ALTA UN PAGO
+    return this.http.post<any>(`${this.urlPago}/masivo`, infoCapturaSPEIPago);
+  }
 
   guardarEnLatablaListarPagos(infoAutorizarSpei: InfoAutorizarSpei) {//Guarda en la tabla listarSpei
     return this.http.post<InfoAutorizarSpei>(`${this.urlEnlistar}/speiOut`, infoAutorizarSpei);

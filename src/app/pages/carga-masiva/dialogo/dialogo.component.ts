@@ -25,6 +25,10 @@ import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.servic
 import { requesteClaveRastreo } from 'src/app/_modelRequest/requestClaveRastreo';
 import { InfoBancos } from 'src/app/_model/InfoBancos';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
+import { from } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
+import { InfoPagosService } from 'src/app/_service/info-pagos.service';
+
 @Component({
   selector: 'app-dialogo',
   templateUrl: './dialogo.component.html',
@@ -62,7 +66,7 @@ export class DialogoComponent implements OnInit {
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
     private infoCuentaClabeService: InfoCuentaclabeService,
-    private loginServices: InfoLoginService,
+    private infoPagosService: InfoPagosService,
     private infoBancoService: InfoBancosService
   ) { }
 
@@ -141,6 +145,7 @@ export class DialogoComponent implements OnInit {
   }
 
   cargarArchivo2(event: Event) {
+
     this.busquedaCuentaConcentradora();
     this.montoTotal = 0;
     this.envioMazivo = [];
@@ -173,55 +178,19 @@ export class DialogoComponent implements OnInit {
             this.datos[i]['Concepto pago']
           ) {
             let trans = new InfoCapturaSPEIPago();
-            trans.ctaDestino = this.datos[i]['Destino'];
-            if (trans.ctaDestino == this.datos[i]['Numero de cuenta'] && trans.ctaDestino.length == 18 && this.validarSoloNumeros(trans.ctaDestino)) {
+            if (this.datos[i]['Destino'] != this.datos[i]['Numero de cuenta'] && this.datos[i]['Destino'].length <= 18 && this.validarSoloNumeros(this.datos[i]['Destino']) == true) {
+              trans.ctaDestino = this.datos[i]['Destino'];
+            } else {
+              this.divEscondido = true;
+              flag = false
               this.snackBar.open(
                 'Carga interrumpida: Cuenta destino no puede ser igual a la clabe, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
-              break;
-            } else {
-              trans.ctaDestino = this.datos[i]['Destino'];
+
             }
-            trans.nombreDestino = this.datos[i]['Nombre Beneficiario'];
-            trans.clabe = this.datos[i]['Numero de cuenta'];
-            if (trans.clabe.length == 18 && trans.clabe == this.clabeMadre && this.validarSoloNumeros(trans.clabe)) {
-              this.snackBar.open(
-                'Carga interrumpida: La cuenta clabe pertenece a la cuenta concentradora, favor de verificar documento.',
-                'Cerrar',
-                { duration: 3000 }
-              );
-              break;
-            } else {
-              trans.clabe = this.datos[i]['Numero de cuenta'];
-            }
-            trans.bancoDestino = this.datos[i]['Institucion bancaria'];
-            trans.monto = this.datos[i]['Monto'];
-            if (parseFloat(trans.monto) <= 0.0 && this.validarSoloNumeros(trans.monto)) {
-              this.snackBar.open(
-                'Carga interrumpida: Monto no puede ser cero, negativo o un caracter, favor de verificar documento.',
-                'Cerrar',
-                { duration: 3000 }
-              );
-              break;
-            } else {
-              trans.monto = this.datos[i]['Monto'];
-            }
-            trans.refNum = this.datos[i]['Referencia Numerica'];
-            if (trans.refNum.length > 7 && trans.refNum.length < 1 && this.validarSoloNumeros(trans.refNum)) {
-              this.snackBar.open(
-                'Carga interrumpida: Referencia Numerica debe tener al menos un digito númerico, o no ser mayor a 7 digitos, favor de verificar documento.',
-                'Cerrar',
-                { duration: 3000 }
-              );
-              break;
-            } else {
-              trans.refNum = this.datos[i]['Referencia Numerica'];
-            }
-            trans.conceptoPago = this.datos[i]['Concepto pago'];
-            trans.cveRastreo = 'asw2';
-            this.envioMazivo.push(trans);
+          
           } else {
             this.snackBar.open(
               'Carga interrumpida: Campos incompletos, favor de verificar documento.',
@@ -231,6 +200,7 @@ export class DialogoComponent implements OnInit {
             break;
           }
         }
+        //Otros Ifs 
         if (this.datos.length === 0) {
           flag = true;
           this.divEscondido = true;
@@ -289,9 +259,10 @@ export class DialogoComponent implements OnInit {
   }
 
   requestList: InfoCapturaSPEIPago[] = [];
-
+  a = 1;
+  listasACargar: any[] = [];
   enviar() {
-    let aux=0;
+    let aux = 0;
     this.requestList = [];
     if (this.codigoOTP != '') {
       this.mostrarSpinner = true;
@@ -330,42 +301,75 @@ export class DialogoComponent implements OnInit {
           for (let i = 0; i < this.envioMazivo.length; i++) {
             let request = new requesteClaveRastreo();
             request.idParticipante = this.localStorageService.getUsuario("pblu").toString();
-         //   this.infoBancoService.generarClaveRastreo(request).pipe(
-           //   finalize(() => {
-                aux++;
-                let speiout = new InfoCapturaSPEIPago();
-                speiout.username = InfSpei.username;
-                speiout.password = InfSpei.password;
-                speiout.certificado = InfSpei.certificado;
-                speiout.llave = InfSpei.llave;
-                speiout.phrase = InfSpei.phrase;
-                speiout.ctaDestino = this.envioMazivo[i].ctaDestino;
-                speiout.nombreDestino = this.envioMazivo[i].nombreDestino;
-                speiout.clabe = this.envioMazivo[i].clabe;
-                speiout.bancoDestino = this.buscarIdBanco(this.envioMazivo[i].ctaDestino).toString();
-                speiout.monto = this.envioMazivo[i].monto;
-                speiout.refNum = this.envioMazivo[i].refNum;
-                speiout.conceptoPago = this.envioMazivo[i].conceptoPago;
-                speiout.cveRastreo = this.claveDeRastreo;
-                this.requestList.push(speiout);
+            //   this.infoBancoService.generarClaveRastreo(request).pipe(
+            //   finalize(() => {
+            aux++;
+            let speiout = new InfoCapturaSPEIPago();
+            speiout.username = InfSpei.username;
+            speiout.password = InfSpei.password;
+            speiout.certificado = InfSpei.certificado;
+            speiout.llave = InfSpei.llave;
+            speiout.phrase = InfSpei.phrase;
+            speiout.ctaDestino = this.envioMazivo[i].ctaDestino;
+            speiout.nombreDestino = this.envioMazivo[i].nombreDestino;
+            speiout.clabe = this.envioMazivo[i].clabe;
+            speiout.bancoDestino = this.buscarIdBanco(this.envioMazivo[i].ctaDestino).toString();
+            speiout.monto = this.envioMazivo[i].monto;
+            speiout.refNum = this.envioMazivo[i].refNum;
+            speiout.conceptoPago = this.envioMazivo[i].conceptoPago;
+            speiout.cveRastreo = this.claveDeRastreo;
+            this.requestList.push(speiout);
+            if (this.requestList.length == this.envioMazivo.length) {
+
+              this.agregarDatosCola(this.requestList);
 
 
-                if(this.requestList.length==this.envioMazivo.length){
-                  console.log(this.requestList);
-                  this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
-                }
-             // })).subscribe((data: { claveRastreo: string; }) => {
-               // this.claveDeRastreo = data.claveRastreo;
-              //});
+              this.realiazarPagoMazivo();
+              this.a++;
+
+              //this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
+            }
+            // })).subscribe((data: { claveRastreo: string; }) => {
+            // this.claveDeRastreo = data.claveRastreo;
+            //});
 
           }
-         
+
         }
       });
       //}
       //});
     }
- 
+
+  }
+
+
+  agregarDatosCola(request: InfoCapturaSPEIPago[]) {
+
+    this.listasACargar.push(request);
+    console.log(this.listasACargar)
+  }
+  realiazarPagoMazivo() {
+    console.log(this.listasACargar, "Este es el de la cola")
+    from(this.listasACargar).pipe(
+      concatMap((lista) => this.infoPagosService.realizarPagoMazivo(lista))
+    ).subscribe(
+      (data) => {
+        // Este bloque se ejecutará si la solicitud se completa sin errores.
+        console.log(data)
+        // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
+      },
+      (error) => {
+        // Este bloque se ejecutará si ocurre un error durante la solicitud.
+
+        // Aquí puedes realizar acciones para manejar el error, si es necesario.
+        // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
+      },
+      () => {
+
+
+      }
+    );
   }
   buscarIdBanco(a: string): number {
     const primerasTresLetras: string = a.substring(0, 3);
