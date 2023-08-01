@@ -74,8 +74,7 @@ export class DialogoComponent implements OnInit {
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
       this.dataSource = new MatTableDataSource(this.envioMazivo);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      setTimeout(() => {this.dataSource.paginator = this.paginator; this.dataSource.sort = this.sort;});
       this.divEscondido = false;
       this.cd.detectChanges();
     } else {
@@ -168,6 +167,7 @@ export class DialogoComponent implements OnInit {
       this.envioMazivo = [];
       this.dataSource = new MatTableDataSource(this.envioMazivo);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
       const lector = new FileReader();
       lector.readAsBinaryString(archivo[0]);
       this.cd.detectChanges();
