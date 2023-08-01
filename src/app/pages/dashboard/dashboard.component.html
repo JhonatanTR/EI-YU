@@ -10,13 +10,18 @@
 <div class="example-fecha">
   <div class="header-content">
     <mat-label class="label-title">Buscar información de:</mat-label>
-    <mat-slide-toggle
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="empezar()">
+      Actualizar Saldo Actual
+    </button>
+    <!--mat-slide-toggle
       class="label-toggle"
       [(ngModel)]="isChecked"
-      (click)="empezar()"
-    >
-      Saldo en tiempo real</mat-slide-toggle
-    >
+      (click)="empezar()">
+      Saldo en tiempo real
+    </mat-slide-toggle-->
   </div>
 
   <div class="body-content">
@@ -29,7 +34,6 @@
           [(ngModel)]="fechaInicio"
           [max]="fechaActual"
           (ngModelChange)="elegir2($event)"
-          [disabled]="isChecked"
         />
         <mat-datepicker-toggle
           matIconSuffix
@@ -48,7 +52,6 @@
           [max]="fechaActual"
           [min]="fechaInicio"
           (ngModelChange)="elegir($event)"
-          [disabled]="isChecked"
         />
         <mat-datepicker-toggle
           matIconSuffix

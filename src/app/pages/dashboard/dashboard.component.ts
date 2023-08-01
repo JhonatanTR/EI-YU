@@ -63,23 +63,40 @@ export class DashboardComponent implements OnDestroy {
     this.loginService.mensaje$.subscribe((mensaje: string) => {
       this.token = mensaje;
     });
-    
+
     this.token = this.localStorageService.getDesc("token")
     this.tipo = "bar"
     //this.dibujar();
     //this.dibujar2();
   }
-  ngOnDestroy(): void {//Cuando sale del este pagina destruye todo proceso que este haciendo internamente en este caso el resultado de tiempo real deja de consultarse 
+  ngOnDestroy(): void {//Cuando sale del este pagina destruye todo proceso que este haciendo internamente en este caso el resultado de tiempo real deja de consultarse
     if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
   }
   empezar() {//Este metodo depende de que si el check esta habilitado o npo ya que si esta hablilitado empiza hacer la consulta y si no deja de hacer la consulta
-    if (this.isChecked) {
+    /*if (this.isChecked) {
       this.stopDataUpdate();
     } else if (this.isChecked == false) {
       this.startDataUpdate();
+    }*/
+    this.showSaldoActual();
+  }
+  showSaldoActual(){
+    const datePipe = new DatePipe('en-US');
+    let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
+    let dat = {
+      "idPblu": this.pblu,
+      "fechaInicio": ini,
+      "fechaFinal": ini
     }
+      this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+        this.pas = dato;
+        let to ={"token":this.token}
+        this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
+          this.sn = sal;
+        })
+      });
   }
   startDataUpdate(): void {// Iniciamos el intervalo de 15 segundos y nos suscribimos a él
     const datePipe = new DatePipe('en-US');
@@ -114,9 +131,9 @@ export class DashboardComponent implements OnDestroy {
       "fechaInicio": ini,
       "fechaFinal": fin
     }
-    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+    /*this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
       this.pas = dato;
-    });
+    });*/
   }
   elegir2(da: any) {//Realiza el segundo filtrado dependiendo de la segunda fecha elegida
     const datePipe = new DatePipe('en-US');
@@ -127,16 +144,16 @@ export class DashboardComponent implements OnDestroy {
       "fechaInicio": ini,
       "fechaFinal": fin
     }
-    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+    /*this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
       this.pas = dato;
-    });
+    });*/
   }
   //Este es una grafica de barra comentada
   /* dibujar() {
      this.chart = new Chart('canvas', {
        type: 'pie',
        data: {
-         
+
          labels: ['Participante 1', 'Participante 2', 'Participante 3', 'Participante 4', 'Participante 5', 'Participante 6'],
          datasets: [{
            label: '# of Votes',
@@ -162,17 +179,17 @@ export class DashboardComponent implements OnDestroy {
        },
        options: {
          scales: {
-         
+
          },
-       
+
        }
      });
- 
+
    }
    dibujar2() {
-     
+
      this.chart2 = new Chart('canvas2', {
-     
+
        type: 'bar',
        data: {
          labels: ['Participante 1', 'Participante 2', 'Participante 3', 'Participante 4', 'Participante 5', 'Participante 6'],
@@ -199,13 +216,13 @@ export class DashboardComponent implements OnDestroy {
          }]
        },
        options: {
-         
+
          scales: {
-         
+
          }
        }
      });
- 
+
    }*/
 
 }
