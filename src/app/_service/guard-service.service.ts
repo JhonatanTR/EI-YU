@@ -13,10 +13,8 @@ export class GuardServiceService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.localStorageService.getDesc("log") != null) {
-      console.log("token: " + this.localStorageService.getDesc("log"));
       return true;
     } else {
-      console.log("token: " + this.localStorageService.getDesc("log"));
       //this.loginService.cerrarSesion();
       this.router.navigate(['login']);
       return false;
