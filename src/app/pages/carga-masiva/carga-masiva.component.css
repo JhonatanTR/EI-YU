@@ -1,14 +1,143 @@
-.bodyEnvio {
-    padding: 18px;
-    width: 90%;
-    border-radius: 2px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-    margin: 20px auto 20px;
-    /* Añadir 50px de margen superior */
-    text-align: justify;
-    /* Añadir justificación */
-  }
-  .example-card {
-    max-width: 90%;
-  }
-  
+:root {
+  --mainText: "Montserrat", sans-serif;
+}
+.body {
+  display: flex;
+  width: 100%;
+  min-height: 90%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+.carga-masiva-btn {
+  height: auto;
+  margin-top: 2em;
+}
+.downloads-container {
+  display: flex;
+  height: auto;
+  width: auto;
+  max-width: 70%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1em;
+  padding: 1em 1em;
+  border-radius: 4px;
+  background-color: #f1f1f17a;
+}
+.cards-container {
+  display: flex;
+  width: 50%;
+  height: auto;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 2em;
+}
+.card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+  padding: 1.5em 1em;
+  transition: 0.2s linear;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+}
+.card:hover {
+  background-color: #f2f2f2;
+  transform: scale(1.01);
+}
+.card-content {
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-content_left {
+  display: flex;
+  width: 50%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+}
+.card-content_right {
+  display: flex;
+  width: 50%;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1em;
+}
+.card-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.card-date-text {
+  font-size: 0.8em;
+  color: #a0a0a0;
+}
+.download-file-btn {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.download-btn {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transform: rotate(180deg);
+}
+.mini-card {
+  display: flex;
+  width: auto;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1em 1em;
+  transition: 0.2s linear;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  gap: 1em;
+}
+.mini-card:hover {
+  background-color: #f2f2f2;
+  transform: scale(1.01);
+}
+.mini-card-icon {
+  flex: 1 1 auto;
+}
+.mini-card-content {
+  display: flex;
+  height: auto;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex: 1 1 auto;
+}
+.mini-card-download {
+  display: flex;
+  height: auto;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.foot {
+  display: flex;
+  height: auto;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 1em;
+}

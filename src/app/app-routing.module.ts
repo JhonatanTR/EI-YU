@@ -16,13 +16,13 @@ const routes: Routes = [
   {path:"login",component:LoginComponent},
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {path:"dashboard",component:DashboardComponent,canActivate:[GuardServiceService]},
-  {path: "enviar_pago", component: EnviarPagoComponent,canActivate:[GuardServiceService]},
-  {path: "busqueda_movimiento", component: BusquedaMovimientoComponent, canActivate:[GuardServiceService]},
+  {path: "enviar-pago", component: EnviarPagoComponent,canActivate:[GuardServiceService]},
+  {path: "busqueda-movimiento", component: BusquedaMovimientoComponent, canActivate:[GuardServiceService]},
   {path: "trasferencia", component: TransferenciaComponent, canActivate:[GuardServiceService]},
   {path: "autorizarspei", component: AutorizarSpeiComponent, canActivate:[GuardServiceService]},
   {path: "configuracion", component: ConfiguracionesComponent, canActivate:[GuardServiceService]},
-  {path: "cargar_cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]},
-  {path: "cargar_masiva_Pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]}
+  {path: "cargar-cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]},
+  {path: "carga-masiva-pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]}
 ];
 
 @NgModule({

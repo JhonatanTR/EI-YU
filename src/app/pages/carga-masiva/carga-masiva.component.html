@@ -1,26 +1,53 @@
-<div class="bodyEnvio">
-<div class="btnDialogo">
-    <button mat-raised-button style="color: #FAF8FF; background-color: #B71C1C; " (click)="openDialog()">Carga
-        masiva</button>
+<div class="body">
+  <div class="carga-masiva-btn">
+    <button
+      mat-raised-button
+      style="color: #faf8ff; background-color: #b71c1c"
+      (click)="openDialog()"
+    >
+      Abrir Carga Masiva
+    </button>
+  </div>
+  <div class="downloads-container">
+    <mat-card class="mini-card">
+      <div class="mini-card-icon">
+        <i class="fa-solid fa-file-excel fa-2xl" style="color: #009688"></i>
+      </div>
+      <div class="mini-card-content">
+        <span>Archivo 1</span>
+        <span class="card-date-text">20/05/2023</span>
+      </div>
+      <div class="mini-card-download">
+        <button matTooltip="Descargar Archivo" class="download-btn">
+          <i class="fa-solid fa-arrow-right-to-bracket fa-rotate-270 fa-xl"></i>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+  <div class="cards-container">
+    <mat-card class="card">
+      <mat-progress-bar
+        class="card-loader"
+        mode="indeterminate"
+      ></mat-progress-bar>
+      <div class="card-content">
+        <div class="card-content_left">
+          <span>Archivo 1</span>
+          <span class="card-date-text">20/05/2023</span>
+        </div>
+        <div class="card-content_right">
+          <span>Procesado</span>
+          <i class="fa-solid fa-check fa-lg" style="color: #66bb6a"></i>
+          <i class="fa-solid fa-xmark fa-lg" style="color: #f44336"></i>
+          <button matTooltip="Descargar Archivo" class="download-file-btn">
+            <i
+              class="fa-solid fa-file-arrow-down fa-lg"
+              style="color: #29b6f6"
+            ></i>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </div>
-
-<mat-card class="example-card" >
-    <mat-card-header>
-      <mat-card-subtitle>Carga de datos</mat-card-subtitle>
-      <mat-card-title>Shiba Inu</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>This card has divider and indeterminate progress as footer</p>
-      <p>{{ longText }}</p>
-      <mat-divider></mat-divider>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
-    <mat-card-footer>
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </mat-card-footer>
-  </mat-card>
-  
-</div>
+<footer class="foot">@ Derechos reservados ASP Integra Opciones V 1.2</footer>
