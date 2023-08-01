@@ -320,13 +320,9 @@ export class DialogoComponent implements OnInit {
             speiout.cveRastreo = this.claveDeRastreo;
             this.requestList.push(speiout);
             if (this.requestList.length == this.envioMazivo.length) {
-
               this.agregarDatosCola(this.requestList);
-
-
               this.realiazarPagoMazivo();
               this.a++;
-
               //this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
             }
             // })).subscribe((data: { claveRastreo: string; }) => {
