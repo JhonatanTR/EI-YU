@@ -6,7 +6,7 @@ import { InfoCuenta } from 'src/app/_model/InfoCuenta';
 import { Cliente } from 'src/app/_model/cliente';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
-import { DialogoComponent } from '../enviar-pago/dialogo/dialogo.component';
+
 import { catchError, map, of, startWith } from 'rxjs';
 import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 import { InfoCuentaClabe } from 'src/app/_model/InfoCuentaClabe';
@@ -174,16 +174,6 @@ export class TransferenciaComponent implements OnInit {
       this.listaCuentas = cuentas;
       this.filtradorCuenta();
     })
-  }
-
-  openDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = '90%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
-    dialogConfig.height = '95%'; // establece la altura del diálogo al 50% del alto de la pantalla
-    dialogConfig.maxWidth = '95%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
-    //dialogConfig.maxHeight = '95%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
-    dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
-    this.dialog.open(DialogoComponent, dialogConfig);
   }
 
   mayusculas(event: any) {

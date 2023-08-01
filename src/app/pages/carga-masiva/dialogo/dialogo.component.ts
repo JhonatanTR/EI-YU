@@ -15,7 +15,7 @@ import { LoginService } from 'src/app/_service/login.service';
 import * as XLSX from 'xlsx';
 import { DialogoDialogCleanComponent } from './dialogo-dialog-clean/dialogo-dialog-clean.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, delay, of } from 'rxjs';
+import { catchError, delay, finalize, of } from 'rxjs';
 import { requestDatosTransferencias } from 'src/app/_modelRequest/requestdatosTransferencias';
 import { InfoSpei } from 'src/app/_model/InfoSpei';
 import { requestOtp } from 'src/app/_modelRequest/requestOtp';
@@ -23,6 +23,8 @@ import { InfoLoginService } from 'src/app/_service/info-login.service';
 import { DialogoDialogCreateComponent } from './dialogo-dialog-create/dialogo-dialog-create.component';
 import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 import { requesteClaveRastreo } from 'src/app/_modelRequest/requestClaveRastreo';
+import { InfoBancos } from 'src/app/_model/InfoBancos';
+import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 @Component({
   selector: 'app-dialogo',
   templateUrl: './dialogo.component.html',
@@ -50,7 +52,7 @@ export class DialogoComponent implements OnInit {
   dataSource!: MatTableDataSource<InfoCapturaSPEIPago>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  infoBancoService: any;
+
 
   constructor(
     private loginService: LoginService,
@@ -61,9 +63,11 @@ export class DialogoComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private infoCuentaClabeService: InfoCuentaclabeService,
     private loginServices: InfoLoginService,
-  ) {}
+    private infoBancoService: InfoBancosService
+  ) { }
 
   ngAfterViewInit() {
+
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
@@ -92,6 +96,7 @@ export class DialogoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.listarBanaco();
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
@@ -101,7 +106,7 @@ export class DialogoComponent implements OnInit {
       this.divEscondido = false;
     } else {
       this.dataSource = new MatTableDataSource(this.envioMazivo);
-     // this.divEscondido = false;
+      // this.divEscondido = false;
     }
     for (let m of this.envioMazivo) {
       this.montoTotal = this.montoTotal + parseFloat(m.monto);
@@ -126,12 +131,13 @@ export class DialogoComponent implements OnInit {
   generadorDeClave(): string {
     let request = new requesteClaveRastreo();
     request.idParticipante = this.localStorageService.getUsuario("pblu").toString();
-    this.infoBancoService.generarClaveRastreo(request).subscribe((data: { claveRastreo: string; }) => {
-      console.log(data.claveRastreo)
-      this.claveDeRastreo = data.claveRastreo;
-      return this.claveDeRastreo;
-    });
-    return '';
+    this.infoBancoService.generarClaveRastreo(request).pipe(
+      finalize(() => {
+        return this.claveDeRastreo;
+      })).subscribe((data: { claveRastreo: string; }) => {
+        this.claveDeRastreo = data.claveRastreo;
+      });
+    return 'XXXXXXXXXXXXXXXXX';
   }
 
   cargarArchivo2(event: Event) {
@@ -168,49 +174,49 @@ export class DialogoComponent implements OnInit {
           ) {
             let trans = new InfoCapturaSPEIPago();
             trans.ctaDestino = this.datos[i]['Destino'];
-            if(trans.ctaDestino == this.datos[i]['Numero de cuenta'] && trans.ctaDestino.length == 18 && this.validarSoloNumeros(trans.ctaDestino)){
+            if (trans.ctaDestino == this.datos[i]['Numero de cuenta'] && trans.ctaDestino.length == 18 && this.validarSoloNumeros(trans.ctaDestino)) {
               this.snackBar.open(
                 'Carga interrumpida: Cuenta destino no puede ser igual a la clabe, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
               break;
-            }else{
+            } else {
               trans.ctaDestino = this.datos[i]['Destino'];
             }
             trans.nombreDestino = this.datos[i]['Nombre Beneficiario'];
             trans.clabe = this.datos[i]['Numero de cuenta'];
-            if(trans.clabe.length == 18 && trans.clabe == this.clabeMadre && this.validarSoloNumeros(trans.clabe)){
+            if (trans.clabe.length == 18 && trans.clabe == this.clabeMadre && this.validarSoloNumeros(trans.clabe)) {
               this.snackBar.open(
                 'Carga interrumpida: La cuenta clabe pertenece a la cuenta concentradora, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
               break;
-            }else{
+            } else {
               trans.clabe = this.datos[i]['Numero de cuenta'];
             }
             trans.bancoDestino = this.datos[i]['Institucion bancaria'];
             trans.monto = this.datos[i]['Monto'];
-            if(parseFloat(trans.monto) <= 0.0 && this.validarSoloNumeros(trans.monto)){
+            if (parseFloat(trans.monto) <= 0.0 && this.validarSoloNumeros(trans.monto)) {
               this.snackBar.open(
                 'Carga interrumpida: Monto no puede ser cero, negativo o un caracter, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
               break;
-            }else{
+            } else {
               trans.monto = this.datos[i]['Monto'];
             }
             trans.refNum = this.datos[i]['Referencia Numerica'];
-            if(trans.refNum.length > 7 && trans.refNum.length < 1 && this.validarSoloNumeros(trans.refNum)){
+            if (trans.refNum.length > 7 && trans.refNum.length < 1 && this.validarSoloNumeros(trans.refNum)) {
               this.snackBar.open(
                 'Carga interrumpida: Referencia Numerica debe tener al menos un digito númerico, o no ser mayor a 7 digitos, favor de verificar documento.',
                 'Cerrar',
                 { duration: 3000 }
               );
               break;
-            }else{
+            } else {
               trans.refNum = this.datos[i]['Referencia Numerica'];
             }
             trans.conceptoPago = this.datos[i]['Concepto pago'];
@@ -282,9 +288,10 @@ export class DialogoComponent implements OnInit {
     });
   }
 
-  requestList: requestDatosTransferencias[] = [];
+  requestList: InfoCapturaSPEIPago[] = [];
 
   enviar() {
+    let aux=0;
     this.requestList = [];
     if (this.codigoOTP != '') {
       this.mostrarSpinner = true;
@@ -296,53 +303,84 @@ export class DialogoComponent implements OnInit {
       request.idUsuario = InfSpei.idUsuario;
       request.otp = this.codigoOTP.trim();
 
-      this.loginServices
-        .verificarOtp(request)
-        .pipe(
-          catchError((error) => {
-            this.mostrarSpinner = false;
-            this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Cerrar', {
-              duration: 2000,
-            });
-            return of(null);
-          })
-        )
-        .subscribe((data) => {
-          this.mostrarSpinner = true;
-          if (data?.mensaje == 'Otp validado correctamente') {
-            const dialogConfig = new MatDialogConfig();
-            dialogConfig.width = '40%';
-            dialogConfig.height = '40%';
-            dialogConfig.disableClose = false;
-            const dialogRef = this.dialog.open(
-              DialogoDialogCreateComponent,
-              dialogConfig
-            );
-            dialogRef.afterClosed().subscribe((result) => {
-              if (result) {
-                for (let i = 0; i < this.envioMazivo.length; i++) {
-                  let req = new requestDatosTransferencias();
+      /*  this.loginServices
+          .verificarOtp(request)
+          .pipe(
+            catchError((error) => {
+              this.mostrarSpinner = false;
+              this.snackBar.open('Error codigo OTP, Intente de nuevo', 'Cerrar', {
+                duration: 2000,
+              });
+              return of(null);
+            })
+          )
+          .subscribe((data) => {*/
+      this.mostrarSpinner = true;
+      // if (data?.mensaje == 'Otp validado correctamente') {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.width = '40%';
+      dialogConfig.height = '40%';
+      dialogConfig.disableClose = false;
+      const dialogRef = this.dialog.open(
+        DialogoDialogCreateComponent,
+        dialogConfig
+      );
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          for (let i = 0; i < this.envioMazivo.length; i++) {
+            let request = new requesteClaveRastreo();
+            request.idParticipante = this.localStorageService.getUsuario("pblu").toString();
+         //   this.infoBancoService.generarClaveRastreo(request).pipe(
+           //   finalize(() => {
+                aux++;
+                let speiout = new InfoCapturaSPEIPago();
+                speiout.username = InfSpei.username;
+                speiout.password = InfSpei.password;
+                speiout.certificado = InfSpei.certificado;
+                speiout.llave = InfSpei.llave;
+                speiout.phrase = InfSpei.phrase;
+                speiout.ctaDestino = this.envioMazivo[i].ctaDestino;
+                speiout.nombreDestino = this.envioMazivo[i].nombreDestino;
+                speiout.clabe = this.envioMazivo[i].clabe;
+                speiout.bancoDestino = this.buscarIdBanco(this.envioMazivo[i].ctaDestino).toString();
+                speiout.monto = this.envioMazivo[i].monto;
+                speiout.refNum = this.envioMazivo[i].refNum;
+                speiout.conceptoPago = this.envioMazivo[i].conceptoPago;
+                speiout.cveRastreo = this.claveDeRastreo;
+                this.requestList.push(speiout);
 
-                  req.ctaDestino = this.envioMazivo[i].ctaDestino;
-                  req.nombreDestino = this.envioMazivo[i].nombreDestino;
-                  req.clabe = this.envioMazivo[i].clabe;
-                  req.bancoDestino = this.envioMazivo[i].bancoDestino;
-                  req.monto = this.envioMazivo[i].monto;
-                  req.refNum = this.envioMazivo[i].refNum;
-                  req.conceptoPago = this.envioMazivo[i].conceptoPago;
-                  req.cveRastreo = this.generadorDeClave();
-                  this.requestList.push(req);
 
+                if(this.requestList.length==this.envioMazivo.length){
+                  console.log(this.requestList);
+                  this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
                 }
-                console.log(this.requestList);
-              }
-            });
+             // })).subscribe((data: { claveRastreo: string; }) => {
+               // this.claveDeRastreo = data.claveRastreo;
+              //});
+
           }
-        });
+         
+        }
+      });
+      //}
+      //});
     }
-
+ 
   }
-
+  buscarIdBanco(a: string): number {
+    const primerasTresLetras: string = a.substring(0, 3);
+    const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
+    if (bancoEncontrado) {
+      return bancoEncontrado.id_banco;
+    }
+    return 0;
+  }
+  listaBancos: InfoBancos[] = [];
+  listarBanaco() {//aqui se carga la lista de los bancos disponibles
+    this.infoBancoService.listar().subscribe((bancos) => {
+      this.listaBancos = bancos;
+    })
+  }
   validarDatoNoNumeros(dato: string): boolean {
     const regex = /^[A-Za-z\s]*$/;
     return regex.test(dato);

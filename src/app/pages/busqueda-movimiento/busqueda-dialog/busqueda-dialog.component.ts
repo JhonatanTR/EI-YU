@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { DialogoComponent } from '../../enviar-pago/dialogo/dialogo.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { requestMovientoDetalle } from 'src/app/_modelRequest/requestMovimientoDetalle';
 import { InfoMovimiento } from 'src/app/_model/InfoMovimiento';

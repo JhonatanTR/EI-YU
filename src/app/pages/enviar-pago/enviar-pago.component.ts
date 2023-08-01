@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogoComponent } from './dialogo/dialogo.component';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { Cliente } from 'src/app/_model/cliente';
 import { InfoBancos } from 'src/app/_model/InfoBancos';
@@ -192,15 +191,6 @@ export class EnviarPagoComponent implements OnInit {
     })
   }
 
-  openDialog() {//abre el dialgo de carga masiva
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = '95%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
-    dialogConfig.height = '90%'; // establece la altura del diálogo al 50% del alto de la pantalla
-    dialogConfig.maxWidth = '95%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
-    dialogConfig.maxHeight = '95%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
-    dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
-    this.dialog.open(DialogoComponent, dialogConfig);
-  }
 
   mayusculas(event: any) {
     this.claveDeRastreo = event.toUpperCase();

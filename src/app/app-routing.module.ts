@@ -10,6 +10,7 @@ import { AutorizarSpeiComponent } from './pages/autorizar-spei/autorizar-spei.co
 import { ConfiguracionesComponent } from './pages/configuraciones/configuraciones.component';
 import { GuardServiceService } from './_service/guard-service.service';
 import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
+import { CargaMasivaComponent } from './pages/carga-masiva/carga-masiva.component';
 
 const routes: Routes = [
   {path:"login",component:LoginComponent},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: "trasferencia", component: TransferenciaComponent, canActivate:[GuardServiceService]},
   {path: "autorizarspei", component: AutorizarSpeiComponent, canActivate:[GuardServiceService]},
   {path: "configuracion", component: ConfiguracionesComponent, canActivate:[GuardServiceService]},
-  {path: "cargar_cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]}
+  {path: "cargar_cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]},
+  {path: "cargar_masiva_Pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]}
 ];
 
 @NgModule({

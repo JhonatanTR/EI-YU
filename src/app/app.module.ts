@@ -7,7 +7,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MaterialModule } from './material/material.module';
 import { EnviarPagoComponent } from './pages/enviar-pago/enviar-pago.component';
-import { DialogoComponent } from './pages/enviar-pago/dialogo/dialogo.component';
+
 import { LocalStorageService } from './_service/local-storage.service'
 import { BusquedaMovimientoComponent } from './pages/busqueda-movimiento/busqueda-movimiento.component';
 import { BusquedaDialogComponent } from './pages/busqueda-movimiento/busqueda-dialog/busqueda-dialog.component';
@@ -25,8 +25,11 @@ import { VerEstadoComponent } from './pages/busqueda-movimiento/ver-estado/ver-e
 import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
 import { CargarCuentaRemoveDialogComponent } from './pages/cargar-cuenta/cargar-cuenta-remove-dialog/cargar-cuenta-remove-dialog.component';
 import { CargarCuentaCreateDialogComponent } from './pages/cargar-cuenta/cargar-cuenta-create-dialog/cargar-cuenta-create-dialog.component';
-import { DialogoDialogCleanComponent } from './pages/enviar-pago/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component';
-import { DialogoDialogCreateComponent } from './pages/enviar-pago/dialogo/dialogo-dialog-create/dialogo-dialog-create.component'; // import NgxQRCodeModule
+
+import { CargaMasivaComponent } from './pages/carga-masiva/carga-masiva.component'; // import NgxQRCodeModule
+import { DialogoDialogCleanComponent } from './pages/carga-masiva/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component';
+import { DialogoDialogCreateComponent } from './pages/carga-masiva/dialogo/dialogo-dialog-create/dialogo-dialog-create.component';
+import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component';
 
 
 @NgModule({
@@ -51,6 +54,7 @@ import { DialogoDialogCreateComponent } from './pages/enviar-pago/dialogo/dialog
     CargarCuentaCreateDialogComponent,
     DialogoDialogCleanComponent,
     DialogoDialogCreateComponent,
+    CargaMasivaComponent,
     
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
