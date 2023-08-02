@@ -40,7 +40,6 @@ export class CargaMasivaComponent implements OnInit {
   nombreArchivo: string = '';
   fecha: string = '';
   pagos: Pagos[] = [];
-  archivos: Archivos[] = [];
   pagosSubscription: Subscription = new Subscription();
   idCounter: number = 0;
   listaBancos: InfoBancos[] = [];
