@@ -29,6 +29,14 @@ import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { InfoPagosService } from 'src/app/_service/info-pagos.service';
 
+interface Datos {
+  Bandera: boolean;
+  Archivo: string;
+  Fecha: string;
+  Datos: InfoCapturaSPEIPago[];
+  DatosSPEI: InfoSpei;
+}
+
 @Component({
   selector: 'app-dialogo',
   templateUrl: './dialogo.component.html',
@@ -44,6 +52,8 @@ export class DialogoComponent implements OnInit {
   clabeMadre: string = '';
   claveDeRastreo: string = '';
   montoTotal!: number; //total del monto de todos los  datos
+  nombreArchivo!: string; //nombre del archivo
+  fechaDeCreacion: string = new Date().toLocaleDateString(); //fecha de creacion del archivo
   displayedColumns: string[] = [
     'Destino',
     'Beneficiario',
@@ -58,7 +68,7 @@ export class DialogoComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private loginService: LoginService,
+    private loginServices: InfoLoginService,
     private dialogRef: MatDialogRef<DialogoComponent>,
     private localStorageService: LocalStorageService,
     private snackBar: MatSnackBar,
@@ -73,6 +83,7 @@ export class DialogoComponent implements OnInit {
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
+      this.nombreArchivo = this.localStorageService.getData('nombreArchivo');
       this.dataSource = new MatTableDataSource(this.envioMazivo);
       setTimeout(() => {this.dataSource.paginator = this.paginator; this.dataSource.sort = this.sort;});
       this.divEscondido = false;
@@ -100,13 +111,13 @@ export class DialogoComponent implements OnInit {
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
+      this.nombreArchivo = this.localStorageService.getData('nombreArchivo');
       this.dataSource = new MatTableDataSource(this.envioMazivo);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.divEscondido = false;
     } else {
       this.dataSource = new MatTableDataSource(this.envioMazivo);
-      // this.divEscondido = false;
     }
     for (let m of this.envioMazivo) {
       this.montoTotal = this.montoTotal + parseFloat(m.monto);
@@ -159,11 +170,13 @@ export class DialogoComponent implements OnInit {
     this.montoTotal = 0;
     this.envioMazivo = [];
     this.localStorageService.removeExecel();
+    this.localStorageService.removeData('nombreArchivo');
     this.ngAfterViewInit();
     const inputElement = event.target as HTMLInputElement;
     let archivo = inputElement.files;
     let flag = false;
     if (archivo != null) {
+      this.nombreArchivo = archivo[0].name;
       this.envioMazivo = [];
       this.dataSource = new MatTableDataSource(this.envioMazivo);
       this.dataSource.paginator = this.paginator;
@@ -247,7 +260,6 @@ export class DialogoComponent implements OnInit {
               break;
             }
 
-            //trans.bancoDestino = this.buscarIdBanco(this.datos[i]['Numero de cuenta']).toString();
             trans.bancoDestino = element['Institucion bancaria'];
 
             trans.monto = element['Monto'];
@@ -309,7 +321,7 @@ export class DialogoComponent implements OnInit {
         }
         if (!flag) {
           this.localStorageService.setExcelList('listExel', this.envioMazivo);
-          //this.divEscondido = false;
+          this.localStorageService.setData('nombreArchivo', this.nombreArchivo);
           this.ngAfterViewInit();
         }
         for (let j = 0; j < this.envioMazivo.length; j++) {
@@ -343,6 +355,7 @@ export class DialogoComponent implements OnInit {
         this.envioMazivo = [];
         this.montoTotal = 0;
         this.localStorageService.removeExecel();
+        this.localStorageService.removeData('nombreArchivo');
         this.ngAfterViewInit();
         this.divEscondido = true;
         this.snackBar.open('Datos Removidos', 'Cerrar', {
@@ -381,9 +394,9 @@ export class DialogoComponent implements OnInit {
               return of(null);
             })
           )
-          .subscribe((data) => {*/
+          .subscribe((data) => {
       this.mostrarSpinner = true;
-      // if (data?.mensaje == 'Otp validado correctamente') {
+       if (data?.mensaje == 'Otp validado correctamente') {*/
       const dialogConfig = new MatDialogConfig();
       dialogConfig.width = '40%';
       dialogConfig.height = '40%';
@@ -394,41 +407,14 @@ export class DialogoComponent implements OnInit {
       );
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          for (let i = 0; i < this.envioMazivo.length; i++) {
-            let request = new requesteClaveRastreo();
-            request.idParticipante = this.localStorageService
-              .getUsuario('pblu')
-              .toString();
-            //   this.infoBancoService.generarClaveRastreo(request).pipe(
-            //   finalize(() => {
-            aux++;
-            let speiout = new InfoCapturaSPEIPago();
-            speiout.username = InfSpei.username;
-            speiout.password = InfSpei.password;
-            speiout.certificado = InfSpei.certificado;
-            speiout.llave = InfSpei.llave;
-            speiout.phrase = InfSpei.phrase;
-            speiout.ctaDestino = this.envioMazivo[i].ctaDestino;
-            speiout.nombreDestino = this.envioMazivo[i].nombreDestino;
-            speiout.clabe = this.envioMazivo[i].clabe;
-            speiout.bancoDestino = this.buscarIdBanco(
-              this.envioMazivo[i].ctaDestino
-            ).toString();
-            speiout.monto = this.envioMazivo[i].monto;
-            speiout.refNum = this.envioMazivo[i].refNum;
-            speiout.conceptoPago = this.envioMazivo[i].conceptoPago;
-            speiout.cveRastreo = this.claveDeRastreo;
-            this.requestList.push(speiout);
-            if (this.requestList.length == this.envioMazivo.length) {
-              this.agregarDatosCola(this.requestList);
-              this.realiazarPagoMazivo();
-              this.a++;
-              //this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
-            }
-            // })).subscribe((data: { claveRastreo: string; }) => {
-            // this.claveDeRastreo = data.claveRastreo;
-            //});
+          const datos: Datos = {
+            Bandera: true,
+            Archivo: this.nombreArchivo,
+            Fecha: this.fechaDeCreacion,
+            Datos: this.envioMazivo,
+            DatosSPEI: InfSpei,
           }
+          this.dialogRef.close(datos);
         }
       });
       //}

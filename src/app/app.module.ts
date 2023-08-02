@@ -30,6 +30,7 @@ import { CargaMasivaComponent } from './pages/carga-masiva/carga-masiva.componen
 import { DialogoDialogCleanComponent } from './pages/carga-masiva/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component';
 import { DialogoDialogCreateComponent } from './pages/carga-masiva/dialogo/dialogo-dialog-create/dialogo-dialog-create.component';
 import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component';
+import { PagoDataService } from './_service/pago-data.service';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component
     DialogoDialogCleanComponent,
     DialogoDialogCreateComponent,
     CargaMasivaComponent,
-    
+
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
   imports: [
@@ -64,12 +65,13 @@ import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component
     MaterialModule,
     HttpClientModule,
       NgxMaskModule.forRoot(options),
-    
+
     ],
   providers: [
     LocalStorageService,
+    PagoDataService,
     { provide: 'WINDOW', useFactory: () => window },
-  
+
   ],
   bootstrap: [AppComponent]
 })

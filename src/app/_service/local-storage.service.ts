@@ -11,6 +11,33 @@ import { InfoPersonaFisica } from '../_model/InfoPersonaFisica';
 export class LocalStorageService {
 
   constructor(@Inject('WINDOW') private window: Window) { }
+  setBoolean(key: string, list: boolean): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getBoolean(key: string): boolean {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
+  removeBoolean(key: string): void {
+    this.window.localStorage.removeItem(key);
+  }
+  setData(key: string, list: string): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getData(key: string): string {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
+  removeData(key: string): void {
+    this.window.localStorage.removeItem(key);
+  }
+  setFileDate(key: string, list: string): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getFileDate(key: string): string {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
   //lista De transacciones del excel mazivo
   setList(key: string, list: Transacciones[]): void {
     this.window.localStorage.setItem(key, JSON.stringify(list));
