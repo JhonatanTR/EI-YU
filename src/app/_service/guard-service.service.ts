@@ -15,7 +15,6 @@ export class GuardServiceService implements CanActivate {
     if (this.localStorageService.getDesc("log") != null) {
       return true;
     } else {
-      //this.loginService.cerrarSesion();
       this.router.navigate(['login']);
       return false;
     }

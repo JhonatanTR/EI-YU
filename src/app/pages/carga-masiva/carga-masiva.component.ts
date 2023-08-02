@@ -28,7 +28,6 @@ import {
 import { Pagos } from 'src/app/_model/Pagos';
 import { HttpClient } from '@angular/common/http';
 import { PagoDataService } from 'src/app/_service/pago-data.service';
-import { Archivos } from 'src/app/_model/Archivos';
 
 @Component({
   selector: 'app-carga-masiva',
