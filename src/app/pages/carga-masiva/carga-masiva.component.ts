@@ -28,6 +28,7 @@ import {
 import { Pagos } from 'src/app/_model/Pagos';
 import { HttpClient } from '@angular/common/http';
 import { PagoDataService } from 'src/app/_service/pago-data.service';
+import { Archivos } from '../../_model/Archivos';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -43,9 +44,10 @@ export class CargaMasivaComponent implements OnInit {
   pagosSubscription: Subscription = new Subscription();
   idCounter: number = 0;
   listaBancos: InfoBancos[] = [];
-  pagoProcesado: boolean = false;
   initialPagosData: Pagos[] = []; // Variable para almacenar los datos iniciales del localStorage
   lastPaymentId: number = 0; // Variable para almacenar el último ID del último pago
+  pagosProcesados: Pagos[] = [];
+  archivos: Pagos[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -79,9 +81,10 @@ export class CargaMasivaComponent implements OnInit {
     const storedPagos = localStorage.getItem('pagos');
     if (storedPagos) {
       this.pagos = JSON.parse(storedPagos);
-      this.initialPagosData = JSON.parse(storedPagos); // Almacenar los datos iniciales del localStorage
-    } else {
-      this.pagos = this.pagoDataService.getPagos();
+    }
+    const storedArchivos = localStorage.getItem('archivos');
+    if (storedArchivos) {
+      this.archivos = JSON.parse(storedArchivos);
     }
 
     // Suscribirse a los cambios en el arreglo pagos del servicio
@@ -89,6 +92,12 @@ export class CargaMasivaComponent implements OnInit {
       (pagos: Pagos[]) => {
         this.pagos = pagos;
         this.lastPaymentId = this.pagoDataService.getLastPaymentId(); // Actualizar el último ID del último pago
+
+      }
+    );
+    this.pagosSubscription = this.pagoDataService.pagosProcesadosUpdated.subscribe(
+      (pagosProcesados: Pagos[]) => {
+        this.archivos = pagosProcesados;
       }
     );
   }
@@ -106,7 +115,6 @@ export class CargaMasivaComponent implements OnInit {
     //añade un pago a la lista de pagos
     this.lastPaymentId = this.pagoDataService.getLastPaymentId(); // Actualizar el último ID del último pago
     this.lastPaymentId++;
-    console.log(this.lastPaymentId);
     const pago = new Pagos(
       this.lastPaymentId,
       Archivo,
@@ -125,6 +133,7 @@ export class CargaMasivaComponent implements OnInit {
       pagoActualizado.Estatus = Estatus;
       pagoActualizado.Bandera = true;
       this.pagoDataService.updatePayment(pagoActualizado);
+
     }
   }
   openDialog() {
@@ -188,8 +197,6 @@ export class CargaMasivaComponent implements OnInit {
                 delay(7000),
                 tap(() => {
                   this.actualizarEstatus(pagoId, 'Procesado');
-                  this.localStorageService.setData('pagoProcesado', 'true');
-                  this.pagoProcesado = true;
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });

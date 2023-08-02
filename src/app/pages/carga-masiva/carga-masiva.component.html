@@ -9,13 +9,13 @@
     </button>
   </div>
   <div class="downloads-container">
-    <mat-card class="mini-card">
+    <mat-card class="mini-card" *ngFor="let archivo of archivos">
       <div class="mini-card-icon">
         <i class="fa-solid fa-file-excel fa-2xl" style="color: #009688"></i>
       </div>
       <div class="mini-card-content">
-        <span>Archivo 1</span>
-        <span class="card-date-text">20/05/2023</span>
+        <span>{{archivo.NombreArchivo}}</span>
+        <span class="card-date-text">{{archivo.Fecha}}</span>
       </div>
       <div class="mini-card-download">
         <button matTooltip="Descargar Archivo" class="download-btn">

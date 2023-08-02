@@ -8,8 +8,11 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class PagoDataService {
   public pagos: Pagos[] = [];
+  public pagosProcesados: Pagos[] = [];
   private localStorageKey = 'pagos';
+  private localStorageKey2 = 'archivos';
   pagosUpdated = new Subject<Pagos[]>();
+  pagosProcesadosUpdated = new Subject<Pagos[]>();
   isLoading: boolean = false;
 
   constructor(private localStorageService: LocalStorageService) {
@@ -18,18 +21,30 @@ export class PagoDataService {
     if (storedPagos) {
       this.pagos = storedPagos;
     }
+    const storedPagosProcesados = localStorageService.getPagos(this.localStorageKey2);
+    if (storedPagosProcesados) {
+      this.pagosProcesados = storedPagosProcesados;
+    }
   }
 
   updatePayment(pago: Pagos) {
     this.isLoading = false; // Indicar que la petición ha finalizado
     const index = this.pagos.findIndex((pagoItem) => pagoItem.Id === pago.Id);
     this.pagos[index] = pago;
+    this.pagosProcesados.push(pago);
+    console.log(this.pagosProcesados);
     this.saveToLocalStorage();
-    this.pagosUpdated.next(this.pagos.slice());
+    //this.pagosUpdated.next(this.pagos.slice());
+    //this.pagosProcesadosUpdated.next(this.pagosProcesados.slice());
   }
   updatePagos(pagos: Pagos[]) {
-    this.pagos = pagos;
-    this.pagosUpdated.next([...this.pagos]); // Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
+   // this.pagos = pagos;
+   // this.pagosUpdated.next([...this.pagos]);// Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
+    this.pagosProcesados.push(...pagos);
+    this.pagosProcesadosUpdated.next(this.pagosProcesados);
+    this.localStorageService.setPagos(this.localStorageKey2, this.pagosProcesados);
+    //this.pagosProcesados = pagos;
+    //this.pagosProcesadosUpdated.next([...this.pagosProcesados]); // Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
   }
 
   // Función para agregar un nuevo pago con duración de 1 hora
@@ -63,11 +78,17 @@ export class PagoDataService {
     this.pagos = this.pagos.filter((pago) => pago.Id !== idPago);
     this.saveToLocalStorage(); // Guarda los pagos en el localStorage después de eliminar
     this.pagosUpdated.next(this.pagos.slice());
+    this.pagosProcesadosUpdated.next(this.pagosProcesados);
+    this.localStorageService.setPagos(this.localStorageKey2, this.pagosProcesados);
     this.isLoading = false; // Indicar que la petición ha finalizado
   }
   getPagos() {
     return this.pagos;
   }
+  getArchivos() {
+    return this.pagosProcesados;
+  }
+
   // Función para guardar los pagos en el localStorage
   private saveToLocalStorage() {
     this.localStorageService.setPagos(this.localStorageKey, this.pagos);
