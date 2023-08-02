@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HOST } from '../_shared/var.constant';
 import { InfoCuentaClabe } from '../_model/InfoCuentaClabe';
 import { Subject } from 'rxjs';
+import { Param_Config_EiYu } from '../_model/Param_Config_EiYu';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,9 @@ export class InfoCuentaclabeService {
   }
   buscarPbluConCuenta(data:any){
     return this.http.post<any>(`${this.url}/validar/existePblu`,data);
+  }
+  parametrosCuentaConcentradora(data:any){
+    return this.http.post<Param_Config_EiYu>(`${this.url}/validar/param`,data)
   }
 
 }

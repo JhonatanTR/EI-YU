@@ -53,13 +53,17 @@ export class DashboardComponent implements OnDestroy {
       this.sn = saldo;
     })
     const datePipe = new DatePipe('en-US');
-    this.startDataUpdate();
+    //this.startDataUpdate();
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
     let dat = {
       "idPblu": this.localStorageService.getUsuario("pblu").toString(),
       "fechaInicio": ini,
       "fechaFinal": ini
     }
+    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+      this.pas = dato;
+    });
+
     this.loginService.mensaje$.subscribe((mensaje: string) => {
       this.token = mensaje;
     });
@@ -84,19 +88,10 @@ export class DashboardComponent implements OnDestroy {
   }
   showSaldoActual(){
     const datePipe = new DatePipe('en-US');
-    let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
-    let dat = {
-      "idPblu": this.pblu,
-      "fechaInicio": ini,
-      "fechaFinal": ini
-    }
-      this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
-        this.pas = dato;
-        let to ={"token":this.token}
         this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
+          console.log(sal)
           this.sn = sal;
         })
-      });
   }
   startDataUpdate(): void {// Iniciamos el intervalo de 15 segundos y nos suscribimos a él
     const datePipe = new DatePipe('en-US');
@@ -131,9 +126,9 @@ export class DashboardComponent implements OnDestroy {
       "fechaInicio": ini,
       "fechaFinal": fin
     }
-    /*this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
       this.pas = dato;
-    });*/
+    });
   }
   elegir2(da: any) {//Realiza el segundo filtrado dependiendo de la segunda fecha elegida
     const datePipe = new DatePipe('en-US');
@@ -144,9 +139,9 @@ export class DashboardComponent implements OnDestroy {
       "fechaInicio": ini,
       "fechaFinal": fin
     }
-    /*this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
       this.pas = dato;
-    });*/
+    });
   }
   //Este es una grafica de barra comentada
   /* dibujar() {

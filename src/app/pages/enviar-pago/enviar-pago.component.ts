@@ -19,6 +19,7 @@ import { InfoSpei } from 'src/app/_model/InfoSpei';
 import { of } from 'rxjs';
 import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 import { InfoCuentaClabe } from 'src/app/_model/InfoCuentaClabe';
+import { Param_Config_EiYu } from 'src/app/_model/Param_Config_EiYu';
 
 @Component({
   selector: 'app-enviar-pago',
@@ -49,6 +50,7 @@ export class EnviarPagoComponent implements OnInit {
   institucionControl = new FormControl();
   cuentasControl = new FormControl();
   adm = false;
+  paramConfig !: Param_Config_EiYu;
   cuentas: InfoCuentaClabe[] = [];
   constructor(private infoCuentaClabeService: InfoCuentaclabeService, private localStorageService: LocalStorageService, private _snackBar: MatSnackBar, private dialog: MatDialog, private storage: LocalStorageService, private infoBancoService: InfoBancosService, private infoPagos: InfoPagosService, private enlistarSpei: InfoPagosService, private infoLoginService: InfoLoginService) {
   }
@@ -68,6 +70,7 @@ export class EnviarPagoComponent implements OnInit {
         }
       })
     })
+    this.parametroCuentaConcentradora();
     this.generadorDeClave();//Metodo generador de clave de rastreo
     if (this.localStorageService.getDat("rol")) {
       this.adm = false;
@@ -77,7 +80,12 @@ export class EnviarPagoComponent implements OnInit {
     this.listarCuentasClabes();
     this.localStorageService.removeExecel();
   }
-
+  parametroCuentaConcentradora() {
+    let pblu = { peiyu: this.localStorageService.getUsuario("pblu") }
+    this.infoCuentaClabeService.parametrosCuentaConcentradora(pblu).subscribe(dato => {
+      this.paramConfig = dato;
+    })
+  }
   listarCuentasClabes() {//Lista las cuentas clabes que tenemos en configuraciíon de cuenta
     let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
     this.infoCuentaClabeService.listarPagosDeAutorizarPblu(res).pipe(
@@ -234,7 +242,61 @@ export class EnviarPagoComponent implements OnInit {
     } else {
       this.numeroDeCuenta = this.cuentasControl.value.clabe;
     }
-    if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {
+    if (this.clabeMadre === this.numeroDeCuenta.toString().trim()) {
+      if (this.paramConfig.valor == 1) {
+        let InfSpei = new InfoSpei();
+        InfSpei = this.localStorageService.getUsuario("userE");
+        let request = new requestOtp();
+        request.idUsuario = InfSpei.idUsuario;
+        request.otp = this.codigoOtp.trim();
+        this.infoLoginService.verificarOtp(request).pipe(
+          catchError((error) => {
+            this.openSnackBar('Error codigo OTP, Intente de nuevo', 'Aviso');
+            return of(null);
+          })
+        ).subscribe(data => {
+          if (data?.mensaje == "Otp validado correctamente") {
+            this.codigoOtp = "";
+            let m: any = this.monto
+            m = m.replace(/,/g, '');
+            let speiout = new InfoCapturaSPEIPago();
+            speiout.username = InfSpei.username;
+            speiout.password = InfSpei.password;
+            speiout.certificado = InfSpei.certificado;
+            speiout.llave = InfSpei.llave;
+            speiout.phrase = InfSpei.phrase;
+            speiout.bancoDestino = this.institucionControl.value.id_banco.toString();
+            speiout.ctaDestino = this.destinatario.toString();
+            speiout.nombreDestino = this.nomBeneficiario;
+            speiout.clabe = this.numeroDeCuenta.toString();
+            speiout.monto = m;
+            speiout.refNum = this.refNumerica;
+            // speiout.refCobranza = this.cobranza;
+            speiout.cveRastreo = this.claveDeRastreo;
+            speiout.conceptoPago = this.conceptoPago;
+
+            this.infoPagos.realizarPago(speiout).pipe(
+              catchError((error) => {
+                this.openSnackBar('Error al generar la operación, Intente nuevamente', 'Aviso');
+                // Aquí puedes realizar las acciones necesarias en caso de error
+                return of(null); // Devuelve un observable vacío o un valor por defecto en caso de error
+              })
+            ).subscribe((data) => {
+              if (data) {
+                this.limpiar();
+                this.openSnackBar('Pago realizado', 'Aviso');
+              }
+            });
+            //aqui se almacena a la base de datos
+          } else {
+            this.codigoOtp = "";
+          }
+        })
+      } else {
+        this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
+      }
+
+    } else {
       let InfSpei = new InfoSpei();
       InfSpei = this.localStorageService.getUsuario("userE");
       let request = new requestOtp();
@@ -283,8 +345,6 @@ export class EnviarPagoComponent implements OnInit {
           this.codigoOtp = "";
         }
       })
-    } else {
-      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
     }
   }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
@@ -351,7 +411,40 @@ export class EnviarPagoComponent implements OnInit {
       this.numeroDeCuenta = this.cuentasControl.value.clabe;
     }
 
-    if (this.clabeMadre != this.numeroDeCuenta.toString().trim()) {
+    if (this.clabeMadre === this.numeroDeCuenta.toString().trim()) {
+      if (this.paramConfig.valor == 1) {
+        let m: any = this.monto
+        m = m.replace(/,/g, '');
+        let dataBaseSPEI = new InfoAutorizarSpei();
+        dataBaseSPEI.pblu = this.localStorageService.getUsuario("pblu");
+        dataBaseSPEI.destino = this.destinatario;
+        dataBaseSPEI.beneficiario = this.nomBeneficiario;
+        dataBaseSPEI.numerodecuenta = this.cuentasControl.value;
+        dataBaseSPEI.banco = this.institucionSeleccionada.descripcion;
+        dataBaseSPEI.monto = parseFloat(m);
+        dataBaseSPEI.refnumerica = this.refNumerica;
+        dataBaseSPEI.claberastreo = this.claveDeRastreo;
+        dataBaseSPEI.conceptopago = this.conceptoPago;
+        dataBaseSPEI.id_usuario = this.localStorageService.getDesc("usuario");
+        if (this.localStorageService.getDesc("idRol") != '3') {
+          if (this.localStorageService.getDat("rol")) {
+            dataBaseSPEI.id_rol = 1;
+          } else {
+            dataBaseSPEI.id_rol = 2;
+
+          }
+        } else {
+          dataBaseSPEI.id_rol = 2;
+        }
+        this.enlistarSpei.guardarEnLatablaListarPagos(dataBaseSPEI).subscribe(data => {
+          this.openSnackBar('Enlistado correctamente', 'Aviso');
+        })
+        this.limpiar()
+        this.generadorDeClave();
+      } else {
+        this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
+      }
+    } else {
       let m: any = this.monto
       m = m.replace(/,/g, '');
       let dataBaseSPEI = new InfoAutorizarSpei();
@@ -380,8 +473,7 @@ export class EnviarPagoComponent implements OnInit {
       })
       this.limpiar()
       this.generadorDeClave();
-    } else {
-      this.openSnackBar('No se puede realizar el spei desde una cuenta concentradora', 'Aviso');
+
     }
   }
   limpiar() {
