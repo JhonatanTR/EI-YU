@@ -67,14 +67,14 @@ export class DialogoComponent implements OnInit {
     private infoCuentaClabeService: InfoCuentaclabeService,
     private infoPagosService: InfoPagosService,
     private infoBancoService: InfoBancosService
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
       this.dataSource = new MatTableDataSource(this.envioMazivo);
-      setTimeout(() => {this.dataSource.paginator = this.paginator; this.dataSource.sort = this.sort;});
+      setTimeout(() => { this.dataSource.paginator = this.paginator; this.dataSource.sort = this.sort; });
       this.divEscondido = false;
       this.cd.detectChanges();
     } else {
@@ -420,9 +420,9 @@ export class DialogoComponent implements OnInit {
             speiout.cveRastreo = this.claveDeRastreo;
             this.requestList.push(speiout);
             if (this.requestList.length == this.envioMazivo.length) {
-              this.agregarDatosCola(this.requestList);
-              this.realiazarPagoMazivo();
-              this.a++;
+
+              this.realiazarPagoMazivo(this.requestList);
+
               //this.Salir();//Ojo aqui hugo aqui llamas el api para hacer el envio de spei
             }
             // })).subscribe((data: { claveRastreo: string; }) => {
@@ -439,14 +439,11 @@ export class DialogoComponent implements OnInit {
   agregarDatosCola(request: InfoCapturaSPEIPago[]) {
     this.listasACargar.push(request);
     console.log(this.listasACargar);
+
   }
-  realiazarPagoMazivo() {
-    console.log(this.listasACargar, 'Este es el de la cola');
-    from(this.listasACargar)
-      .pipe(
-        concatMap((lista) => this.infoPagosService.realizarPagoMazivo(lista))
-      )
-      .subscribe(
+  realiazarPagoMazivo(request: InfoCapturaSPEIPago[]) {
+
+    this.infoPagosService.realizarPagoMazivo(request).subscribe(
         (data) => {
           // Este bloque se ejecutará si la solicitud se completa sin errores.
           console.log(data);
@@ -457,7 +454,7 @@ export class DialogoComponent implements OnInit {
           // Aquí puedes realizar acciones para manejar el error, si es necesario.
           // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
         },
-        () => {}
+        () => { }
       );
   }
   buscarIdBanco(a: string): number {
