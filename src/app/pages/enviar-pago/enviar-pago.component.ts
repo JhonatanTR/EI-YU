@@ -78,7 +78,7 @@ export class EnviarPagoComponent implements OnInit {
       this.adm = true;
     }
     this.listarCuentasClabes();
-    this.localStorageService.removeExecel();
+    //this.localStorageService.removeExecel();
   }
   parametroCuentaConcentradora() {
     let pblu = { peiyu: this.localStorageService.getUsuario("pblu") }

@@ -45,6 +45,7 @@ export class CargaMasivaComponent implements OnInit {
   listaBancos: InfoBancos[] = [];
   pagoProcesado: boolean = false;
   initialPagosData: Pagos[] = []; // Variable para almacenar los datos iniciales del localStorage
+  lastPaymentId: number = 0; // Variable para almacenar el último ID del último pago
 
   constructor(
     private dialog: MatDialog,
@@ -57,15 +58,24 @@ export class CargaMasivaComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.listarBanaco();
-    //this.pagoProcesado = this.localStorageService.getBoolean('pagoProcesado');
+    // Verificar si hay pagos almacenados en el localStorage
+    const localStorageKeys = Object.keys(localStorage);
+    for (const key of localStorageKeys) {
+      if (key.startsWith('pago_')) {
+        const paymentDataWithExpiration = JSON.parse(
+          localStorage.getItem(key)!
+        );
+        const expirationDate = paymentDataWithExpiration.expirationDate;
+        const currentTime = new Date().getTime();
 
-    /*if(this.pagos.length === 0){
-      this.pagos = this.pagoDataService.getPagos();
+        // Si la fecha de vencimiento ha pasado, eliminar el pago
+        if (currentTime >= expirationDate) {
+          const idPago = parseInt(key.split('_')[1], 10);
+          this.pagoDataService.deletePayment(idPago);
+          localStorage.removeItem(key);
+        }
+      }
     }
-    if(this.archivos.length === 0){
-      //this.archivos = this.pagoDataService.getArchivos();
-    }*/
-
     const storedPagos = localStorage.getItem('pagos');
     if (storedPagos) {
       this.pagos = JSON.parse(storedPagos);
@@ -78,6 +88,7 @@ export class CargaMasivaComponent implements OnInit {
     this.pagosSubscription = this.pagoDataService.pagosUpdated.subscribe(
       (pagos: Pagos[]) => {
         this.pagos = pagos;
+        this.lastPaymentId = this.pagoDataService.getLastPaymentId(); // Actualizar el último ID del último pago
       }
     );
   }
@@ -93,9 +104,11 @@ export class CargaMasivaComponent implements OnInit {
   }
   añadirPago(Archivo: string, Fecha: string, Datos: any[]) {
     //añade un pago a la lista de pagos
-    this.idCounter++;
+    this.lastPaymentId = this.pagoDataService.getLastPaymentId(); // Actualizar el último ID del último pago
+    this.lastPaymentId++;
+    console.log(this.lastPaymentId);
     const pago = new Pagos(
-      this.idCounter,
+      this.lastPaymentId,
       Archivo,
       Fecha,
       'Procesando',
@@ -103,6 +116,7 @@ export class CargaMasivaComponent implements OnInit {
       Datos
     );
     this.pagoDataService.addPaymentWithExpiration(pago, pago.Id);
+    return pago.Id;
   }
   // Método para cambiar la descripción de un pago finalizado
   actualizarEstatus(Id: number, Estatus: string) {
@@ -166,13 +180,12 @@ export class CargaMasivaComponent implements OnInit {
               this.localStorageService.getData('nombreArchivo');
           }
           const post = defer(() => {
-            this.añadirPago(Archivo, Fecha, Datos);
+            const pagoId = this.añadirPago(Archivo, Fecha, Datos);
             this.pagos = this.pagoDataService.getPagos();
-            const pagoId = this.idCounter;
             return this.http
               .get('https://pokeapi.co/api/v2/pokemon/pikachu')
               .pipe(
-                delay(15000),
+                delay(7000),
                 tap(() => {
                   this.actualizarEstatus(pagoId, 'Procesado');
                   this.localStorageService.setData('pagoProcesado', 'true');
@@ -243,7 +256,9 @@ export class CargaMasivaComponent implements OnInit {
       const currentPagos: Pagos[] = JSON.parse(currentPagosData);
 
       // Filtrar los pagos con el estatus 'Procesado'
-      const updatedPagos: Pagos[] = currentPagos.filter((pago) => pago.Estatus === 'Procesado');
+      const updatedPagos: Pagos[] = currentPagos.filter(
+        (pago) => pago.Estatus === 'Procesado'
+      );
 
       // Actualizar el arreglo 'pagos' del componente con los pagos filtrados
       this.pagos = updatedPagos;

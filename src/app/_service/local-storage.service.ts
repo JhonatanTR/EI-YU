@@ -4,6 +4,7 @@ import { InfoCapturaSPEI } from '../_model/InfoCapturaSPEI';
 import { InfoSpei } from '../_model/InfoSpei';
 import { InfoCapturaSPEIPago } from '../_model/InfoCapturaSPEIPago';
 import { InfoPersonaFisica } from '../_model/InfoPersonaFisica';
+import { Pagos } from '../_model/Pagos';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,14 @@ import { InfoPersonaFisica } from '../_model/InfoPersonaFisica';
 export class LocalStorageService {
 
   constructor(@Inject('WINDOW') private window: Window) { }
+  setPagos(key: string, list: Pagos[]): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getPagos(key: string): Pagos[] {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
+
   setBoolean(key: string, list: boolean): void {
     this.window.localStorage.setItem(key, JSON.stringify(list));
   }

@@ -69,8 +69,8 @@ import { PagoDataService } from './_service/pago-data.service';
     ],
   providers: [
     LocalStorageService,
-    PagoDataService,
     { provide: 'WINDOW', useFactory: () => window },
+    PagoDataService,
 
   ],
   bootstrap: [AppComponent]
