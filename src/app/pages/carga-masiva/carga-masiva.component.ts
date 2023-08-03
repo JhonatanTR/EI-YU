@@ -23,6 +23,7 @@ import {
   delay,
   finalize,
   of,
+  share,
   tap,
 } from 'rxjs';
 import { Pagos } from 'src/app/_model/Pagos';
@@ -104,7 +105,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.pagosSubscription.unsubscribe();
-    this.postSubscription.unsubscribe();
+    if (this.postSubscription && !this.postSubscription.closed) {
+      this.postSubscription.unsubscribe();
+    }
   }
 
   listarBanaco() {
@@ -189,7 +192,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             // this.claveDeRastreo = data.claveRastreo;
             //});
           }
-          this.postSubscription.unsubscribe();
+          if (this.postSubscription && !this.postSubscription.closed) {
+            this.postSubscription.unsubscribe();
+          }
 
           const post = defer(() => {
             const pagoId = this.añadirPago(Archivo, Fecha, Datos);
@@ -204,30 +209,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                     duration: 3000,
                   });
                 })
+                share() // Utilizamos el operador share para compartir la suscripción
               );
-            /*.subscribe(
-                (data) => {
-                  // Este bloque se ejecutará si la solicitud se completa sin errores.
-                  console.log(data, 'Exito');
-                  // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
-                },
-                (error) => {
-                  // Este bloque se ejecutará si ocurre un error durante la solicitud.
-                  console.error(
-                    'Error en la solicitud, intente nuevamente:',
-                    error
-                  );
-                  this.snackBar.open(
-                    'Error en la solicitud, intente nuevamente',
-                    'Cerrar',
-                    {
-                      duration: 3000,
-                    }
-                  );
-                  // Aquí puedes realizar acciones para manejar el error, si es necesario.
-                  // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
-                }
-              );*/
           });
           post.subscribe((data) => {
             console.log(data);
