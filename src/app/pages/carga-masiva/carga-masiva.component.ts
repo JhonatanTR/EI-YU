@@ -65,6 +65,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   ) {}
   ngOnInit(): void {
     this.listarBanaco();
+    this.leerArchivo();
     // Verificar si hay pagos almacenados en el localStorage
     const localStorageKeys = Object.keys(localStorage);
     for (const key of localStorageKeys) {
@@ -105,6 +106,22 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           this.archivos = pagosProcesados;
         }
       );
+  }
+
+  leerArchivo(){
+    this.infoPagosService.leerArchivo(4).subscribe(data=>{
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      // Create a URL for the Blob
+      const url = window.URL.createObjectURL(blob);
+      // Create a temporary anchor element to trigger the download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'file.xlsx'; // Change the file name if needed  
+      // Programmatically trigger the download
+      a.click();
+      // Cleanup: Revoke the URL object after download
+      window.URL.revokeObjectURL(url);
+     })
   }
   ngOnDestroy(): void {
     this.pagosSubscription.unsubscribe();
@@ -298,8 +315,17 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     const dataBlob: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    FileSaver.saveAs(dataBlob, `${nombreArchivo}.xlsx`);
-   console.log(execlAux);
+    //FileSaver.saveAs(dataBlob, `${nombreArchivo}.xlsx`);
+    let archivo = new File([dataBlob], `${nombreArchivo}.xlsx`);
+    let infoDato = {
+      pblu: this.localStorageService.getUsuario("pblu"),
+      nombreExcel: nombreArchivo
+    }
+    this.infoPagosService.guardarArchivo(archivo,infoDato).subscribe(data=>{
+      console.log(1);
+    })
+    console.log(execlAux);
+
   }
 
   buscarIdBanco(a: string): number {
