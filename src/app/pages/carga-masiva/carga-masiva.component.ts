@@ -268,7 +268,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       pagoAux.Destino = requestList[i].ctaDestino
       pagoAux.Nombre_Beneficiario = requestList[i].nombreDestino
       pagoAux.Numero_de_cuenta = requestList[i].clabe
-      pagoAux.Institucion_bancaria = requestList[i].bancoDestino
+      pagoAux.Institucion_bancaria =this.buscarNombreBanco(requestList[i].bancoDestino)
       pagoAux.Monto = requestList[i].monto
       pagoAux.Referencia_Numerica = requestList[i].refNum
       pagoAux.conceptoPago = requestList[i].conceptoPago
@@ -293,13 +293,21 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       nombreExcel: nombreArchivo
     }
     this.infoPagosService.guardarArchivo(archivo, infoDato).subscribe(data => {
-
-      //this.archivosPorParticipante();
+      this.archivosPorParticipante();
     })
 
 
   }
-
+  buscarNombreBanco(a: string): string {
+  
+    const bancoEncontrado = this.listaBancos.find(
+      (banco) => banco.id_banco.toString() === a
+    );
+    if (bancoEncontrado) {
+      return bancoEncontrado.descripcion;
+    }
+    return "No se encontraron bancos relacionados con la cuenta destino";
+  }
   buscarIdBanco(a: string): number {
     const primerasTresLetras: string = a.substring(0, 3);
     const bancoEncontrado = this.listaBancos.find(

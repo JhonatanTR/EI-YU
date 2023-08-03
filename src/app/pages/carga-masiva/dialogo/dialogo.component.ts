@@ -424,7 +424,7 @@ export class DialogoComponent implements OnInit {
 
   agregarDatosCola(request: InfoCapturaSPEIPago[]) {
     this.listasACargar.push(request);
-
+    console.log(this.listasACargar);
 
   }
   realiazarPagoMazivo(request: InfoCapturaSPEIPago[]) {
@@ -432,7 +432,7 @@ export class DialogoComponent implements OnInit {
     this.infoPagosService.realizarPagoMazivo(request).subscribe(
         (data) => {
           // Este bloque se ejecutará si la solicitud se completa sin errores.
-          
+          console.log(data);
           // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
         },
         (error) => {
