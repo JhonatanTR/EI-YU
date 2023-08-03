@@ -56,6 +56,15 @@
   justify-content: flex-start;
   align-items: center;
   margin: 0;
+  flex: 1 1;
+}
+.text-container{
+  display: flex;
+  height: 41%;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  justify-content: flex-start;
 }
 .copyright-text{
   font-size: 12px;
@@ -64,9 +73,19 @@
   margin: 0;
   height: 25px;
 }
-.imgASP{
+.img-container{
+  display: flex;
   height: auto;
-  width: 60%;
+  width: 80%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  /* flex: 1 1 auto; */
+}
+.imgASP{
+  width: 100%;
+  /* flex: 1 1 auto; */
 }
 .example-toolbar {
   background-color: #eab52F;

@@ -35,7 +35,7 @@ import { Archivos } from '../../_model/Archivos';
   templateUrl: './carga-masiva.component.html',
   styleUrls: ['./carga-masiva.component.css'],
 })
-export class CargaMasivaComponent implements OnInit {
+export class CargaMasivaComponent implements OnInit, OnDestroy {
   requestList: InfoCapturaSPEIPago[] = [];
   claveDeRastreo: string = '123';
   nombreArchivo: string = '';
@@ -100,6 +100,9 @@ export class CargaMasivaComponent implements OnInit {
         this.archivos = pagosProcesados;
       }
     );
+  }
+  ngOnDestroy(): void {
+    this.pagosSubscription.unsubscribe();
   }
 
   listarBanaco() {
@@ -271,7 +274,7 @@ export class CargaMasivaComponent implements OnInit {
       this.pagos = updatedPagos;
       this.pagoDataService.updatePagos(updatedPagos);
       // Guardar los datos actualizados en el localStorage
-      localStorage.setItem('pagos', JSON.stringify(updatedPagos));
+      //localStorage.setItem('pagos', JSON.stringify(updatedPagos));
     }
   }
 }
