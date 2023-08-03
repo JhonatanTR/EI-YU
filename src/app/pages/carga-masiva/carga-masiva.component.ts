@@ -48,6 +48,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   lastPaymentId: number = 0; // Variable para almacenar el último ID del último pago
   pagosProcesados: Pagos[] = [];
   archivos: Pagos[] = [];
+  private postSubscription: Subscription = new Subscription();
 
   constructor(
     private dialog: MatDialog,
@@ -92,17 +93,18 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       (pagos: Pagos[]) => {
         this.pagos = pagos;
         this.lastPaymentId = this.pagoDataService.getLastPaymentId(); // Actualizar el último ID del último pago
-
       }
     );
-    this.pagosSubscription = this.pagoDataService.pagosProcesadosUpdated.subscribe(
-      (pagosProcesados: Pagos[]) => {
-        this.archivos = pagosProcesados;
-      }
-    );
+    this.pagosSubscription =
+      this.pagoDataService.pagosProcesadosUpdated.subscribe(
+        (pagosProcesados: Pagos[]) => {
+          this.archivos = pagosProcesados;
+        }
+      );
   }
   ngOnDestroy(): void {
     this.pagosSubscription.unsubscribe();
+    this.postSubscription.unsubscribe();
   }
 
   listarBanaco() {
@@ -136,9 +138,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       pagoActualizado.Estatus = Estatus;
       pagoActualizado.Bandera = true;
       this.pagoDataService.updatePayment(pagoActualizado);
-
     }
   }
+
   openDialog() {
     //abre el dialgo de carga masiva
     const dialogConfig = new MatDialogConfig();
@@ -187,22 +189,23 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             // this.claveDeRastreo = data.claveRastreo;
             //});
           }
-       
+          this.postSubscription.unsubscribe();
+
           const post = defer(() => {
             const pagoId = this.añadirPago(Archivo, Fecha, Datos);
             this.pagos = this.pagoDataService.getPagos();
             return this.infoPagosService
-            .realizarPagoMazivo(this.requestList)
+              .realizarPagoMazivo(this.requestList)
               .pipe(
                 tap(() => {
-                  console.log('Terminó la petición',);
+                  console.log('Terminó la petición');
                   this.actualizarEstatus(pagoId, 'Procesado');
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });
                 })
-              )
-              /*.subscribe(
+              );
+            /*.subscribe(
                 (data) => {
                   // Este bloque se ejecutará si la solicitud se completa sin errores.
                   console.log(data, 'Exito');
@@ -226,10 +229,21 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                 }
               );*/
           });
-          post.subscribe(data=>{
+          post.subscribe((data) => {
             console.log(data);
           });
-         /* this.infoPagosService
+
+          // Llamada a la función post y asignación de la suscripción
+          this.postSubscription = post.subscribe(
+            () => {
+              console.log('Petición realizada con éxito');
+            },
+            (error) => {
+              console.error('Error en la petición', error);
+            }
+          );
+
+          /* this.infoPagosService
             .realizarPagoMazivo(this.requestList)
             .pipe(
               finalize(() => {
