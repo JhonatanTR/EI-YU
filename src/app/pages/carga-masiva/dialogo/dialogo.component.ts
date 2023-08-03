@@ -28,6 +28,7 @@ import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { InfoPagosService } from 'src/app/_service/info-pagos.service';
+import { Param_Config_EiYu } from 'src/app/_model/Param_Config_EiYu';
 
 interface Datos {
   Bandera: boolean;
@@ -66,6 +67,9 @@ export class DialogoComponent implements OnInit {
   dataSource!: MatTableDataSource<InfoCapturaSPEIPago>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  numeroDeCuenta: string = "";
+  paramConfig !: Param_Config_EiYu;
+
 
   constructor(
     private loginServices: InfoLoginService,
@@ -105,9 +109,13 @@ export class DialogoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
+  parametroCuentaConcentradora() {
+    let pblu = { peiyu: this.localStorageService.getUsuario("pblu") }
+    this.infoCuentaClabeService.parametrosCuentaConcentradora(pblu).subscribe((dato: Param_Config_EiYu) => {
+      this.paramConfig = dato;
+    })
+  }
   ngOnInit(): void {
-    this.listarBanaco();
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
@@ -233,7 +241,34 @@ export class DialogoComponent implements OnInit {
 
             trans.clabe = element['Numero de cuenta'];
 
-            if (trans.clabe != clabeMadre) {
+            if (this.clabeMadre === this.numeroDeCuenta.toString().trim()) {
+              if (this.paramConfig.valor == 1) {
+                if (
+                  trans.clabe.toString().length == 18 &&
+                  this.validarSoloNumeros(element['Numero de cuenta'])
+                ) {
+                  trans.clabe = element['Numero de cuenta'];
+                } else {
+                  this.divEscondido = true;
+                  flag = true;
+                  this.snackBar.open(
+                    'Carga interrumpida: Numero de cuenta no es valida, favor de verificar documento.',
+                    'Cerrar',
+                    { duration: 3000 }
+                  );
+                  break;
+                }
+              }else{
+                this.divEscondido = true;
+                flag = true;
+                this.snackBar.open(
+                  'Carga interrumpida: No se puede realizar el SPEI desde una cuenta concentradora, favor de verificar documento.',
+                  'Cerrar',
+                  { duration: 3000 }
+                );
+                break;
+              }
+            }else{
               if (
                 trans.clabe.toString().length == 18 &&
                 this.validarSoloNumeros(element['Numero de cuenta'])
@@ -249,17 +284,7 @@ export class DialogoComponent implements OnInit {
                 );
                 break;
               }
-            } else {
-              this.divEscondido = true;
-              flag = true;
-              this.snackBar.open(
-                'Carga interrumpida: No se puede realizar el SPEI desde una cuenta concentradora, favor de verificar documento.',
-                'Cerrar',
-                { duration: 3000 }
-              );
-              break;
             }
-
             trans.bancoDestino = element['Institucion bancaria'];
 
             trans.monto = element['Monto'];
@@ -324,14 +349,6 @@ export class DialogoComponent implements OnInit {
           this.localStorageService.setData('nombreArchivo', this.nombreArchivo);
           this.ngAfterViewInit();
         }
-        for (let j = 0; j < this.envioMazivo.length; j++) {
-          if (
-            this.envioMazivo[j].ctaDestino.length == 18 &&
-            this.envioMazivo[j].clabe.length == 18
-          ) {
-            //TODO: Validar que la cuenta destino sea igual a la clabe
-          }
-        }
       };
     } else {
       this.divEscondido = true;
@@ -371,7 +388,6 @@ export class DialogoComponent implements OnInit {
   a = 1;
   listasACargar: any[] = [];
   enviar() {
-    let aux = 0;
     this.requestList = [];
     if (this.codigoOTP != '') {
       this.mostrarSpinner = true;
@@ -383,7 +399,7 @@ export class DialogoComponent implements OnInit {
       request.idUsuario = InfSpei.idUsuario;
       request.otp = this.codigoOTP.trim();
 
-      /*  this.loginServices
+      this.loginServices
           .verificarOtp(request)
           .pipe(
             catchError((error) => {
@@ -396,7 +412,7 @@ export class DialogoComponent implements OnInit {
           )
           .subscribe((data) => {
       this.mostrarSpinner = true;
-       if (data?.mensaje == 'Otp validado correctamente') {*/
+       if (data?.mensaje == 'Otp validado correctamente') {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.width = '40%';
       dialogConfig.height = '40%';
@@ -417,49 +433,11 @@ export class DialogoComponent implements OnInit {
           this.dialogRef.close(datos);
         }
       });
-      //}
-      //});
+      }
+      });
     }
   }
 
-  agregarDatosCola(request: InfoCapturaSPEIPago[]) {
-    this.listasACargar.push(request);
-    console.log(this.listasACargar);
-
-  }
-  realiazarPagoMazivo(request: InfoCapturaSPEIPago[]) {
-
-    this.infoPagosService.realizarPagoMazivo(request).subscribe(
-        (data) => {
-          // Este bloque se ejecutará si la solicitud se completa sin errores.
-          console.log(data);
-          // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
-        },
-        (error) => {
-          // Este bloque se ejecutará si ocurre un error durante la solicitud.
-          // Aquí puedes realizar acciones para manejar el error, si es necesario.
-          // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
-        },
-        () => { }
-      );
-  }
-  buscarIdBanco(a: string): number {
-    const primerasTresLetras: string = a.substring(0, 3);
-    const bancoEncontrado = this.listaBancos.find(
-      (banco) => banco.id_banco.toString().substr(2) === primerasTresLetras
-    );
-    if (bancoEncontrado) {
-      return bancoEncontrado.id_banco;
-    }
-    return 0;
-  }
-  listaBancos: InfoBancos[] = [];
-  listarBanaco() {
-    //aqui se carga la lista de los bancos disponibles
-    this.infoBancoService.listar().subscribe((bancos) => {
-      this.listaBancos = bancos;
-    });
-  }
   validarDatoNoNumeros(dato: string): boolean {
     const regex = /^[A-Za-z\s]*$/;
     return regex.test(dato);

@@ -35,39 +35,12 @@ export class PagoDataService {
     }
   }
 
-  updatePayment(pago: Pagos) {
+  updatePayment(pago: Pagos, idPago: number) {
+    const expirationDate = new Date().getTime() + 1000; // 1 hora en milisegundos (3600000 ms = 1 hora)
     this.isLoading = false; // Indicar que la petición ha finalizado
     const index = this.pagos.findIndex((pagoItem) => pagoItem.Id === pago.Id);
     this.pagos[index] = pago;
-    this.pagosProcesados.push(pago);
     this.saveToLocalStorage();
-    //this.pagosUpdated.next(this.pagos.slice());
-    //this.pagosProcesadosUpdated.next(this.pagosProcesados.slice());
-  }
-  updatePagos(pagos: Pagos[]) {
-    this.pagos = pagos;
-    this.pagosUpdated.next([...this.pagos]);// Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
-    //this.pagosProcesadosUpdated.next(this.pagosProcesados);
-    this.localStorageService.setPagos(
-      this.localStorageKey2,
-      this.pagosProcesados
-    );
-    //this.pagosProcesados.push(...pagos);
-    //this.pagosProcesadosUpdated.next(this.pagosProcesados);
-    //this.localStorageService.setPagos(this.localStorageKey2, this.pagosProcesados);
-    //this.pagosProcesados = pagos;
-    //this.pagosProcesadosUpdated.next([...this.pagosProcesados]); // Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
-  }
-
-  // Función para agregar un nuevo pago con duración de 1 hora
-  addPaymentWithExpiration(pago: Pagos, idPago: number) {
-    const expirationDate = new Date().getTime() + 10000; // 1 hora en milisegundos (3600000 ms = 1 hora)
-    this.isLoading = true; // Indicar que hay una petición en curso
-    this.pagos.push(pago);
-    this.pagos.sort((a, b) => b.Id - a.Id);
-    this.saveToLocalStorage(); // Guarda los pagos en el localStorage
-
-    // Guardar la fecha de vencimiento junto con los datos del pago en el localStorage
     const paymentDataWithExpiration = {
       data: pago,
       expirationDate: expirationDate,
@@ -76,12 +49,28 @@ export class PagoDataService {
       `pago_${idPago}`,
       JSON.stringify(paymentDataWithExpiration)
     );
-
-    // Configurar el temporizador para eliminar el pago después de 1 hora
     setTimeout(() => {
       this.isLoading = false; // Indicar que la petición ha finalizado
       this.deletePayment(idPago);
-    }, 10000); // 1 hora en milisegundos (3600000 ms = 1 hora)
+    }, 1000); // 1 hora en milisegundos (3600000 ms = 1 hora)
+  }
+  updatePagos(pagos: Pagos[]) {
+    this.pagos = pagos;
+    this.pagosUpdated.next([...this.pagos]);// Notificar a los suscriptores que el arreglo de pagos ha sido actualizado
+  }
+
+  // Función para agregar un nuevo pago con duración de 1 hora
+  addPaymentWithExpiration(pago: Pagos, idPago: number) {
+    this.isLoading = true; // Indicar que hay una petición en curso
+    this.pagos.push(pago);
+    this.pagos.sort((a, b) => b.Id - a.Id);
+    this.saveToLocalStorage(); // Guarda los pagos en el localStorage
+
+    // Guardar la fecha de vencimiento junto con los datos del pago en el localStorage
+
+
+    // Configurar el temporizador para eliminar el pago después de 1 hora
+
   }
   async archivosPorParticipante(): Promise<Archivo_Eiyu[]> {
     const p = { pblu: this.localStorageService.getUsuario("pblu") };
@@ -101,10 +90,6 @@ export class PagoDataService {
     this.pagosUpdated.next(this.pagos.slice());
     this.archivo_Eiyu = await this.archivosPorParticipante();
     this.archivosProcesadosUpdated.next(this.archivo_Eiyu);
-    this.localStorageService.setPagos(
-      this.localStorageKey2,
-      this.pagosProcesados
-    );
     this.isLoading = false; // Indicar que la petición ha finalizado
     return true;
   }

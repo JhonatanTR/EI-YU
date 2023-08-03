@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  HostListener,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogoComponent } from './dialogo/dialogo.component';
 import { InfoCapturaSPEIPago } from 'src/app/_model/InfoCapturaSPEIPago';
@@ -14,15 +9,8 @@ import { InfoBancos } from 'src/app/_model/InfoBancos';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as XLSX from 'xlsx';
-import {
-  Observable,
-  Subscription,
-  defer,
-  share,
-  tap,
-} from 'rxjs';
+import { Observable, Subscription, defer, delay, finalize, share, tap } from 'rxjs';
 import { Pagos } from 'src/app/_model/Pagos';
-import { HttpClient } from '@angular/common/http';
 import { PagoDataService } from 'src/app/_service/pago-data.service';
 import { InfoCapturaSPEIPagoAux } from 'src/app/_model/InfoCapturaSPEIPagoAux';
 import { Archivo_Eiyu } from 'src/app/_model/Archivo_EiYu';
@@ -56,12 +44,11 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     private infoPagosService: InfoPagosService,
     private infoBancoService: InfoBancosService,
     public pagoDataService: PagoDataService
-  ) { }
-  archivo_Eiyu:Archivo_Eiyu[]=[];
+  ) {}
+  archivo_Eiyu: Archivo_Eiyu[] = [];
   ngOnInit(): void {
     this.listarBanaco();
     this.archivosPorParticipante();
-
 
     // Verificar si hay pagos almacenados en el localStorage
     const localStorageKeys = Object.keys(localStorage);
@@ -78,7 +65,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           const idPago = parseInt(key.split('_')[1], 10);
           this.pagoDataService.deletePayment(idPago);
           localStorage.removeItem(key);
-
+          this.archivosPorParticipante();
         }
       }
     }
@@ -86,7 +73,6 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     if (storedPagos) {
       this.pagos = JSON.parse(storedPagos);
     }
-
 
     // Suscribirse a los cambios en el arreglo pagos del servicio
     this.pagosSubscription = this.pagoDataService.pagosUpdated.subscribe(
@@ -109,14 +95,16 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       );
   }
   archivosPorParticipante() {
-    let p ={pblu:this.localStorageService.getUsuario("pblu")}
-    this.infoPagosService.archivosPorParticipante(p).subscribe(data=>{
-      this.archivo_Eiyu=data;
-    })
+    let p = { pblu: this.localStorageService.getUsuario('pblu') };
+    this.infoPagosService.archivosPorParticipante(p).subscribe((data) => {
+      this.archivo_Eiyu = data;
+    });
   }
-  leerArchivo(id:number,nombre:string) {
-    this.infoPagosService.leerArchivo(id).subscribe(data => {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  leerArchivo(id: number, nombre: string) {
+    this.infoPagosService.leerArchivo(id).subscribe((data) => {
+      const blob = new Blob([data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
       // Create a URL for the Blob
       const url = window.URL.createObjectURL(blob);
       // Create a temporary anchor element to trigger the download
@@ -127,7 +115,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       a.click();
       // Cleanup: Revoke the URL object after download
       window.URL.revokeObjectURL(url);
-    })
+    });
   }
   ngOnDestroy(): void {
     this.pagosSubscription.unsubscribe();
@@ -166,7 +154,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     if (pagoActualizado) {
       pagoActualizado.Estatus = Estatus;
       pagoActualizado.Bandera = true;
-      this.pagoDataService.updatePayment(pagoActualizado);
+      this.pagoDataService.updatePayment(pagoActualizado, Id);
     }
   }
 
@@ -192,8 +180,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             request.idParticipante = this.localStorageService
               .getUsuario('pblu')
               .toString();
-            //   this.infoBancoService.generarClaveRastreo(request).pipe(
-            //   finalize(() => {
+            this.infoBancoService.generarClaveRastreo(request).pipe(
+              finalize(() => {
             aux++;
             let speiout = new InfoCapturaSPEIPago();
             speiout.username = DatosSPEI.username;
@@ -213,9 +201,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             speiout.cveRastreo = this.claveDeRastreo;
             this.requestList.push(speiout);
 
-            // })).subscribe((data: { claveRastreo: string; }) => {
-            // this.claveDeRastreo = data.claveRastreo;
-            //});
+            })).subscribe((data: { claveRastreo: string; }) => {
+            this.claveDeRastreo = data.claveRastreo;
+            });
           }
 
           this.post = defer(() => {
@@ -225,13 +213,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
               .realizarPagoMazivo(this.requestList)
               .pipe(
                 tap(() => {
-
-
                   this.actualizarEstatus(pagoId, 'Procesado');
-
-                  this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
-                    duration: 3000,
-                  });
                 }),
                 share()
               );
@@ -239,39 +221,55 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           if (this.postSubscription && !this.postSubscription.closed) {
             this.postSubscription.unsubscribe();
           }
-
           this.postSubscription = this.post.subscribe(
             (data) => {
-
               this.generarexcel(this.requestList, data, nombreArchivo);
-
+              this.snackBar.open(
+                '¡Pagos generados correctamente!',
+                'Cerrar',
+                {
+                  duration: 3000,
+                }
+              );
             },
             (error) => {
-              console.error('Error en la petición', error);
+              this.snackBar.open(
+                'Error al generar pagos, intentelo de nuevo.',
+                'Cerrar',
+                {
+                  duration: 3000,
+                }
+              );
             }
           );
         }
       }
     });
   }
-  generarexcel(requestList: InfoCapturaSPEIPago[], data: any[], nombreArchivo: string) {
+  generarexcel(
+    requestList: InfoCapturaSPEIPago[],
+    data: any[],
+    nombreArchivo: string
+  ) {
     let execlAux: InfoCapturaSPEIPagoAux[] = [];
     for (let i = 0; i < requestList.length; i++) {
-      let pagoAux = new InfoCapturaSPEIPagoAux;
+      let pagoAux = new InfoCapturaSPEIPagoAux();
       if (data[i]?.ok == true) {
-        pagoAux.Estatus = "Correcto"
-        pagoAux.Mensaje = data[i].mensaje
+        pagoAux.Estatus = 'Correcto';
+        pagoAux.Mensaje = data[i].mensaje;
       } else {
-        pagoAux.Estatus = "Error"
-        pagoAux.Mensaje = data[i].mensaje
+        pagoAux.Estatus = 'Error';
+        pagoAux.Mensaje = data[i].mensaje;
       }
-      pagoAux.Destino = requestList[i].ctaDestino
-      pagoAux.Nombre_Beneficiario = requestList[i].nombreDestino
-      pagoAux.Numero_de_cuenta = requestList[i].clabe
-      pagoAux.Institucion_bancaria =this.buscarNombreBanco(requestList[i].bancoDestino)
-      pagoAux.Monto = requestList[i].monto
-      pagoAux.Referencia_Numerica = requestList[i].refNum
-      pagoAux.conceptoPago = requestList[i].conceptoPago
+      pagoAux.Destino = requestList[i].ctaDestino;
+      pagoAux.Nombre_Beneficiario = requestList[i].nombreDestino;
+      pagoAux.Numero_de_cuenta = requestList[i].clabe;
+      pagoAux.Institucion_bancaria = this.buscarNombreBanco(
+        requestList[i].bancoDestino
+      );
+      pagoAux.Monto = requestList[i].monto;
+      pagoAux.Referencia_Numerica = requestList[i].refNum;
+      pagoAux.conceptoPago = requestList[i].conceptoPago;
       pagoAux.Clave_Rastreo = requestList[i].cveRastreo;
       execlAux.push(pagoAux);
     }
@@ -286,27 +284,24 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     const dataBlob: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    //FileSaver.saveAs(dataBlob, `${nombreArchivo}.xlsx`);
     let archivo = new File([dataBlob], `${nombreArchivo}.xlsx`);
     let infoDato = {
-      pblu: this.localStorageService.getUsuario("pblu"),
-      nombreExcel: nombreArchivo
-    }
-    this.infoPagosService.guardarArchivo(archivo, infoDato).subscribe(data => {
-      this.archivosPorParticipante();
-    })
-
-
+      pblu: this.localStorageService.getUsuario('pblu'),
+      nombreExcel: nombreArchivo,
+    };
+    this.infoPagosService
+      .guardarArchivo(archivo, infoDato)
+      .subscribe((data) => {
+      });
   }
   buscarNombreBanco(a: string): string {
-  
     const bancoEncontrado = this.listaBancos.find(
       (banco) => banco.id_banco.toString() === a
     );
     if (bancoEncontrado) {
       return bancoEncontrado.descripcion;
     }
-    return "No se encontraron bancos relacionados con la cuenta destino";
+    return 'No se encontraron bancos relacionados con la cuenta destino';
   }
   buscarIdBanco(a: string): number {
     const primerasTresLetras: string = a.substring(0, 3);
@@ -338,8 +333,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       // Actualizar el arreglo 'pagos' del componente con los pagos filtrados
       this.pagos = updatedPagos;
       this.pagoDataService.updatePagos(updatedPagos);
-      // Guardar los datos actualizados en el localStorage
-      //localStorage.setItem('pagos', JSON.stringify(updatedPagos));
+      this.archivosPorParticipante();
     }
   }
 }
