@@ -194,17 +194,40 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           const post = defer(() => {
             const pagoId = this.añadirPago(Archivo, Fecha, Datos);
             this.pagos = this.pagoDataService.getPagos();
-            return this.http
-              .get('https://pokeapi.co/api/v2/pokemon/pikachu')
+            return this.infoPagosService
+            .realizarPagoMazivo(this.requestList)
               .pipe(
-                delay(7000),
                 tap(() => {
+                  console.log('Terminó la petición');
                   this.actualizarEstatus(pagoId, 'Procesado');
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });
                 })
-              );
+              )
+              /*.subscribe(
+                (data) => {
+                  // Este bloque se ejecutará si la solicitud se completa sin errores.
+                  console.log(data, 'Exito');
+                  // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
+                },
+                (error) => {
+                  // Este bloque se ejecutará si ocurre un error durante la solicitud.
+                  console.error(
+                    'Error en la solicitud, intente nuevamente:',
+                    error
+                  );
+                  this.snackBar.open(
+                    'Error en la solicitud, intente nuevamente',
+                    'Cerrar',
+                    {
+                      duration: 3000,
+                    }
+                  );
+                  // Aquí puedes realizar acciones para manejar el error, si es necesario.
+                  // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
+                }
+              );*/
           });
           post.subscribe();
           this.infoPagosService
