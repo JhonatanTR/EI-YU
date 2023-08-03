@@ -601,7 +601,7 @@ export class CargarCuentaComponent implements OnInit {
     const dataBlob: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-
+    
     FileSaver.saveAs(dataBlob, 'cuentas_generadas.xlsx');
     this.creados = true;
   }

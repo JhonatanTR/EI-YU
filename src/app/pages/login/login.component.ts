@@ -60,13 +60,13 @@ export class LoginComponent implements OnInit {
     this.password = this.form.value['password'];
    // this.password = this.encryptPassword(this.password);
    // console.log("Contraseña encriptada: ", this.password);
-    this.otp = this.form.value['otp'];
+    //this.otp = this.form.value['otp'];
     if (this.otp != "") {
       log.otp = this.otp.trim();
     }
     log.usuario = this.username.trim();
     log.password = this.password.trim();
-    log.otp = this.otp.trim();
+    //log.otp = this.otp.trim();
     this.loginServices.login(log).pipe(
       catchError((error) => {
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');

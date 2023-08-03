@@ -187,10 +187,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             // this.claveDeRastreo = data.claveRastreo;
             //});
           }
-          if (!Archivo) {
-            this.nombreArchivo =
-              this.localStorageService.getData('nombreArchivo');
-          }
+       
           const post = defer(() => {
             const pagoId = this.añadirPago(Archivo, Fecha, Datos);
             this.pagos = this.pagoDataService.getPagos();
@@ -198,7 +195,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             .realizarPagoMazivo(this.requestList)
               .pipe(
                 tap(() => {
-                  console.log('Terminó la petición');
+                  console.log('Terminó la petición',);
                   this.actualizarEstatus(pagoId, 'Procesado');
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
@@ -229,8 +226,10 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                 }
               );*/
           });
-          post.subscribe();
-          this.infoPagosService
+          post.subscribe(data=>{
+            console.log(data);
+          });
+         /* this.infoPagosService
             .realizarPagoMazivo(this.requestList)
             .pipe(
               finalize(() => {
@@ -260,7 +259,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                 // Aquí puedes realizar acciones para manejar el error, si es necesario.
                 // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
               }
-            );
+            );*/
         }
       }
     });
