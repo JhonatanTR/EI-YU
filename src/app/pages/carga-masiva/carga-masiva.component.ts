@@ -1,8 +1,6 @@
 import {
-  ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild,
   OnDestroy,
   HostListener,
 } from '@angular/core';
@@ -11,7 +9,6 @@ import { DialogoComponent } from './dialogo/dialogo.component';
 import { InfoCapturaSPEIPago } from 'src/app/_model/InfoCapturaSPEIPago';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { InfoPagosService } from 'src/app/_service/info-pagos.service';
-import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 import { requesteClaveRastreo } from 'src/app/_modelRequest/requestClaveRastreo';
 import { InfoBancos } from 'src/app/_model/InfoBancos';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
@@ -20,20 +17,14 @@ import * as XLSX from 'xlsx';
 import {
   Observable,
   Subscription,
-  catchError,
   defer,
-  delay,
-  finalize,
-  of,
   share,
   tap,
 } from 'rxjs';
 import { Pagos } from 'src/app/_model/Pagos';
 import { HttpClient } from '@angular/common/http';
 import { PagoDataService } from 'src/app/_service/pago-data.service';
-import { Archivos } from '../../_model/Archivos';
 import { InfoCapturaSPEIPagoAux } from 'src/app/_model/InfoCapturaSPEIPagoAux';
-import * as FileSaver from 'file-saver';
 import { Archivo_Eiyu } from 'src/app/_model/Archivo_EiYu';
 
 @Component({
@@ -48,6 +39,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   fecha: string = '';
   pagos: Pagos[] = [];
   pagosSubscription: Subscription = new Subscription();
+  archivosSubscription: Subscription = new Subscription();
   idCounter: number = 0;
   listaBancos: InfoBancos[] = [];
   initialPagosData: Pagos[] = []; // Variable para almacenar los datos iniciales del localStorage
@@ -62,7 +54,6 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private snackBar: MatSnackBar,
     private infoPagosService: InfoPagosService,
-    private http: HttpClient,
     private infoBancoService: InfoBancosService,
     public pagoDataService: PagoDataService
   ) { }
@@ -71,7 +62,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     this.listarBanaco();
     this.archivosPorParticipante();
 
-    
+
     // Verificar si hay pagos almacenados en el localStorage
     const localStorageKeys = Object.keys(localStorage);
     for (const key of localStorageKeys) {
@@ -87,6 +78,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           const idPago = parseInt(key.split('_')[1], 10);
           this.pagoDataService.deletePayment(idPago);
           localStorage.removeItem(key);
+
         }
       }
     }
@@ -94,10 +86,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     if (storedPagos) {
       this.pagos = JSON.parse(storedPagos);
     }
-    const storedArchivos = localStorage.getItem('archivos');
-    if (storedArchivos) {
-      this.archivos = JSON.parse(storedArchivos);
-    }
+
 
     // Suscribirse a los cambios en el arreglo pagos del servicio
     this.pagosSubscription = this.pagoDataService.pagosUpdated.subscribe(
@@ -110,6 +99,12 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       this.pagoDataService.pagosProcesadosUpdated.subscribe(
         (pagosProcesados: Pagos[]) => {
           this.archivos = pagosProcesados;
+        }
+      );
+    this.archivosSubscription =
+      this.pagoDataService.archivosProcesadosUpdated.subscribe(
+        (archivosProcesados: Archivo_Eiyu[]) => {
+          this.archivo_Eiyu = archivosProcesados;
         }
       );
   }
@@ -127,7 +122,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       // Create a temporary anchor element to trigger the download
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${nombre}.xlsx`; // Change the file name if needed  
+      a.download = `${nombre}.xlsx`; // Change the file name if needed
       // Programmatically trigger the download
       a.click();
       // Cleanup: Revoke the URL object after download
@@ -217,9 +212,6 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             speiout.conceptoPago = Datos[i].conceptoPago;
             speiout.cveRastreo = this.claveDeRastreo;
             this.requestList.push(speiout);
-            //this.agregarDatosCola(this.requestList);
-            //this.realiazarPagoMazivo();
-            //.a++;
 
             // })).subscribe((data: { claveRastreo: string; }) => {
             // this.claveDeRastreo = data.claveRastreo;
@@ -234,9 +226,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
               .pipe(
                 tap(() => {
 
-               
+
                   this.actualizarEstatus(pagoId, 'Procesado');
-                
+
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });
@@ -250,56 +242,14 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
 
           this.postSubscription = this.post.subscribe(
             (data) => {
-              
-              this.generarexcel(this.requestList, data, nombreArchivo);
-              
-            },
-            (error) => {
-              console.error('Error en la petición', error);
-            }
-          );
 
-          // Llamada a la función post y asignación de la suscripción
-          /*this.postSubscription = post.subscribe(
-            () => {
-              console.log('Petición realizada con éxito');
+              this.generarexcel(this.requestList, data, nombreArchivo);
+
             },
             (error) => {
               console.error('Error en la petición', error);
             }
           );
-*/
-          /* this.infoPagosService
-            .realizarPagoMazivo(this.requestList)
-            .pipe(
-              finalize(() => {
-                //Fin de la animacion
-                // Este bloque se ejecutará al final de la suscripción, una vez que se completen todas las solicitudes.
-              })
-            )
-            .subscribe(
-              (data) => {
-                // Este bloque se ejecutará si la solicitud se completa sin errores.
-                console.log(data, 'Exito');
-                // Aquí puedes realizar acciones con la respuesta exitosa si es necesario.
-              },
-              (error) => {
-                // Este bloque se ejecutará si ocurre un error durante la solicitud.
-                console.error(
-                  'Error en la solicitud, intente nuevamente:',
-                  error
-                );
-                this.snackBar.open(
-                  'Error en la solicitud, intente nuevamente',
-                  'Cerrar',
-                  {
-                    duration: 3000,
-                  }
-                );
-                // Aquí puedes realizar acciones para manejar el error, si es necesario.
-                // También puedes dejar este bloque vacío si no deseas hacer nada con el error y permitir que el flujo continúe normalmente.
-              }
-            );*/
         }
       }
     });
@@ -344,9 +294,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     }
     this.infoPagosService.guardarArchivo(archivo, infoDato).subscribe(data => {
 
-      this.archivosPorParticipante();
+      //this.archivosPorParticipante();
     })
-    
+
 
   }
 
