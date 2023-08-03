@@ -22,7 +22,7 @@ import { Archivo_Eiyu } from 'src/app/_model/Archivo_EiYu';
 })
 export class CargaMasivaComponent implements OnInit, OnDestroy {
   requestList: InfoCapturaSPEIPago[] = [];
-  claveDeRastreo: string = '123';
+  claveDeRastreo: string = '';
   nombreArchivo: string = '';
   fecha: string = '';
   pagos: Pagos[] = [];
@@ -198,8 +198,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             speiout.monto = Datos[i].monto;
             speiout.refNum = Datos[i].refNum;
             speiout.conceptoPago = Datos[i].conceptoPago;
-            speiout.cveRastreo = this.claveDeRastreo;
             this.claveDeRastreo = data.claveRastreo;
+            speiout.cveRastreo = this.claveDeRastreo;
             this.requestList.push(speiout);
 
           }
