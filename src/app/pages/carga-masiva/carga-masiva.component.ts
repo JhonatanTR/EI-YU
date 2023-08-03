@@ -208,7 +208,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });
-                })
+                }),
                 share() // Utilizamos el operador share para compartir la suscripción
               );
           });
@@ -217,7 +217,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
           });
 
           // Llamada a la función post y asignación de la suscripción
-          this.postSubscription = post.subscribe(
+          /*this.postSubscription = post.subscribe(
             () => {
               console.log('Petición realizada con éxito');
             },
@@ -225,7 +225,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
               console.error('Error en la petición', error);
             }
           );
-
+*/
           /* this.infoPagosService
             .realizarPagoMazivo(this.requestList)
             .pipe(

@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
     this.password = this.form.value['password'];
    // this.password = this.encryptPassword(this.password);
    // console.log("Contraseña encriptada: ", this.password);
-    //this.otp = this.form.value['otp'];
+    this.otp = this.form.value['otp'];
     if (this.otp != "") {
       log.otp = this.otp.trim();
     }
