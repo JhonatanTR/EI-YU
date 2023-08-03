@@ -168,7 +168,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     dialogConfig.maxHeight = '95%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
     dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
     const dialogRef = this.dialog.open(DialogoComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       //Destructura el resultado del dialogo
       if (result) {
         const { Bandera, Archivo, Fecha, Datos, DatosSPEI } = result;
@@ -180,8 +180,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             request.idParticipante = this.localStorageService
               .getUsuario('pblu')
               .toString();
-            this.infoBancoService.generarClaveRastreo(request).pipe(
-              finalize(() => {
+            const data: { claveRastreo: string } = await this.infoBancoService.generarClaveRastreo(request).toPromise();
+
             aux++;
             let speiout = new InfoCapturaSPEIPago();
             speiout.username = DatosSPEI.username;
@@ -199,11 +199,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             speiout.refNum = Datos[i].refNum;
             speiout.conceptoPago = Datos[i].conceptoPago;
             speiout.cveRastreo = this.claveDeRastreo;
+            this.claveDeRastreo = data.claveRastreo;
             this.requestList.push(speiout);
 
-            })).subscribe((data: { claveRastreo: string; }) => {
-            this.claveDeRastreo = data.claveRastreo;
-            });
           }
 
           this.post = defer(() => {
@@ -225,7 +223,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             (data) => {
               this.generarexcel(this.requestList, data, nombreArchivo);
               this.snackBar.open(
-                '¡Pagos generados correctamente!',
+                '¡Pago generados correctamente!',
                 'Cerrar',
                 {
                   duration: 3000,
