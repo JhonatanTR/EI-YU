@@ -89,7 +89,6 @@ export class DashboardComponent implements OnDestroy {
   showSaldoActual(){
     const datePipe = new DatePipe('en-US');
         this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
-          console.log(sal)
           this.sn = sal;
         })
   }

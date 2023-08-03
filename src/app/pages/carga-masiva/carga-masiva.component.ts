@@ -34,6 +34,7 @@ import { PagoDataService } from 'src/app/_service/pago-data.service';
 import { Archivos } from '../../_model/Archivos';
 import { InfoCapturaSPEIPagoAux } from 'src/app/_model/InfoCapturaSPEIPagoAux';
 import * as FileSaver from 'file-saver';
+import { Archivo_Eiyu } from 'src/app/_model/Archivo_EiYu';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -64,10 +65,13 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private infoBancoService: InfoBancosService,
     public pagoDataService: PagoDataService
-  ) {}
+  ) { }
+  archivo_Eiyu:Archivo_Eiyu[]=[];
   ngOnInit(): void {
     this.listarBanaco();
-    this.leerArchivo();
+    this.archivosPorParticipante();
+
+    
     // Verificar si hay pagos almacenados en el localStorage
     const localStorageKeys = Object.keys(localStorage);
     for (const key of localStorageKeys) {
@@ -109,21 +113,26 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
         }
       );
   }
-
-  leerArchivo(){
-    this.infoPagosService.leerArchivo(4).subscribe(data=>{
+  archivosPorParticipante() {
+    let p ={pblu:this.localStorageService.getUsuario("pblu")}
+    this.infoPagosService.archivosPorParticipante(p).subscribe(data=>{
+      this.archivo_Eiyu=data;
+    })
+  }
+  leerArchivo(id:number,nombre:string) {
+    this.infoPagosService.leerArchivo(id).subscribe(data => {
       const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       // Create a URL for the Blob
       const url = window.URL.createObjectURL(blob);
       // Create a temporary anchor element to trigger the download
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'file.xlsx'; // Change the file name if needed  
+      a.download = `${nombre}.xlsx`; // Change the file name if needed  
       // Programmatically trigger the download
       a.click();
       // Cleanup: Revoke the URL object after download
       window.URL.revokeObjectURL(url);
-     })
+    })
   }
   ngOnDestroy(): void {
     this.pagosSubscription.unsubscribe();
@@ -181,7 +190,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       if (result) {
         const { Bandera, Archivo, Fecha, Datos, DatosSPEI } = result;
         if (Bandera) {
-          let nombreArchivo=Archivo;
+          let nombreArchivo = Archivo;
           let aux = 0;
           for (let i = 0; i < Datos.length; i++) {
             let request = new requesteClaveRastreo();
@@ -224,8 +233,10 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
               .realizarPagoMazivo(this.requestList)
               .pipe(
                 tap(() => {
-                  console.log('Terminó la petición');
+
+               
                   this.actualizarEstatus(pagoId, 'Procesado');
+                
                   this.snackBar.open('Carga masiva exitosa', 'Cerrar', {
                     duration: 3000,
                   });
@@ -239,8 +250,9 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
 
           this.postSubscription = this.post.subscribe(
             (data) => {
+              
               this.generarexcel(this.requestList, data, nombreArchivo);
-              console.log("hugo gay", data);
+              
             },
             (error) => {
               console.error('Error en la petición', error);
@@ -292,24 +304,24 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       }
     });
   }
-  generarexcel( requestList: InfoCapturaSPEIPago[],data:any[],nombreArchivo:string){
+  generarexcel(requestList: InfoCapturaSPEIPago[], data: any[], nombreArchivo: string) {
     let execlAux: InfoCapturaSPEIPagoAux[] = [];
-    for(let i =0;i<requestList.length;i++){
-      let pagoAux =new InfoCapturaSPEIPagoAux;
+    for (let i = 0; i < requestList.length; i++) {
+      let pagoAux = new InfoCapturaSPEIPagoAux;
       if (data[i]?.ok == true) {
-        pagoAux.Estatus="Correcto"
-        pagoAux.Mensaje=data[i].mensaje
-      }else{
-        pagoAux.Estatus="Error"
-        pagoAux.Mensaje=data[i].mensaje
+        pagoAux.Estatus = "Correcto"
+        pagoAux.Mensaje = data[i].mensaje
+      } else {
+        pagoAux.Estatus = "Error"
+        pagoAux.Mensaje = data[i].mensaje
       }
-      pagoAux.Destino=requestList[i].ctaDestino
-      pagoAux.Nombre_Beneficiario=requestList[i].nombreDestino
-      pagoAux.Numero_de_cuenta=requestList[i].clabe
-      pagoAux.Institucion_bancaria=requestList[i].bancoDestino
-      pagoAux.Monto=requestList[i].monto
-      pagoAux.Referencia_Numerica=requestList[i].refNum
-      pagoAux.conceptoPago=requestList[i].conceptoPago
+      pagoAux.Destino = requestList[i].ctaDestino
+      pagoAux.Nombre_Beneficiario = requestList[i].nombreDestino
+      pagoAux.Numero_de_cuenta = requestList[i].clabe
+      pagoAux.Institucion_bancaria = requestList[i].bancoDestino
+      pagoAux.Monto = requestList[i].monto
+      pagoAux.Referencia_Numerica = requestList[i].refNum
+      pagoAux.conceptoPago = requestList[i].conceptoPago
       pagoAux.Clave_Rastreo = requestList[i].cveRastreo;
       execlAux.push(pagoAux);
     }
@@ -330,10 +342,11 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       pblu: this.localStorageService.getUsuario("pblu"),
       nombreExcel: nombreArchivo
     }
-    this.infoPagosService.guardarArchivo(archivo,infoDato).subscribe(data=>{
-      console.log(1);
+    this.infoPagosService.guardarArchivo(archivo, infoDato).subscribe(data => {
+
+      this.archivosPorParticipante();
     })
-    console.log(execlAux);
+    
 
   }
 

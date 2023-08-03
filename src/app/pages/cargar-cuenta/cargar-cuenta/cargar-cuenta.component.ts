@@ -99,8 +99,6 @@ export class CargarCuentaComponent implements OnInit {
     }
   }
   eliminar() {
-    console.log(this.selecc);
-    console.log(this.deseleccionados);
     if (this.isAllSelected() != false) {
       this.removeXLSX();
     } else {

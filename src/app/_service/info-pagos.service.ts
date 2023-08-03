@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { InfoCapturaSPEIPago } from '../_model/InfoCapturaSPEIPago';
 import { InfoAutorizarSpei } from '../_model/InfoAutorizarSpei';
 import { HOST, HOSTPAGO } from '../_shared/var.constant';
+import { Archivo_Eiyu } from '../_model/Archivo_EiYu';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class InfoPagosService {
     })
   }
   archivosPorParticipante(dato:any){
-    
+    return this.http.post<Archivo_Eiyu[]>(`${HOSTPAGO}/encriptacion/archivosActuales`,dato)
   }
 
   guardarEnLatablaListarPagos(infoAutorizarSpei: InfoAutorizarSpei) {//Guarda en la tabla listarSpei
