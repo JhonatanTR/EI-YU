@@ -18,6 +18,7 @@ import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as XLSX from 'xlsx';
 import {
+  Observable,
   Subscription,
   catchError,
   defer,
@@ -52,7 +53,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   lastPaymentId: number = 0; // Variable para almacenar el último ID del último pago
   pagosProcesados: Pagos[] = [];
   archivos: Pagos[] = [];
-  private postSubscription: Subscription = new Subscription();
+  postSubscription: Subscription | undefined;
+  post: Observable<any> | undefined;
 
   constructor(
     private dialog: MatDialog,
@@ -148,6 +150,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
   }
 
   openDialog() {
+    this.requestList = [];
     //abre el dialgo de carga masiva
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '95%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
@@ -196,11 +199,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
             // this.claveDeRastreo = data.claveRastreo;
             //});
           }
-          if (this.postSubscription && !this.postSubscription.closed) {
-            this.postSubscription.unsubscribe();
-          }
 
-          const post = defer(() => {
+          this.post = defer(() => {
             const pagoId = this.añadirPago(Archivo, Fecha, Datos);
             this.pagos = this.pagoDataService.getPagos();
             return this.infoPagosService
@@ -213,13 +213,22 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
                     duration: 3000,
                   });
                 }),
-                share() // Utilizamos el operador share para compartir la suscripción
+                share()
               );
           });
-          post.subscribe((data) => {
-            this.generarexcel(this.requestList,data,nombreArchivo);
-            console.log("hugo gay",data);
-          });
+          if (this.postSubscription && !this.postSubscription.closed) {
+            this.postSubscription.unsubscribe();
+          }
+
+          this.postSubscription = this.post.subscribe(
+            (data) => {
+              this.generarexcel(this.requestList, data, nombreArchivo);
+              console.log("hugo gay", data);
+            },
+            (error) => {
+              console.error('Error en la petición', error);
+            }
+          );
 
           // Llamada a la función post y asignación de la suscripción
           /*this.postSubscription = post.subscribe(
