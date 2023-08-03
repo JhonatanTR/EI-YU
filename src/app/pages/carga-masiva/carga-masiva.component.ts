@@ -16,6 +16,7 @@ import { requesteClaveRastreo } from 'src/app/_modelRequest/requestClaveRastreo'
 import { InfoBancos } from 'src/app/_model/InfoBancos';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as XLSX from 'xlsx';
 import {
   Subscription,
   catchError,
@@ -30,6 +31,8 @@ import { Pagos } from 'src/app/_model/Pagos';
 import { HttpClient } from '@angular/common/http';
 import { PagoDataService } from 'src/app/_service/pago-data.service';
 import { Archivos } from '../../_model/Archivos';
+import { InfoCapturaSPEIPagoAux } from 'src/app/_model/InfoCapturaSPEIPagoAux';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-carga-masiva',
@@ -158,6 +161,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
       if (result) {
         const { Bandera, Archivo, Fecha, Datos, DatosSPEI } = result;
         if (Bandera) {
+          let nombreArchivo=Archivo;
           let aux = 0;
           for (let i = 0; i < Datos.length; i++) {
             let request = new requesteClaveRastreo();
@@ -213,7 +217,8 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
               );
           });
           post.subscribe((data) => {
-            console.log(data);
+            this.generarexcel(this.requestList,data,nombreArchivo);
+            console.log("hugo gay",data);
           });
 
           // Llamada a la función post y asignación de la suscripción
@@ -260,6 +265,41 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+  generarexcel( requestList: InfoCapturaSPEIPago[],data:any[],nombreArchivo:string){
+    let execlAux: InfoCapturaSPEIPagoAux[] = [];
+    for(let i =0;i<requestList.length;i++){
+      let pagoAux =new InfoCapturaSPEIPagoAux;
+      if (data[i]?.ok == true) {
+        pagoAux.Estatus="Correcto"
+        pagoAux.Mensaje=data[i].mensaje
+      }else{
+        pagoAux.Estatus="Error"
+        pagoAux.Mensaje=data[i].mensaje
+      }
+      pagoAux.Destino=requestList[i].ctaDestino
+      pagoAux.Nombre_Beneficiario=requestList[i].nombreDestino
+      pagoAux.Numero_de_cuenta=requestList[i].clabe
+      pagoAux.Institucion_bancaria=requestList[i].bancoDestino
+      pagoAux.Monto=requestList[i].monto
+      pagoAux.Referencia_Numerica=requestList[i].refNum
+      pagoAux.conceptoPago=requestList[i].conceptoPago
+      pagoAux.Clave_Rastreo = requestList[i].cveRastreo;
+      execlAux.push(pagoAux);
+    }
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(execlAux);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Cuentas Generadas');
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    const dataBlob: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    FileSaver.saveAs(dataBlob, `${nombreArchivo}.xlsx`);
+   console.log(execlAux);
   }
 
   buscarIdBanco(a: string): number {

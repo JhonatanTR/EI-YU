@@ -21,6 +21,20 @@ export class InfoPagosService {
     return this.http.post<any>(`${HOSTPAGO}/encriptacion/masivo`, infoCapturaSPEIPago);
   }
 
+  guardarArchivo(data: File, infoDato: any) {
+    let formdata: FormData = new FormData();
+    const jsonString = JSON.stringify(infoDato);
+    formdata.append("file", data, jsonString);
+    return this.http.post(`${HOSTPAGO}/encriptacion/guardarArchivo`, formdata, {
+      responseType: 'text'
+    });
+
+  }
+  leerArchivo(id:number) {
+    return this.http.get(`${HOSTPAGO}/encriptacion/leerArchivo/${id}`, {
+      responseType: 'blob'
+    })
+  }
   guardarEnLatablaListarPagos(infoAutorizarSpei: InfoAutorizarSpei) {//Guarda en la tabla listarSpei
     return this.http.post<InfoAutorizarSpei>(`${this.urlEnlistar}/speiOut`, infoAutorizarSpei);
   }
