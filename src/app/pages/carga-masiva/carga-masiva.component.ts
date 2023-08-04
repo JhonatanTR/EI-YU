@@ -273,7 +273,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     }
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(execlAux);
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Cuentas Generadas');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Pagos Generados');
     const excelBuffer: any = XLSX.write(workbook, {
       bookType: 'xlsx',
       type: 'array',
@@ -282,7 +282,7 @@ export class CargaMasivaComponent implements OnInit, OnDestroy {
     const dataBlob: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    let archivo = new File([dataBlob], `${nombreArchivo}.xlsx`);
+    let archivo = new File([dataBlob], `${nombreArchivo}-pagos-generados.xlsx`);
     let infoDato = {
       pblu: this.localStorageService.getUsuario('pblu'),
       nombreExcel: nombreArchivo,

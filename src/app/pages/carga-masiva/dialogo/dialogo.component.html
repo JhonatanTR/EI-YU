@@ -87,7 +87,7 @@
 
           <ng-container matColumnDef="Monto">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Monto</th>
-            <td mat-cell *matCellDef="let row">${{ row.monto }}</td>
+            <td mat-cell *matCellDef="let row" thousandSeparator=",">${{ row.monto }}</td>
           </ng-container>
 
           <ng-container matColumnDef="Ref. Num">

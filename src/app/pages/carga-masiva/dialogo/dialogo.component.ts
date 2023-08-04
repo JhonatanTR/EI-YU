@@ -69,6 +69,7 @@ export class DialogoComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   numeroDeCuenta: string = "";
   paramConfig !: Param_Config_EiYu;
+  monto: string = "";
 
 
   constructor(
@@ -116,6 +117,7 @@ export class DialogoComponent implements OnInit {
     })
   }
   ngOnInit(): void {
+    this.parametroCuentaConcentradora();
     this.montoTotal = 0;
     if (this.localStorageService.getExcelList('listExel') != null) {
       this.envioMazivo = this.localStorageService.getExcelList('listExel');
@@ -240,8 +242,8 @@ export class DialogoComponent implements OnInit {
             trans.nombreDestino = element['Nombre Beneficiario'];
 
             trans.clabe = element['Numero de cuenta'];
-
-            if (this.clabeMadre === this.numeroDeCuenta.toString().trim()) {
+            
+            if (this.clabeMadre === trans.clabe.toString().trim()) {
               if (this.paramConfig.valor == 1) {
                 if (
                   trans.clabe.toString().length == 18 &&
@@ -289,7 +291,7 @@ export class DialogoComponent implements OnInit {
 
             trans.monto = element['Monto'];
             if (
-              this.validarSoloNumeros(element['Monto']) &&
+              this.validarSoloNumerosYDecimales(element['Monto']) &&
               trans.monto.toString().length > 0
             ) {
               trans.monto = element['Monto'];
@@ -445,5 +447,27 @@ export class DialogoComponent implements OnInit {
   validarSoloNumeros(dato: string): boolean {
     const regex = /^\d+$/;
     return regex.test(dato);
+  }
+  validarSoloNumerosYDecimales(dato: string): boolean {
+  const regex = /^\d+(\.\d+)?$/;
+  return regex.test(dato);
+  }
+  agregarMillares(dato: string): boolean {
+    const regex = /^(\d{1,3}(,\d{3})*|\d+)(\.\d+)?$/;
+    const tieneComa = /,/.test(dato); // Comprueba si ya contiene una coma como separador de miles
+
+    if (typeof dato === "string") {
+      if (!tieneComa) {
+        // Agrega la coma como separador de miles a la variable
+        const partes = dato.split(".");
+        partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        dato = partes.join(".");
+      }
+
+      return regex.test(dato);
+    }
+
+    // Si dato no es una cadena, retorna false o lanza una excepción, según lo desees manejar.
+    return false;
   }
 }
