@@ -50,31 +50,62 @@ export class LoginComponent implements OnInit {
     });
   }
   signIn() {
-
+   
+    let log = new login();
+    this.username = this.form.value['user'];
+    this.password = this.form.value['password'];
+    this.otp = this.form.value['otp'];
+    if (this.otp != "" ) {
+     this.operar();
+    
+    }else{
+      log.usuario = this.username.trim();
+      log.password = this.password.trim();
+      this.loginServices.login(log).subscribe(loginCorrecto=>{
+       
+        if(loginCorrecto.usuario.token?.activo == true || loginCorrecto.usuario.token != null){
+          this.openSnackBar('Favor de ingresar un codigo Otp', 'Aviso');
+         
+        }else{
+          if (loginCorrecto.usuario.rol.idRol == 1 || loginCorrecto.usuario.usuarios_permisos[0].id==3) {
+            this.openDialogo(loginCorrecto.usuario.id);
+          }else{
+            this.operar();
+          }
+       
+        }
+      })
+    }
+    
   }
   cl = new Cliente();
   user !: Usuario;
   operar() {
+    this.loading = true
     let log = new login();
     this.username = this.form.value['user'];
     this.password = this.form.value['password'];
    // this.password = this.encryptPassword(this.password);
    // console.log("Contraseña encriptada: ", this.password);
     this.otp = this.form.value['otp'];
-    if (this.otp != "") {
-      log.otp = this.otp.trim();
-    }
+   
     log.usuario = this.username.trim();
     log.password = this.password.trim();
-    //log.otp = this.otp.trim();
+    if(this.otp!=""){
+      log.otp = this.otp.trim();
+    }
+    
     this.loginServices.login(log).pipe(
       catchError((error) => {
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
         return of(null);
       })
     ).subscribe(da => {//login al portal
-      if (da != null) {
+      if (da != null ) {
+        if(da.mensaje!="OTP INCORRECTO"){
+         
         if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
+          this.loading = false
           this.showError = true;
           setTimeout(() => {
             this.showError = false;
@@ -152,6 +183,12 @@ export class LoginComponent implements OnInit {
 
           }
         }
+      }else{
+        this.loading = false
+        this.openSnackBar('Codigo OTP incorrecto.', 'Aviso');
+      }
+      }else{
+        this.loading = false
       }
     })
 
