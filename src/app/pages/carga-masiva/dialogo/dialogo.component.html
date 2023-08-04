@@ -87,7 +87,7 @@
 
           <ng-container matColumnDef="Monto">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Monto</th>
-            <td mat-cell *matCellDef="let row" thousandSeparator=",">${{ row.monto }}</td>
+            <td mat-cell *matCellDef="let row" thousandSeparator=",">${{ row.monto | number:'1.2-2'}}</td>
           </ng-container>
 
           <ng-container matColumnDef="Ref. Num">
@@ -115,7 +115,7 @@
         ></mat-paginator>
         <div style="position: relative; padding-top: 20px; left: 25px">
           <p style="color: rgb(4, 86, 4); font-size: 21px; font-weight: 500">
-            MONTO TOTAL: ${{ montoTotal }}
+            MONTO TOTAL: ${{ montoTotal | number:'1.2-2' }}
           </p>
         </div>
 

@@ -242,7 +242,7 @@ export class DialogoComponent implements OnInit {
             trans.nombreDestino = element['Nombre Beneficiario'];
 
             trans.clabe = element['Numero de cuenta'];
-            
+
             if (this.clabeMadre === trans.clabe.toString().trim()) {
               if (this.paramConfig.valor == 1) {
                 if (
@@ -416,6 +416,7 @@ export class DialogoComponent implements OnInit {
       this.mostrarSpinner = true;
        if (data?.mensaje == 'Otp validado correctamente') {
       const dialogConfig = new MatDialogConfig();
+      dialogConfig.data = this.montoTotal;
       dialogConfig.width = '40%';
       dialogConfig.height = '40%';
       dialogConfig.disableClose = false;
@@ -451,23 +452,5 @@ export class DialogoComponent implements OnInit {
   validarSoloNumerosYDecimales(dato: string): boolean {
   const regex = /^\d+(\.\d+)?$/;
   return regex.test(dato);
-  }
-  agregarMillares(dato: string): boolean {
-    const regex = /^(\d{1,3}(,\d{3})*|\d+)(\.\d+)?$/;
-    const tieneComa = /,/.test(dato); // Comprueba si ya contiene una coma como separador de miles
-
-    if (typeof dato === "string") {
-      if (!tieneComa) {
-        // Agrega la coma como separador de miles a la variable
-        const partes = dato.split(".");
-        partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        dato = partes.join(".");
-      }
-
-      return regex.test(dato);
-    }
-
-    // Si dato no es una cadena, retorna false o lanza una excepción, según lo desees manejar.
-    return false;
   }
 }

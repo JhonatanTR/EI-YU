@@ -8,7 +8,7 @@
       Abrir Carga Masiva
     </button>
   </div>
-  <div class="downloads-container">
+  <div class="downloads-container" *ngIf="archivo_Eiyu.length > 0">
     <mat-card class="mini-card" *ngFor="let ar of archivo_Eiyu">
       <div class="mini-card-icon">
         <i class="fa-solid fa-file-excel fa-2xl" style="color: #009688"></i>
