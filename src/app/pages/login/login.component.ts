@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
       'otp': new FormControl(''),
     });
   }
-  signIn() {
+  /*signIn() {
    
     let log = new login();
     this.username = this.form.value['user'];
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
       })
     }
     
-  }
+  }*/
   cl = new Cliente();
   user !: Usuario;
   operar() {
@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit {
       })
     ).subscribe(da => {//login al portal
       if (da != null ) {
-        if(da.mensaje!="OTP INCORRECTO"){
+      //  if(da.mensaje!="OTP INCORRECTO"){
          
         if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
           this.loading = false
@@ -183,10 +183,10 @@ export class LoginComponent implements OnInit {
 
           }
         }
-      }else{
+     /* }else{
         this.loading = false
         this.openSnackBar('Codigo OTP incorrecto.', 'Aviso');
-      }
+      }*/
       }else{
         this.loading = false
       }

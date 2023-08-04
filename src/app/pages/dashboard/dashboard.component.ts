@@ -90,7 +90,18 @@ export class DashboardComponent implements OnDestroy {
     const datePipe = new DatePipe('en-US');
         this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
           this.sn = sal;
+          let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
+          let dat = {
+            "idPblu": this.localStorageService.getUsuario("pblu").toString(),
+            "fechaInicio": ini,
+            "fechaFinal": ini
+          }
+          this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
+            this.pas = dato;
+    
+          });
         })
+        
   }
   startDataUpdate(): void {// Iniciamos el intervalo de 15 segundos y nos suscribimos a él
     const datePipe = new DatePipe('en-US');
