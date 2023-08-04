@@ -38,8 +38,8 @@ export class InfoLoginService {
   token(data: any) {//Genera el token dependiendo el Usuario Y contraseña
     return this.http.post<any>(this.urlValidacionToken, data);
   }
-  saldo(TOKEN: any) {//para saber el saldo tienes que introducir el token antes devuelto 
-    return this.http.post<any>(`${this.urlSaldo}/api/saldo`,TOKEN)
+  saldo(dato: any) {//para saber el saldo tienes que introducir el token antes devuelto 
+    return this.http.post<any>(`${this.urlSaldo}/api/saldo`,dato)
   }
   saldoACTUAL(data:any) {//para saber el saldo tienes que introducir el token antes devuelto 
     return this.http.post<any>(`${this.urlSaldo}/api/saldoActual`,data)

@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InfoLoginService } from 'src/app/_service/info-login.service';
 import { LoginService } from 'src/app/_service/login.service';
+import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 
 
 
@@ -41,28 +42,20 @@ export class DashboardComponent implements OnDestroy {
   pbluParaSaldo={
    "pblu": this.localStorageService.getUsuario("pblu")
   }
-  constructor(private loginService: LoginService, private infoLog: InfoLoginService, private Infob: InfoBancosService, private localStorageService: LocalStorageService) {
+  constructor(private infoCuentaClabeService: InfoCuentaclabeService, private loginService: LoginService, private infoLog: InfoLoginService, private Infob: InfoBancosService, private localStorageService: LocalStorageService) {
     this.fechaActual = new Date();
     this.fechaInicio = new Date;
     this.fechaFinal = new Date;
     this.pas = new PagoAbonoSaldo();
   }
-
+  clabeMadre="";
   ngOnInit(): void {
-    this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe((saldo:any) => {
-      this.sn = saldo;
-    })
+    this.cuentaConcentradora();
+    
     const datePipe = new DatePipe('en-US');
     //this.startDataUpdate();
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
-    let dat = {
-      "idPblu": this.localStorageService.getUsuario("pblu").toString(),
-      "fechaInicio": ini,
-      "fechaFinal": ini
-    }
-    this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
-      this.pas = dato;
-    });
+   
 
     this.loginService.mensaje$.subscribe((mensaje: string) => {
       this.token = mensaje;
@@ -73,8 +66,25 @@ export class DashboardComponent implements OnDestroy {
     //this.dibujar();
     //this.dibujar2();
   }
+  cuentaConcentradora(){
+    let res = { "peiyu": this.localStorageService.getUsuario("pblu") }
+    this.infoCuentaClabeService.buscarPbluConCuenta(res).subscribe(data => {
+      let clabe = {
+        "clabe": data.clabe_pblu,
+        "pblu": this.localStorageService.getUsuario("pblu")
+      };
+      this.infoCuentaClabeService.buscarCuentaExiste(clabe).subscribe(d => {
+        if (d == null) {
+        } else {
+          this.clabeMadre = d.clabe;
+          this.showSaldoActual();
+        }
+      })
+    })
+  }
   ngOnDestroy(): void {//Cuando sale del este pagina destruye todo proceso que este haciendo internamente en este caso el resultado de tiempo real deja de consultarse
-    if (this.intervalSubscription) {
+   
+    this.showSaldoActual(); if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
   }
@@ -88,9 +98,13 @@ export class DashboardComponent implements OnDestroy {
   }
   showSaldoActual(){
     const datePipe = new DatePipe('en-US');
-        this.infoLog.saldoACTUAL(this.pbluParaSaldo).subscribe(sal => {
+    let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
+    let dato={
+      "cuentaID":this.clabeMadre,
+      "fecha":ini
+    }
+        this.infoLog.saldo(dato).subscribe(sal => {
           this.sn = sal;
-          let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
           let dat = {
             "idPblu": this.localStorageService.getUsuario("pblu").toString(),
             "fechaInicio": ini,
@@ -98,7 +112,6 @@ export class DashboardComponent implements OnDestroy {
           }
           this.Infob.PagoAbonoSaldo(dat).subscribe(dato => {
             this.pas = dato;
-    
           });
         })
         
