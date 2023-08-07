@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MaterialModule } from './material/material.module';
 import { EnviarPagoComponent } from './pages/enviar-pago/enviar-pago.component';
@@ -31,6 +30,7 @@ import { DialogoDialogCleanComponent } from './pages/carga-masiva/dialogo/dialog
 import { DialogoDialogCreateComponent } from './pages/carga-masiva/dialogo/dialogo-dialog-create/dialogo-dialog-create.component';
 import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component';
 import { PagoDataService } from './_service/pago-data.service';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({

@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
     this.des = this.localStorageService.getDesc("des");
   }
 
-  title = 'EI-YU';
+  title = 'Ei-Yu';
   estalogeado() {
     return this.login;
   }

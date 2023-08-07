@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EnviarPagoComponent } from './pages/enviar-pago/enviar-pago.component';
 import { BusquedaMovimientoComponent } from './pages/busqueda-movimiento/busqueda-movimiento.component';
@@ -11,6 +10,7 @@ import { ConfiguracionesComponent } from './pages/configuraciones/configuracione
 import { GuardServiceService } from './_service/guard-service.service';
 import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
 import { CargaMasivaComponent } from './pages/carga-masiva/carga-masiva.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {path:"login",component:LoginComponent},
