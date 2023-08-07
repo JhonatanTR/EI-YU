@@ -46,7 +46,7 @@ export class InfoLoginService {
   }
 
   buscarNomUsuarioPorId(dato: any) {
-    return this.http.post<any>(`${this.url}/buscarIdUsuario`, dato)
+    return this.http.post<any>(`${this.url}/iniciar/buscarIdUsuario`, dato)
   }
 
 
