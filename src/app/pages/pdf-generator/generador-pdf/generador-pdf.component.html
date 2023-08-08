@@ -1,0 +1,147 @@
+<div class="main-container" #pdfContent>
+  <header class="pdf-header">
+    <div class="left-header-container">
+      <img src="assets\asp-o-logo.png" class="imgLogo" />
+      <span>¡HOLA ERICKA!</span>
+      <span>TU RESUMEN DE MOVIMIENTOS MENSUAL</span>
+    </div>
+    <div class="right-header-container">
+      <span> Titular: </span>
+      <span> Calle: </span>
+      <span> Col: </span>
+      <span> C.P: </span>
+      <div class="right-header-container_period">
+        <span style="font-weight: bold">Periodo: </span>
+      </div>
+    </div>
+  </header>
+  <div class="pdf-body">
+    <div class="summary">
+      <div class="summary-left">
+        <span style="font-weight: bold">RESUMEN</span>
+        <span>No. de cliente: </span>
+        <span>No.de cuenta referenciada:</span>
+        <span>RFC: </span>
+      </div>
+      <div class="summary-right">
+        <div class="summary-right-item">
+          <i
+            class="fa-solid fa-circle-arrow-up fa-3x"
+            style="color: #e73539"
+          ></i>
+          <span> $5,514,671.24 </span>
+          <span> Depósitos </span>
+        </div>
+        <div class="summary-right-item" style="border-left: 1px solid #b9bbbf">
+          <i
+            class="fa-solid fa-circle-arrow-right fa-3x"
+            style="color: #738bbd"
+          ></i>
+          <span> $0.00 </span>
+          <span> Retiros </span>
+        </div>
+        <div class="summary-right-item-results">
+          <div class="depositos-item">
+            <span>Depósitos: $5,514,671.24</span>
+          </div>
+          <div class="retiros-item">
+            <span>Retiros: $0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="resumen-movimientos">
+      <h3 class="resumen-movimientos-text">Resumen de movimientos</h3>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 tabla">
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="Movimiento">
+          <th mat-header-cell *matHeaderCellDef>Movimiento</th>
+          <td mat-cell *matCellDef="let element" style="text-align: center">
+            <ng-container
+              *ngIf="element.Movimiento === 'Deposito'; else retiroIcon"
+            >
+              <i
+                class="fa-solid fa-circle-arrow-up fa-3x"
+                style="color: #e73539"
+              ></i>
+            </ng-container>
+            <ng-template #retiroIcon>
+              <i
+                class="fa-solid fa-circle-arrow-right fa-3x"
+                style="color: #738bbd"
+              ></i>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="Descripcion Comercio">
+          <th mat-header-cell *matHeaderCellDef>Descripción Comercio</th>
+          <td mat-cell *matCellDef="let element" style="text-align: center">
+            {{ element.DescripcionComercio }}
+          </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let element" style="text-align: center">
+            {{ element.Fecha }}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Retiros">
+          <th mat-header-cell *matHeaderCellDef>Retiros</th>
+          <td mat-cell *matCellDef="let element" style="text-align: center">
+            {{ element.Retiros }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Depositos">
+          <th mat-header-cell *matHeaderCellDef>Despósitos</th>
+          <td mat-cell *matCellDef="let element" style="text-align: center">
+            {{ element.Depositos }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+  <footer class="pdf-footer">
+    <div class="leyend-container">
+      <span
+        >Atención en Contact center 66-4204-1866 o línea sin costo: 800-4627-
+        373 ext. 136, 137 y 154, de Lunes a Sábado de 09:00 a 18:00 hrs. Fuera
+        de este horario y en caso de robo o extravío escríbenos al What’s app:
+        66-4204-1866.</span
+      >
+      <span
+        >Producto financiero emitido por
+        <img class="leyend-logo" src="assets/asp-o-logo.png" alt="" /> Opciones
+        Empresariales del Noreste S.A. de C.V., Sociedad Financiera
+        Popular.</span
+      >
+      <span
+        >Opciones Empresariales del Noreste S.A. de C.V., Sociedad Financiera
+        Popular, es una entidad financiera, responsable de tus fondos, conócenos
+        en
+        <a href="www.aspintegraopciones.com"> www.aspintegraopciones.com </a>
+        Para recibir tus consultas o reclamaciones, cuentas con la Unidad
+        Especializada de Atención a Usuarios en horario de 09:00 a 14:00 de
+        Lunes a Viernes, para mayor información consulta:
+        <a
+          href="https://www.aspintegraopciones.com/fr/regulacion/aviso-a-usuarios.html"
+        >
+          https://www.aspintegraopciones.com/fr/regulacion/aviso-a-usuarios.html
+        </a></span
+      >
+    </div>
+  </footer>
+</div>
+<button (click)="generatePDF()">Generar PDF</button>

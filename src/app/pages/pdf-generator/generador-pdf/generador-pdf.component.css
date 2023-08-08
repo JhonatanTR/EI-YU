@@ -1,0 +1,178 @@
+.main-container {
+  width: 100%;
+  height: auto;
+  font-family: "Ubuntu", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.pdf-header {
+  width: 100%;
+  height: auto;
+  font-family: "Ubuntu", sans-serif;
+  display: flex;
+  flex-direction: row;
+}
+.left-header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  color: white;
+  background-color: #69bbbf;
+  margin-right: 0.3em;
+  padding: 2em 1em;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 15px;
+}
+.imgLogo {
+  width: 25%;
+  height: auto;
+}
+.right-header-container {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 20%;
+  color: white;
+  background-color: #69bbbf;
+  margin-left: 0.3em;
+  padding: 1em;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 12px;
+}
+.right-header-container_period {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1em;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 12px;
+}
+.pdf-body {
+  font-family: "Ubuntu", sans-serif;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.summary {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1em;
+  width: 100%;
+  height: 20%;
+  margin-top: 10%;
+}
+.summary-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 1em;
+  gap: 1em;
+  width: 40%;
+  border-radius: 10px;
+  border: 1px solid #b9bbbf;
+}
+.summary-right {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1em;
+  width: 50%;
+  border-radius: 10px;
+  border: 1px solid #b9bbbf;
+}
+.summary-right-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  width: auto;
+  padding: 0 2em;
+  flex: 1 1 auto;
+}
+.summary-right-item-results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  gap: 1em;
+  color: white;
+  padding-left: 4em;
+  padding-right: 1em;
+}
+.depositos-item {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0.5em;
+  border-radius: 5px;
+  background-color: #738bbd;
+}
+.retiros-item {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0.5em;
+  border-radius: 5px;
+  background-color: #2a2643;
+}
+.resumen-movimientos{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2em;
+  width: 100%;
+  margin-bottom: 2em;
+  margin-top: 5em;
+}
+.resumen-movimientos-text{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tabla{
+  width: 90%;
+}
+.pdf-footer{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 49%;
+}
+.leyend-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
+  width: 95%;
+  text-align: center;
+  font-size: 11px;
+}
+.leyend-logo{
+  width: 5%;
+  height: auto;
+}
+:host ::ng-deep {
+
+.mat-header-cell {
+    text-align: center;
+    /*margin: 0 10px;*/
+    font-weight: bold;
+    color: black;
+    font-size: 14px;
+}
+}

@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
         this.rolnivel3= this.localStorageService.getDat("rolPermisoNivel3");
         if (this.localStorageService.getDat("rol")) {
           this.adm = this.localStorageService.getDat("rol");
-         
+
         }
       }
     }
@@ -55,5 +55,8 @@ export class AppComponent implements OnInit {
     cl.login = false;
     this.loginService.cli.next(cl);
     this.router.navigate(['login']);
+  }
+  ajustes(){
+    this.router.navigate(['ajustes']);
   }
 }

@@ -11,6 +11,8 @@ import { GuardServiceService } from './_service/guard-service.service';
 import { CargarCuentaComponent } from './pages/cargar-cuenta/cargar-cuenta/cargar-cuenta.component';
 import { CargaMasivaComponent } from './pages/carga-masiva/carga-masiva.component';
 import { LoginComponent } from './login/login.component';
+import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/generador-pdf.component';
+import { AjustesComponent } from './pages/ajustes/ajustes.component';
 
 const routes: Routes = [
   {path:"login",component:LoginComponent},
@@ -22,7 +24,9 @@ const routes: Routes = [
   {path: "autorizarspei", component: AutorizarSpeiComponent, canActivate:[GuardServiceService]},
   {path: "configuracion", component: ConfiguracionesComponent, canActivate:[GuardServiceService]},
   {path: "cargar-cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]},
-  {path: "carga-masiva-pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]}
+  {path: "carga-masiva-pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]},
+  {path: "generar-pdf", component: GeneradorPdfComponent, canActivate:[GuardServiceService]},
+  {path: "ajustes", component: AjustesComponent, canActivate:[GuardServiceService]}
 ];
 
 @NgModule({

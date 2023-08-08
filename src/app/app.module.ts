@@ -31,6 +31,8 @@ import { DialogoDialogCreateComponent } from './pages/carga-masiva/dialogo/dialo
 import { DialogoComponent } from './pages/carga-masiva/dialogo/dialogo.component';
 import { PagoDataService } from './_service/pago-data.service';
 import { LoginComponent } from './login/login.component';
+import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/generador-pdf.component';
+import { AjustesComponent } from './pages/ajustes/ajustes.component';
 
 
 @NgModule({
@@ -56,6 +58,8 @@ import { LoginComponent } from './login/login.component';
     DialogoDialogCleanComponent,
     DialogoDialogCreateComponent,
     CargaMasivaComponent,
+    GeneradorPdfComponent,
+    AjustesComponent,
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
