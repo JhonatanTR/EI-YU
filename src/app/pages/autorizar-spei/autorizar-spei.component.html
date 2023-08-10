@@ -27,6 +27,10 @@
                 <td mat-cell *matCellDef="let row" [style.color]="letraColor"> {{row.destino}} </td>
             </ng-container>
         
+            <ng-container matColumnDef="dato4">
+                <th mat-header-cell *matHeaderCellDef>Banco Beneficiario</th>
+                <td mat-cell *matCellDef="let row"> {{row.banco}} </td>
+            </ng-container>
             <ng-container matColumnDef="dato2">
                 <th mat-header-cell *matHeaderCellDef> Beneficiario </th>
                 <td mat-cell *matCellDef="let row"> {{row.beneficiario}} </td>
@@ -37,10 +41,12 @@
                 <td mat-cell *matCellDef="let row">{{row.numerodecuenta}}</td>
             </ng-container>
         
-            <ng-container matColumnDef="dato4">
-                <th mat-header-cell *matHeaderCellDef>Banco</th>
-                <td mat-cell *matCellDef="let row"> {{row.banco}} </td>
+            <ng-container matColumnDef="dato10">
+                <th mat-header-cell *matHeaderCellDef> Numero de cuenta </th>
+                <td mat-cell *matCellDef="let row">{{buscarNombreBanco(row.numerodecuenta)}}</td>
             </ng-container>
+            
+           
         
             <ng-container matColumnDef="dato5">
                 <th mat-header-cell *matHeaderCellDef> Monto </th>

@@ -32,7 +32,7 @@ export class AutorizarSpeiComponent implements OnInit {
   selection = new SelectionModel<InfoAutorizarSpei>(true, []); // Selección de filas en la tabla
   @ViewChild(MatPaginator) paginator!: MatPaginator; // Referencia al paginador de la tabla
   dataSource!: MatTableDataSource<InfoAutorizarSpei>; // Fuente de datos de la tabla
-  displayedColumns: string[] = ['select', 'dato1', 'dato2', 'dato3', 'dato4', 'dato5', 'dato6', 'dato8', 'dato9']; // Columnas a mostrar en la tabla
+  displayedColumns: string[] = ['select', 'dato1', 'dato4','dato2', 'dato3','dato10',  'dato5', 'dato6', 'dato8', 'dato9']; // Columnas a mostrar en la tabla
   otp: string = ""; // Código OTP ingresado
   Listspeiout: InfoAutorizarSpei[] = []; // Lista de pagos
   total: number = 0; // Total de los montos de los pagos seleccionados
@@ -67,7 +67,16 @@ export class AutorizarSpeiComponent implements OnInit {
       this.listNoPagadoRolIntermedio();
     }
   }
-
+ buscarNombreBanco(a: string): string {
+  const primerasTresLetras: string = a.substring(0, 3);
+    const bancoEncontrado = this.listaBancos.find(
+      (banco) => banco.id_banco.toString().substr(2) === primerasTresLetras
+    );
+    if (bancoEncontrado) {
+      return bancoEncontrado.descripcion;
+    }
+    return 'No se encontraron bancos relacionados con la cuenta destino';
+  }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator; // Configuración del paginador de la tabla
   }
