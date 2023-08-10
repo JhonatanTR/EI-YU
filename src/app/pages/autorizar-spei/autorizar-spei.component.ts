@@ -18,6 +18,8 @@ import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { InfoBancosService } from 'src/app/_service/info-bancos.service';
 import { InfoBancos } from 'src/app/_model/InfoBancos';
+import { DialogoDialogCleanComponent } from '../carga-masiva/dialogo/dialogo-dialog-clean/dialogo-dialog-clean.component';
+import { DialogoLimpiarComponent } from './dialogo-limpiar/dialogo-limpiar.component';
 
 @Component({
   selector: 'app-autorizar-spei',
@@ -204,17 +206,17 @@ export class AutorizarSpeiComponent implements OnInit {
 
   }
 
-    buscarIdBanco(a: string): number {
-      const primerasTresLetras: string = a.substring(0, 3);
-      const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
+  buscarIdBanco(a: string): number {
+    const primerasTresLetras: string = a.substring(0, 3);
+    const bancoEncontrado = this.listaBancos.find(banco => banco.id_banco.toString().substr(2) === primerasTresLetras);
 
-      if (bancoEncontrado) {
-        return bancoEncontrado.id_banco;
-      }
-      return 0;
+    if (bancoEncontrado) {
+      return bancoEncontrado.id_banco;
     }
+    return 0;
+  }
 
-    enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
+  enviarList() {//Aqui se hace el envio de la lista de La autorizacion de Spei
     this.listaErroSpei = []
     this.mostrarSpinner = true;
     let InfSpei = new InfoSpei();
@@ -245,7 +247,7 @@ export class AutorizarSpeiComponent implements OnInit {
           speiout.refNum = info.refnumerica;
           speiout.cveRastreo = info.claberastreo;
           speiout.conceptoPago = info.conceptopago;
-          speiout.bancoDestino= this.buscarIdBanco(info.destino).toString();
+          speiout.bancoDestino = this.buscarIdBanco(info.destino).toString();
 
           return this.infoPagosService.realizarPago(speiout).pipe(
             catchError(() => of(null))
@@ -304,7 +306,31 @@ export class AutorizarSpeiComponent implements OnInit {
     });
 
   }
+  verDatos() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '33%'; // establece el ancho del diálogo al 50% del ancho de la pantalla
+    dialogConfig.height = '30%'; // establece la altura del diálogo al 50% del alto de la pantalla
+    dialogConfig.maxWidth = '100%'; // establece el ancho máximo del diálogo al 90% del ancho de la pantalla
+    dialogConfig.maxHeight = '100%'; // establece la altura máxima del diálogo al 90% del alto de la pantalla
+    dialogConfig.disableClose = false; // desactiva la opción de cerrar el diálogo haciendo clic fuera de él
+    const dialogRef = this.dialog.open(DialogoLimpiarComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(async (result) => {
+      //Destructura el resultado del dialogo
+      if (result) {
+        console.log(this.info);
+        this.infoPagosService.eliminararLista(this.info).subscribe(data => {
+          this.selection.clear();
+          this.aver = this.aver.filter(itemAver => !this.info.includes(itemAver));
+          this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(this.aver);
+          this.dataSource.paginator = this.paginator;
+          this.info=[];
+        });
+      }
 
+    });
+
+
+  }
 
   openDiaCuenta(listaErroSpeei: InfoAutorizarSpei[]) {//abre el dialgo para ver las cuentas erroneas
     const dialogConfig = new MatDialogConfig();

@@ -33,6 +33,7 @@ import { PagoDataService } from './_service/pago-data.service';
 import { LoginComponent } from './login/login.component';
 import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/generador-pdf.component';
 import { AjustesComponent } from './pages/ajustes/ajustes.component';
+import { DialogoLimpiarComponent } from './pages/autorizar-spei/dialogo-limpiar/dialogo-limpiar.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { AjustesComponent } from './pages/ajustes/ajustes.component';
     CargaMasivaComponent,
     GeneradorPdfComponent,
     AjustesComponent,
+    DialogoLimpiarComponent,
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],

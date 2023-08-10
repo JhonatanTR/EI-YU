@@ -60,6 +60,14 @@ export class InfoPagosService {
   buscarLlaveUsuario(dato: any) {//Listar solo true
     return this.http.post<any>(`${this.urlEnlistar}/consultaId`, dato);
   }
+  eliminararLista(datos:InfoAutorizarSpei[]){
+    return this.http.post<any>(`${this.urlEnlistar}/eliEnlistado`, datos);
+  }
 
+  generarReporte(){
+    return this.http.get("http://localhost:8080/consultas/hateoas",{
+      responseType: 'blob'
+    })
+  }
 
 }
