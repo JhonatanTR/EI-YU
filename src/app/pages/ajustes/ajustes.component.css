@@ -1,11 +1,11 @@
 .tabla {
+  display: flex;
+  flex-direction: column;
   padding: 8px;
   width: 90%;
   border-radius: 3px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   margin: 20px auto 10px;
-
-
 }
 
 table {
@@ -13,7 +13,7 @@ table {
 }
 
 .medium-box {
-
+  display: flex;
   width: 100%;
   justify-content: flex-start;
   align-items: start;
@@ -22,7 +22,12 @@ table {
 }
 
 .config-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 10px;
+  gap: 2em;
 }
 
 .icon {

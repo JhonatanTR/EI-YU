@@ -1,17 +1,17 @@
 <div class="main-container" #pdfContent>
   <header class="pdf-header">
     <div class="left-header-container">
-      <img src="assets\asp-o-logo.png" class="imgLogo" />
-      <span>¡HOLA ERICKA!</span>
+      <img src="assets\img\asp-o-logo.png" class="imgLogo" />
+      <span>¡HOLA {{nombre}}!</span>
       <span>TU RESUMEN DE MOVIMIENTOS MENSUAL</span>
     </div>
     <div class="right-header-container">
-      <span> Titular: </span>
-      <span> Calle: </span>
-      <span> Col: </span>
-      <span> C.P: </span>
+      <span> Titular: {{nombre}} {{apellidos}}</span>
+      <span> Calle: {{calle}}</span>
+      <span> Col: {{colonia}}</span>
+      <span> C.P: {{codigoPostal}}</span>
       <div class="right-header-container_period">
-        <span style="font-weight: bold">Periodo: </span>
+        <span><strong> Periodo: </strong> {{periodo}}</span>
       </div>
     </div>
   </header>
@@ -19,9 +19,9 @@
     <div class="summary">
       <div class="summary-left">
         <span style="font-weight: bold">RESUMEN</span>
-        <span>No. de cliente: </span>
-        <span>No.de cuenta referenciada:</span>
-        <span>RFC: </span>
+        <span>No. de cliente: {{nocliente}}</span>
+        <span>No.de cuenta referenciada: {{noCuentareferenciada}}</span>
+        <span>RFC: {{rfc}}</span>
       </div>
       <div class="summary-right">
         <div class="summary-right-item">
@@ -29,7 +29,7 @@
             class="fa-solid fa-circle-arrow-up fa-3x"
             style="color: #e73539"
           ></i>
-          <span> $5,514,671.24 </span>
+          <span> ${{depositos}}</span>
           <span> Depósitos </span>
         </div>
         <div class="summary-right-item" style="border-left: 1px solid #b9bbbf">
@@ -37,15 +37,15 @@
             class="fa-solid fa-circle-arrow-right fa-3x"
             style="color: #738bbd"
           ></i>
-          <span> $0.00 </span>
+          <span> ${{retiros}} </span>
           <span> Retiros </span>
         </div>
         <div class="summary-right-item-results">
           <div class="depositos-item">
-            <span>Depósitos: $5,514,671.24</span>
+            <span>Depósitos: ${{depositos}}</span>
           </div>
           <div class="retiros-item">
-            <span>Retiros: $0.00</span>
+            <span>Retiros: ${{retiros}}</span>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
       >
       <span
         >Producto financiero emitido por
-        <img class="leyend-logo" src="assets/asp-o-logo.png" alt="" /> Opciones
+        <img class="leyend-logo" src="assets/img/asp-o-logo.png" alt="Logo de ASP Integra Opciones" /> Opciones
         Empresariales del Noreste S.A. de C.V., Sociedad Financiera
         Popular.</span
       >

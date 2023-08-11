@@ -33,6 +33,8 @@ import { PagoDataService } from './_service/pago-data.service';
 import { LoginComponent } from './login/login.component';
 import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/generador-pdf.component';
 import { AjustesComponent } from './pages/ajustes/ajustes.component';
+import { CambiarPasswordComponent } from './pages/ajustes/cambiar-password/cambiar-password.component';
+import { NewPasswordDialogComponent } from './pages/ajustes/cambiar-password/new-password-dialog/new-password-dialog.component';
 
 
 @NgModule({
@@ -60,6 +62,8 @@ import { AjustesComponent } from './pages/ajustes/ajustes.component';
     CargaMasivaComponent,
     GeneradorPdfComponent,
     AjustesComponent,
+    CambiarPasswordComponent,
+    NewPasswordDialogComponent,
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],

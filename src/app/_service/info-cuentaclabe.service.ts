@@ -4,6 +4,7 @@ import { HOST } from '../_shared/var.constant';
 import { InfoCuentaClabe } from '../_model/InfoCuentaClabe';
 import { Subject } from 'rxjs';
 import { Param_Config_EiYu } from '../_model/Param_Config_EiYu';
+import { InfoPDF } from '../_model/InfoPDF';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class InfoCuentaclabeService {
   eliminar(infoCuentaClabe:InfoCuentaClabe){//Listar en la tabla Cuentas
     return this.http.post(`${this.url}/api/eliminar`,infoCuentaClabe);
   }
-  modificar(infoCuentaClabe:InfoCuentaClabe){//Modifica la Cuentas clabe 
+  modificar(infoCuentaClabe:InfoCuentaClabe){//Modifica la Cuentas clabe
     return this.http.put<InfoCuentaClabe>(`${this.url}/api/modificar`,infoCuentaClabe);
   }
   buscarCuentaExiste(data:any){
@@ -36,6 +37,9 @@ export class InfoCuentaclabeService {
   }
   parametrosCuentaConcentradora(data:any){
     return this.http.post<Param_Config_EiYu>(`${this.url}/validar/param`,data)
+  }
+  getDatosPDF(data:any){
+    return this.http.post<InfoPDF>(`${this.url}/validar/datosDelPdf`,data)
   }
 
 }
