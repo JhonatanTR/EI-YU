@@ -109,10 +109,10 @@ export class BusquedaMovimientoComponent implements OnInit {
         }))
       .subscribe(data => {
         let mov = JSON.parse(JSON.stringify(data))?.content
+        console.log(mov);
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
         this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
-        this.dataSource.paginator = this.paginator;
       });
     this.listarBanco();
   }
@@ -216,18 +216,31 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.infoBancoService.listarMovimientoFiltradosPageable(this.req, 0, this.cantidad).subscribe(todos => {
         let mov = JSON.parse(JSON.stringify(todos))?.content;
         mov = mov.filter((item: { cve_rastreo: any; }) => !this.deseleccionados.some(deseleccionado => deseleccionado.cve_rastreo === item.cve_rastreo));
-        let pdfData: any = this.generatePdfData(mov);
+        //let pdfData: any = this.generatePdfData(mov);
         // Generamos el documento PDF y lo abrimos en una nueva pestaña del navegador
-        pdfMake.createPdf(pdfData).download('movimientos.pdf');
+        this.pdfNuevo(mov);
+       // pdfMake.createPdf(pdfData).download('movimientos.pdf');
       })
     } else {
       let movimientosSeleccionados = this.selecc;
-      let pdfData: any = this.generatePdfData(movimientosSeleccionados);
+      this.pdfNuevo(movimientosSeleccionados);
+      /*let pdfData: any = this.generatePdfData(movimientosSeleccionados);
       // Generamos el documento PDF y lo abrimos en una nueva pestaña del navegador
-      pdfMake.createPdf(pdfData).download('movimientos.pdf');
+      pdfMake.createPdf(pdfData).download('movimientos.pdf');*/
     }
     // Generamos el contenido del PDF
   }
+  pdfNuevo(data:any){
+  this.infoBancoService.generarReportePdfMovimiento(data).subscribe(data=>{
+    const url = window.URL.createObjectURL(data);
+    const a=  document.createElement('a');
+    a.setAttribute('style','display:none');
+    a.href = url;
+    a.download='movimientos.pdf';
+    a.click();
+    return url;
+  })
+}
 
   generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de
     let data = [];
@@ -315,6 +328,10 @@ export class BusquedaMovimientoComponent implements OnInit {
     this.institucionSeleccionada = e.option.value;
   }
   req = new RequestMovimientos();
+  pageSize: number = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+  busquedaRealizada: boolean = false;
+
   filtar() {//Aqui se hace el filtrado de fechas y de todos los inputs disponibles
 
     if (this.inicio != null && this.final != null) { // Este if hace que si la fecha final y la fecha de incio no estan seleccionado los obligue a seleccionar alguna

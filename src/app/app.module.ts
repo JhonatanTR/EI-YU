@@ -35,6 +35,7 @@ import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/gener
 import { AjustesComponent } from './pages/ajustes/ajustes.component';
 import { CambiarPasswordComponent } from './pages/ajustes/cambiar-password/cambiar-password.component';
 import { NewPasswordDialogComponent } from './pages/ajustes/cambiar-password/new-password-dialog/new-password-dialog.component';
+import { DialogoLimpiarComponent } from './pages/autorizar-spei/dialogo-limpiar/dialogo-limpiar.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { NewPasswordDialogComponent } from './pages/ajustes/cambiar-password/new
     AjustesComponent,
     CambiarPasswordComponent,
     NewPasswordDialogComponent,
+    DialogoLimpiarComponent,
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],

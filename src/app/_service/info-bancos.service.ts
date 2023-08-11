@@ -52,5 +52,10 @@ export class InfoBancosService {
   descripcion(dato:any){//Es la descripción de los participantes, Como tal su nombre
     return this.http.post<any>(`${this.url}/descripcion`, dato)
   }
+  generarReportePdfMovimiento(dato:InfoMovimiento[]){
+    return this.http.post(`${this.url}/generadorPdfMovimientos`,dato,{
+      responseType: 'blob'
+    })
+  }
 
 }

@@ -25,7 +25,7 @@ export class InfoLoginService {
     return this.http.post<any>(`${this.url}/enroladors`, data)
   }
   actualizarUsuario(data: any) {//actualiza El cliente Usuario
-    return this.http.put<any>(`${this.url}/actualizar`, data)
+    return this.http.put<any>(`${this.url}/iniciar/actualizar`, data)
   }
   verificarOtp(rtOtp: requestOtp) {//Verifica si el codigo OTP es correcto
     return this.http.post<any>(`${this.url}/otp/validar`, rtOtp);
