@@ -35,7 +35,13 @@ table {
     .button-eliminar{
       display: flex;
       justify-content: flex-start;
-      margin-left: 10px; 
+      margin-left: 10px;
       width: 170px;
     }
-  
+  :host ::ng-deep .mat-header-cell{
+    padding: 0 0.5rem;
+  } .mat-row{
+    overflow-wrap: anywhere;
+  } .mat-header-cell{
+    text-align: center;
+  }
