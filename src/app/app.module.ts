@@ -36,7 +36,7 @@ import { AjustesComponent } from './pages/ajustes/ajustes.component';
 import { CambiarPasswordComponent } from './pages/ajustes/cambiar-password/cambiar-password.component';
 import { NewPasswordDialogComponent } from './pages/ajustes/cambiar-password/new-password-dialog/new-password-dialog.component';
 import { DialogoLimpiarComponent } from './pages/autorizar-spei/dialogo-limpiar/dialogo-limpiar.component';
-
+import { ForgotenPasswordInfoComponent } from './login/forgoten-password-info/forgoten-password-info.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +66,7 @@ import { DialogoLimpiarComponent } from './pages/autorizar-spei/dialogo-limpiar/
     CambiarPasswordComponent,
     NewPasswordDialogComponent,
     DialogoLimpiarComponent,
+    ForgotenPasswordInfoComponent,
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
