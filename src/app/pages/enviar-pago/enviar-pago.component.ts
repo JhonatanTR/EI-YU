@@ -79,15 +79,6 @@ export class EnviarPagoComponent implements OnInit {
     }
     this.listarCuentasClabes();
     //this.localStorageService.removeExecel();
-      this.infoPagos.generarReporte().subscribe(data=>{
-        const url = window.URL.createObjectURL(data);
-        const a=  document.createElement('a');
-        a.setAttribute('style','display:none');
-        a.href = url;
-        a.download='pdfHugue.pdf';
-        a.click();
-        return url;
-      })
   }
   parametroCuentaConcentradora() {
     let pblu = { peiyu: this.localStorageService.getUsuario("pblu") }
