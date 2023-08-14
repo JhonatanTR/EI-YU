@@ -11,6 +11,7 @@ import { InfoLoginService } from 'src/app/_service/info-login.service';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { NewPasswordDialogComponent } from './new-password-dialog/new-password-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './cambiar-password.component.html',
@@ -40,7 +41,8 @@ export class CambiarPasswordComponent implements OnInit {
     private infoLoginService: InfoLoginService,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router
   ) {
     this.actualPassword = false;
   }
@@ -150,7 +152,7 @@ export class CambiarPasswordComponent implements OnInit {
         this.actualPassword = false;
         if (this.isPasswordValid(constraseña) && this.isPasswordValid(constraseñaConfirmada)) {
           if (constraseña === constraseñaConfirmada) {
-            if(constraseña === this.actualPassword){
+            if(constraseña === actutalpassword){
               this.isError = true;
             }else{
               data.usuario.password = constraseña;
@@ -172,7 +174,14 @@ export class CambiarPasswordComponent implements OnInit {
         dialogConfig.height = '60%';
         dialogConfig.maxWidth = '95%';
         dialogConfig.disableClose = true;
-        this.dialog.open(NewPasswordDialogComponent, dialogConfig);
+        const dialogref = this.dialog.open(NewPasswordDialogComponent, dialogConfig);
+        dialogref.afterClosed().subscribe((result) => {
+          this.password.nativeElement.value = '';
+          this.confirmPassword.nativeElement.value = '';
+          this.actualPassword$.nativeElement.value = '';
+          this.passwordForm.reset();
+          this.router.navigate(['/dashboard']);
+        });
       },
       (error) => {
         this.snackbar.open('Error al actualizar la contraseña. Intentelo de nuevo.', 'Cerrar', {
