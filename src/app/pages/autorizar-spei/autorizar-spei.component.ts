@@ -326,7 +326,6 @@ export class AutorizarSpeiComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result) => {
       //Destructura el resultado del dialogo
       if (result) {
-        console.log(this.info);
         this.infoPagosService.eliminararLista(this.info).subscribe(data => {
           this.selection.clear();
           this.aver = this.aver.filter(itemAver => !this.info.includes(itemAver));

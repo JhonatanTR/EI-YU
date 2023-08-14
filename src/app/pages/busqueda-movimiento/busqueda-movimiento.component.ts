@@ -109,7 +109,6 @@ export class BusquedaMovimientoComponent implements OnInit {
         }))
       .subscribe(data => {
         let mov = JSON.parse(JSON.stringify(data))?.content
-        console.log(mov);
         this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
         this.listaMovimiento = mov;
         this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
