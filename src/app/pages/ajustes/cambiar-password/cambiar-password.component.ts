@@ -5,9 +5,12 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { login } from 'src/app/_model/InfoLogin';
 import { InfoLoginService } from 'src/app/_service/info-login.service';
 import { LocalStorageService } from 'src/app/_service/local-storage.service';
+import { NewPasswordDialogComponent } from './new-password-dialog/new-password-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   templateUrl: './cambiar-password.component.html',
@@ -24,12 +27,15 @@ export class CambiarPasswordComponent implements OnInit {
   username: string = '';
   actualPassword: boolean;
   isError: boolean = false;
+  showTooltip: boolean = false;
 
   constructor(
     private localStorageService: LocalStorageService,
     private fb: FormBuilder,
     private infoLoginService: InfoLoginService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
   ) {
     this.actualPassword = false;
   }
@@ -108,6 +114,11 @@ export class CambiarPasswordComponent implements OnInit {
       !/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|hgf|gfe|fed|edc|dcb|cba|aqp|bpr|cps|dtq|eur|fvs|gwt|hux|ivy|jwz|kxa|lyb|mzc|nad|obe|pcf|qdg|reh|sfi|tgj|uhk|vil|wjm|xkn|ylo|zmp)/i.test(
         password
       );
+
+    // El nombre de la institución SPEI, BANXICO, SPID o la clave de la institución
+    const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
+      password
+    );
     // Comprobar todos los requisitos y devolver el resultado final.
     return (
       hasLetterAndNumber &&
@@ -116,14 +127,9 @@ export class CambiarPasswordComponent implements OnInit {
       hasNoWhitespace &&
       hasNoLetterÑ &&
       hasNoConsecutiveNumbers &&
-      hasNoConsecutiveLetters
+      hasNoConsecutiveLetters &&
+      hasNoInstitutionNamAndNumber
     );
-  }
-  isActualPassword(controlName: string) {
-    //TODO - Comprobar contraseña actual con endpoint
-    const control = this.passwordForm.get(controlName);
-
-    return true;
   }
   onSubmit() {
     let constraseña = this.passwordForm.get('password')?.value;
@@ -136,7 +142,6 @@ export class CambiarPasswordComponent implements OnInit {
 
     this.infoLoginService.login(log).subscribe((data) => {
       if (data.mensaje === 'OK') {
-        console.log(data);
         this.actualPassword = false;
         data.password = constraseña;
         if (
@@ -144,22 +149,34 @@ export class CambiarPasswordComponent implements OnInit {
           this.isPasswordValid(constraseñaConfirmada)
         ) {
           if (constraseña === constraseñaConfirmada) {
-            this.actualizarPassword(data);
+            if(constraseña === this.actualPassword){
+              this.isError = true;
+            }else{
+              this.actualizarPassword(data);
+            }
           }
         }
       } else {
         this.actualPassword = true;
-        this.cd.detectChanges(); // Forzar la detección de cambios
       }
     });
   }
   actualizarPassword(data: any) {
+    console.log(data.password);
     this.infoLoginService.actualizarUsuario(data).subscribe(
       (data) => {
         console.log(data);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '50%';
+        dialogConfig.height = '60%';
+        dialogConfig.maxWidth = '95%';
+        dialogConfig.disableClose = true;
+        this.dialog.open(NewPasswordDialogComponent, dialogConfig);
       },
       (error) => {
-        this.isError = true;
+        this.snackbar.open('Error al actualizar la contraseña. Intentelo de nuevo.', 'Cerrar', {
+          duration: 3000,
+        });
       }
     );
   }
