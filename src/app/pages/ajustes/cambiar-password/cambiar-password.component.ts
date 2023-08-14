@@ -143,17 +143,13 @@ export class CambiarPasswordComponent implements OnInit {
     this.infoLoginService.login(log).subscribe((data) => {
       if (data.mensaje === 'OK') {
         this.actualPassword = false;
-       
-       
         if (this.isPasswordValid(constraseña) && this.isPasswordValid(constraseñaConfirmada)) {
           if (constraseña === constraseñaConfirmada) {
             if(constraseña === this.actualPassword){
               this.isError = true;
             }else{
               data.usuario.password = constraseña;
-
               let sesion:any =data;
-              console.log(sesion,"Sesion");
               this.actualizarPassword(sesion);
             }
           }
@@ -164,10 +160,8 @@ export class CambiarPasswordComponent implements OnInit {
     });
   }
   actualizarPassword(data: any) {
-  console.log(data.usuario,"El perro sacrigicado")
     this.infoLoginService.actualizarUsuario(data.usuario).subscribe(
       (data) => {
-        console.log(data);
         const dialogConfig = new MatDialogConfig();
         dialogConfig.width = '50%';
         dialogConfig.height = '60%';
