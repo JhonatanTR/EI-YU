@@ -113,6 +113,7 @@ export class LoginComponent implements OnInit {
             this.showError = false;
           }, 3000);
         } else {
+          console.log(da);
           this.loading = true
 
           let dato = { "peiyu": da.usuario.idParticipante };
