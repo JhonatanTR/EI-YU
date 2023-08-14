@@ -14,6 +14,8 @@ import { catchError, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InfoCuentaclabeService } from 'src/app/_service/info-cuentaclabe.service';
 import { EnrolarTokenComponent } from '../pages/enrolar-token/enrolar-token.component';
+import { ForgotenPasswordInfoComponent } from './forgoten-password-info/forgoten-password-info.component';
+
 //import { SHA256 } from 'crypto-js';
 
 
@@ -50,33 +52,33 @@ export class LoginComponent implements OnInit {
     });
   }
   /*signIn() {
-   
+
     let log = new login();
     this.username = this.form.value['user'];
     this.password = this.form.value['password'];
     this.otp = this.form.value['otp'];
     if (this.otp != "" ) {
      this.operar();
-    
+
     }else{
       log.usuario = this.username.trim();
       log.password = this.password.trim();
       this.loginServices.login(log).subscribe(loginCorrecto=>{
-       
+
         if(loginCorrecto.usuario.token?.activo == true || loginCorrecto.usuario.token != null){
           this.openSnackBar('Favor de ingresar un codigo Otp', 'Aviso');
-         
+
         }else{
           if (loginCorrecto.usuario.rol.idRol == 1 || loginCorrecto.usuario.usuarios_permisos[0].id==3) {
             this.openDialogo(loginCorrecto.usuario.id);
           }else{
             this.operar();
           }
-       
+
         }
       })
     }
-    
+
   }*/
   cl = new Cliente();
   user !: Usuario;
@@ -88,13 +90,13 @@ export class LoginComponent implements OnInit {
    // this.password = this.encryptPassword(this.password);
    // console.log("Contraseña encriptada: ", this.password);
     this.otp = this.form.value['otp'];
-   
+
     log.usuario = this.username.trim();
     log.password = this.password.trim();
     if(this.otp!=""){
       log.otp = this.otp.trim();
     }
-    
+
     this.loginServices.login(log).pipe(
       catchError((error) => {
         this.openSnackBar('Se produjo un error de conexión. Por favor, inténtelo de nuevo más tarde.', 'Aviso');
@@ -103,7 +105,7 @@ export class LoginComponent implements OnInit {
     ).subscribe(da => {//login al portal
       if (da != null ) {
       //  if(da.mensaje!="OTP INCORRECTO"){
-         
+
         if (da.mensaje == "USUARIO/CONTRASEÑA INCORRECTO") {
           this.loading = false
           this.showError = true;
@@ -138,7 +140,7 @@ export class LoginComponent implements OnInit {
                 this.localStorageService.setDesc("permiso", da.usuario.usuarios_permisos[0].id.toString());
               }else if(da.usuario.usuarios_permisos[0].id==3){
                 this.loginService.roln3.next(true);
-                
+
                 this.localStorageService.setDat("rolPermisoNivel3", true);
                 this.localStorageService.setDesc("permiso",  da.usuario.usuarios_permisos[0].id.toString())
                 this.localStorageService.setDesc("idUser_1",  da.usuario.id)
@@ -212,6 +214,15 @@ export class LoginComponent implements OnInit {
   /*encryptPassword(text: string): string {
     return SHA256(text).toString();
   }*/
+  dialogoContrasenaOlvidada(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '50%';
+    dialogConfig.height = '50%';
+    dialogConfig.maxWidth = '93%';
+    dialogConfig.panelClass =  ['animate__animated','animate__fadeInDown'];
+    dialogConfig.disableClose = false;
+    this.dialog.open(ForgotenPasswordInfoComponent, dialogConfig);
+  }
 }
 interface Usuario {
   username: string;

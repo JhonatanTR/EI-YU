@@ -82,7 +82,7 @@ a {
   display: flex;
   flex-direction: column;
   padding: 0 50px;
-  padding-top: 2.5em;
+  padding-top: 3em;
   height: 100%;
   gap: 2em;
   margin-top: 0em;
@@ -129,7 +129,12 @@ a {
     color: white;
 
 }
-
+.inputs-login{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+}
 .form-container input {
     color: white;
     background: rgba(0, 255, 0, 0);

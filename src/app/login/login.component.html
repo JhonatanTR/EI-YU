@@ -21,26 +21,28 @@
         >
           <h1 class="p-bienvenido">BIENVENIDO</h1>
           <span style="color: #faf8ff">INGRESAR CON TU CUENTA</span>
-          <input
-            type="email"
-            placeholder="Username"
-            formControlName="user"
-            required
-            class="input-with-underline"
-          />
+          <div class="inputs-login">
+            <input
+              type="email"
+              placeholder="Username"
+              formControlName="user"
+              required
+              class="input-with-underline"
+            />
 
-          <input
-            type="password"
-            placeholder="Password"
-            formControlName="password"
-            required
-            class="input-with-underline"
-          />
+            <input
+              type="password"
+              placeholder="Password"
+              formControlName="password"
+              required
+              class="input-with-underline"
+            />
+          </div>
          <!--input type="password" placeholder="Código OTP" formControlName="otp"-->
          <div class="login-container">
            <button type="submit" [disabled]="frmExamen.invalid">Acceder</button>
 
-            <span class="forgot-password-text">¿Olvidaste tu contraseña?</span>
+            <span class="forgot-password-text" (click)="dialogoContrasenaOlvidada()">¿Olvidaste tu contraseña?</span>
 
          </div>
 
