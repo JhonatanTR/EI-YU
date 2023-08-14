@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -28,6 +28,11 @@ export class CambiarPasswordComponent implements OnInit {
   actualPassword: boolean;
   isError: boolean = false;
   showTooltip: boolean = false;
+  @ViewChild('password') password!: ElementRef;
+  @ViewChild('confirmPassword') confirmPassword!: ElementRef;
+  @ViewChild('actualPassword') actualPassword$!: ElementRef;
+
+
 
   constructor(
     private localStorageService: LocalStorageService,
