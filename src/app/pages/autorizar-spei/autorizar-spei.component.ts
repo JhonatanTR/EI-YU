@@ -332,6 +332,7 @@ export class AutorizarSpeiComponent implements OnInit {
           this.dataSource = new MatTableDataSource<InfoAutorizarSpei>(this.aver);
           this.dataSource.paginator = this.paginator;
           this.info=[];
+          this.total=0;
         });
       }
 
