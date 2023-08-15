@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -35,8 +41,6 @@ export class CambiarPasswordComponent implements OnInit {
   @ViewChild('password') password!: ElementRef;
   @ViewChild('confirmPassword') confirmPassword!: ElementRef;
   @ViewChild('actualPassword') actualPassword$!: ElementRef;
-
-
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -112,7 +116,7 @@ export class CambiarPasswordComponent implements OnInit {
     const newPassword = control.value;
     const isPasswordValid = this.isPasswordValid(newPassword);
 
-    const hasErrors = Object.values(isPasswordValid).some(error => !error);
+    const hasErrors = Object.values(isPasswordValid).some((error) => !error);
 
     if (hasErrors) {
       return { invalidPassword: true, isPasswordValid };
@@ -120,7 +124,6 @@ export class CambiarPasswordComponent implements OnInit {
       return null;
     }
   }
-
 
   isPasswordValid(password: string): { [key: string]: boolean } {
     const errors = {
@@ -136,36 +139,38 @@ export class CambiarPasswordComponent implements OnInit {
     // Debe incluir letras y números, al menos una mayúscula y un carácter especial.
     /*const hasLetterAndNumber =
       /[a-zA-Z]+/.test(password) && /[0-9]+/.test(password);*/
-      if(/[a-zA-Z]+/.test(password) && /[0-9]+/.test(password)){
-        errors.hasLetterAndNumber = true;
-      }
-      if(/[A-Z]+/.test(password)){
-        errors.hasUppercase = true;
-      }
-      if(/[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password)){
-        errors.hasSpecialCharacter = true;
-      }
-      if(!/\s+/.test(password)){
-        errors.hasNoWhitespace = true;
-      }
-      if(!/[ñÑ]+/.test(password)){
-        errors.hasNoLetterÑ = true;
-      }
-      if(!/(012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210)/.test(
+    if (/[a-zA-Z]+/.test(password) && /[0-9]+/.test(password)) {
+      errors.hasLetterAndNumber = true;
+    }
+    if (/[A-Z]+/.test(password)) {
+      errors.hasUppercase = true;
+    }
+    if (/[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password)) {
+      errors.hasSpecialCharacter = true;
+    }
+    if (!/\s+/.test(password)) {
+      errors.hasNoWhitespace = true;
+    }
+    if (!/[ñÑ]+/.test(password)) {
+      errors.hasNoLetterÑ = true;
+    }
+    if (
+      !/(012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210)/.test(
         password
-      )){
-        errors.hasNoConsecutiveNumbers = true;
-      }
-      if(!/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|ihg|hgf|gfe|fed|edc|dcb|cba)/.test(
+      )
+    ) {
+      errors.hasNoConsecutiveNumbers = true;
+    }
+    if (
+      !/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|ihg|hgf|gfe|fed|edc|dcb|cba)/.test(
         password
-      )){
-        errors.hasNoConsecutiveLetters = true;
-      }
-      if(!/(banxico|spei|spid|2001)/i.test(
-        password
-      )){
-        errors.hasNoInstitutionNamAndNumber = true;
-      }
+      )
+    ) {
+      errors.hasNoConsecutiveLetters = true;
+    }
+    if (!/(banxico|spei|spid|2001)/i.test(password)) {
+      errors.hasNoInstitutionNamAndNumber = true;
+    }
     //const hasUppercase = /[A-Z]+/.test(password);
     //const hasSpecialCharacter = /[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
 
@@ -173,7 +178,7 @@ export class CambiarPasswordComponent implements OnInit {
     //const hasNoWhitespace = !/\s+/.test(password);
 
     // No debe contener la letra Ñ.
-   // const hasNoLetterÑ = !/[ñÑ]+/.test(password);
+    // const hasNoLetterÑ = !/[ñÑ]+/.test(password);
 
     // Tercia de números consecutivos ascendente y descendente no permitidos.
     /*const hasNoConsecutiveNumbers =
@@ -188,7 +193,7 @@ export class CambiarPasswordComponent implements OnInit {
       );*/
 
     // El nombre de la institución SPEI, BANXICO, SPID o la clave de la institución
-   /* const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
+    /* const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
       password
     );*/
     // Comprobar todos los requisitos y devolver el resultado final.
@@ -213,25 +218,41 @@ export class CambiarPasswordComponent implements OnInit {
     log.usuario = this.username;
     log.password = actutalpassword;
 
-    this.infoLoginService.login(log).subscribe((data) => {
-      if (data.mensaje === 'OK') {
-        this.actualPassword = false;
-        if (this.isPasswordValid(constraseña) && this.isPasswordValid(constraseñaConfirmada)) {
-          if (constraseña === constraseñaConfirmada) {
-            if(constraseña === actutalpassword){
-              this.isError = true;
-            }else{
-              data.usuario.password = constraseña;
-              let sesion:any =data;
-              this.actualizarPassword(sesion);
+    this.infoLoginService.login(log).subscribe(
+      (data) => {
+        if (data.mensaje === 'OK') {
+          this.actualPassword = false;
+          if (
+            this.isPasswordValid(constraseña) &&
+            this.isPasswordValid(constraseñaConfirmada)
+          ) {
+            if (constraseña === constraseñaConfirmada) {
+              if (constraseña === actutalpassword) {
+                this.isError = true;
+              } else {
+                data.usuario.password = constraseña;
+                let sesion: any = data;
+                this.actualizarPassword(sesion);
+              }
             }
           }
+        } else {
+          this.passwordForm
+            .get('actualPassword')
+            ?.setErrors({ actualPassword: true });
+          this.actualPassword = true;
         }
-      } else {
-        this.passwordForm.get('actualPassword')?.setErrors({ actualPassword: true });
-        this.actualPassword = true;
+      },
+      (error) => {
+        this.snackbar.open(
+          'Error al recuperar la contraseña actual. Intentelo de nuevo.',
+          'Cerrar',
+          {
+            duration: 3000,
+          }
+        );
       }
-    });
+    );
   }
   borrarInput() {
     // Método llamado cuando el usuario borra el input
@@ -245,7 +266,10 @@ export class CambiarPasswordComponent implements OnInit {
         dialogConfig.height = '60%';
         dialogConfig.maxWidth = '95%';
         dialogConfig.disableClose = true;
-        const dialogref = this.dialog.open(NewPasswordDialogComponent, dialogConfig);
+        const dialogref = this.dialog.open(
+          NewPasswordDialogComponent,
+          dialogConfig
+        );
         dialogref.afterClosed().subscribe((result) => {
           this.password.nativeElement.value = '';
           this.confirmPassword.nativeElement.value = '';
@@ -255,9 +279,13 @@ export class CambiarPasswordComponent implements OnInit {
         });
       },
       (error) => {
-        this.snackbar.open('Error al actualizar la contraseña. Intentelo de nuevo.', 'Cerrar', {
-          duration: 3000,
-        });
+        this.snackbar.open(
+          'Error al actualizar la contraseña. Intentelo de nuevo.',
+          'Cerrar',
+          {
+            duration: 3000,
+          }
+        );
       }
     );
   }
