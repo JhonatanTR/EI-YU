@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -12,6 +14,7 @@ import { LocalStorageService } from 'src/app/_service/local-storage.service';
 import { NewPasswordDialogComponent } from './new-password-dialog/new-password-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { error } from 'console';
 
 @Component({
   templateUrl: './cambiar-password.component.html',
@@ -57,16 +60,14 @@ export class CambiarPasswordComponent implements OnInit {
       {
         password: new FormControl('', [
           Validators.required,
+          this.customPasswordValidator.bind(this),
           Validators.minLength(this.minPasswordLength),
           Validators.maxLength(this.maxPasswordLength),
         ]),
-        actualPassword: new FormControl('', [
-          Validators.required,
-          Validators.minLength(this.minPasswordLength),
-          Validators.maxLength(this.maxPasswordLength),
-        ]),
+        actualPassword: new FormControl('', Validators.required),
         confirmPassword: new FormControl('', [
           Validators.required,
+          this.customPasswordValidator.bind(this),
           Validators.minLength(this.minPasswordLength),
           Validators.maxLength(this.maxPasswordLength),
         ]),
@@ -95,39 +96,103 @@ export class CambiarPasswordComponent implements OnInit {
     const control = this.passwordForm.get(controlName);
     return control?.hasError(errorName) ?? false;
   }
+  validarPassword() {
+    const nuevaPasswordControl = this.passwordForm.get('password');
+    const nuevaPassword = nuevaPasswordControl?.value;
 
-  isPasswordValid(password: string): boolean {
+    const isPasswordValid = this.isPasswordValid(nuevaPassword);
+
+    if (isPasswordValid) {
+      nuevaPasswordControl?.setErrors(null);
+    } else {
+      nuevaPasswordControl?.setErrors({ invalidPassword: true });
+    }
+  }
+  customPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const newPassword = control.value;
+    const isPasswordValid = this.isPasswordValid(newPassword);
+
+    const hasErrors = Object.values(isPasswordValid).some(error => !error);
+
+    if (hasErrors) {
+      return { invalidPassword: true, isPasswordValid };
+    } else {
+      return null;
+    }
+  }
+
+
+  isPasswordValid(password: string): { [key: string]: boolean } {
+    const errors = {
+      hasLetterAndNumber: false,
+      hasUppercase: false,
+      hasSpecialCharacter: false,
+      hasNoWhitespace: false,
+      hasNoLetterÑ: false,
+      hasNoConsecutiveNumbers: false,
+      hasNoConsecutiveLetters: false,
+      hasNoInstitutionNamAndNumber: false,
+    };
     // Debe incluir letras y números, al menos una mayúscula y un carácter especial.
-    const hasLetterAndNumber =
-      /[a-zA-Z]+/.test(password) && /[0-9]+/.test(password);
-    const hasUppercase = /[A-Z]+/.test(password);
-    const hasSpecialCharacter =
-      /[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
+    /*const hasLetterAndNumber =
+      /[a-zA-Z]+/.test(password) && /[0-9]+/.test(password);*/
+      if(/[a-zA-Z]+/.test(password) && /[0-9]+/.test(password)){
+        errors.hasLetterAndNumber = true;
+      }
+      if(/[A-Z]+/.test(password)){
+        errors.hasUppercase = true;
+      }
+      if(/[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password)){
+        errors.hasSpecialCharacter = true;
+      }
+      if(!/\s+/.test(password)){
+        errors.hasNoWhitespace = true;
+      }
+      if(!/[ñÑ]+/.test(password)){
+        errors.hasNoLetterÑ = true;
+      }
+      if(!/(012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210)/.test(
+        password
+      )){
+        errors.hasNoConsecutiveNumbers = true;
+      }
+      if(!/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|ihg|hgf|gfe|fed|edc|dcb|cba)/.test(
+        password
+      )){
+        errors.hasNoConsecutiveLetters = true;
+      }
+      if(!/(banxico|spei|spid|2001)/i.test(
+        password
+      )){
+        errors.hasNoInstitutionNamAndNumber = true;
+      }
+    //const hasUppercase = /[A-Z]+/.test(password);
+    //const hasSpecialCharacter = /[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
 
     // No debe contener espacios en blanco.
-    const hasNoWhitespace = !/\s+/.test(password);
+    //const hasNoWhitespace = !/\s+/.test(password);
 
     // No debe contener la letra Ñ.
-    const hasNoLetterÑ = !/[ñÑ]+/.test(password);
+   // const hasNoLetterÑ = !/[ñÑ]+/.test(password);
 
     // Tercia de números consecutivos ascendente y descendente no permitidos.
-    const hasNoConsecutiveNumbers =
+    /*const hasNoConsecutiveNumbers =
       !/(012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210)/.test(
         password
-      );
+      );*/
 
     // Tercia de letras consecutivas ascendente y descendente no permitidos.
-    const hasNoConsecutiveLetters =
+    /*const hasNoConsecutiveLetters =
       !/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|hgf|gfe|fed|edc|dcb|cba|aqp|bpr|cps|dtq|eur|fvs|gwt|hux|ivy|jwz|kxa|lyb|mzc|nad|obe|pcf|qdg|reh|sfi|tgj|uhk|vil|wjm|xkn|ylo|zmp)/i.test(
         password
-      );
+      );*/
 
     // El nombre de la institución SPEI, BANXICO, SPID o la clave de la institución
-    const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
+   /* const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
       password
-    );
+    );*/
     // Comprobar todos los requisitos y devolver el resultado final.
-    return (
+    /*return (
       hasLetterAndNumber &&
       hasUppercase &&
       hasSpecialCharacter &&
@@ -136,7 +201,8 @@ export class CambiarPasswordComponent implements OnInit {
       hasNoConsecutiveNumbers &&
       hasNoConsecutiveLetters &&
       hasNoInstitutionNamAndNumber
-    );
+    );*/
+    return errors;
   }
   onSubmit() {
     let constraseña = this.passwordForm.get('password')?.value;
@@ -162,9 +228,14 @@ export class CambiarPasswordComponent implements OnInit {
           }
         }
       } else {
+        this.passwordForm.get('actualPassword')?.setErrors({ actualPassword: true });
         this.actualPassword = true;
       }
     });
+  }
+  borrarInput() {
+    // Método llamado cuando el usuario borra el input
+    this.passwordForm.get('actualPassword')?.setErrors(null); // Limpiar los errores
   }
   actualizarPassword(data: any) {
     this.infoLoginService.actualizarUsuario(data.usuario).subscribe(

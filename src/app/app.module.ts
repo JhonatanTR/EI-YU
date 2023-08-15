@@ -37,6 +37,7 @@ import { CambiarPasswordComponent } from './pages/ajustes/cambiar-password/cambi
 import { NewPasswordDialogComponent } from './pages/ajustes/cambiar-password/new-password-dialog/new-password-dialog.component';
 import { DialogoLimpiarComponent } from './pages/autorizar-spei/dialogo-limpiar/dialogo-limpiar.component';
 import { ForgotenPasswordInfoComponent } from './login/forgoten-password-info/forgoten-password-info.component';
+import { CopyPasteBlockDirective } from './directives/copyPasteBlock';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { ForgotenPasswordInfoComponent } from './login/forgoten-password-info/fo
     NewPasswordDialogComponent,
     DialogoLimpiarComponent,
     ForgotenPasswordInfoComponent,
+    CopyPasteBlockDirective
 
   ],
   entryComponents: [DialogoComponent,BusquedaDialogComponent,DialogoConfCuentaComponent,EnrolarTokenComponent,DialogErrorListPagoComponent],
