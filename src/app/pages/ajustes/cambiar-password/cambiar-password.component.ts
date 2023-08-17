@@ -125,6 +125,45 @@ export class CambiarPasswordComponent implements OnInit {
     }
   }
 
+  isPasswordValid2(password: string): boolean {
+    // Debe incluir letras y números, al menos una mayúscula y un carácter especial.
+    const hasLetterAndNumber =
+      /[a-zA-Z]+/.test(password) && /[0-9]+/.test(password);
+    const hasUppercase = /[A-Z]+/.test(password);
+    const hasSpecialCharacter =
+      /[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
+    // No debe contener espacios en blanco.
+    const hasNoWhitespace = !/\s+/.test(password);
+    // No debe contener la letra Ñ.
+    const hasNoLetterÑ = !/[ñÑ]+/.test(password);
+    // Tercia de números consecutivos ascendente y descendente no permitidos.
+    const hasNoConsecutiveNumbers =
+      !/(012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210)/.test(
+        password
+      );
+    // Tercia de letras consecutivas ascendente y descendente no permitidos.
+    const hasNoConsecutiveLetters =
+      !/(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz|zyx|yxw|xwv|wvu|vut|uts|tsr|srq|rqp|qpo|pon|onm|nml|mlk|lkj|kji|jih|hgf|gfe|fed|edc|dcb|cba|aqp|bpr|cps|dtq|eur|fvs|gwt|hux|ivy|jwz|kxa|lyb|mzc|nad|obe|pcf|qdg|reh|sfi|tgj|uhk|vil|wjm|xkn|ylo|zmp)/i.test(
+        password
+      );
+
+    // El nombre de la institución SPEI, BANXICO, SPID o la clave de la institución
+    const hasNoInstitutionNamAndNumber = !/(banxico|spei|spid|2001)/i.test(
+      password
+    );
+    // Comprobar todos los requisitos y devolver el resultado final.
+    return (
+      hasLetterAndNumber &&
+      hasUppercase &&
+      hasSpecialCharacter &&
+      hasNoWhitespace &&
+      hasNoLetterÑ &&
+      hasNoConsecutiveNumbers &&
+      hasNoConsecutiveLetters &&
+      hasNoInstitutionNamAndNumber
+    )
+  }
+
   isPasswordValid(password: string): { [key: string]: boolean } {
     const errors = {
       hasLetterAndNumber: false,
@@ -223,8 +262,8 @@ export class CambiarPasswordComponent implements OnInit {
         if (data.mensaje === 'OK') {
           this.actualPassword = false;
           if (
-            this.isPasswordValid(constraseña) &&
-            this.isPasswordValid(constraseñaConfirmada)
+            this.isPasswordValid2(constraseña) &&
+            this.isPasswordValid2(constraseñaConfirmada)
           ) {
             if (constraseña === constraseñaConfirmada) {
               if (constraseña === actutalpassword) {
