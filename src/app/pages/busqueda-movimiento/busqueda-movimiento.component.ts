@@ -42,7 +42,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   filteredBancos: any[] = [];//aqui se almacenan los filtros de banco
   filteredCuentas: any[] = [];//aqui se almacenan los filtros de las cuentas
   institucionControl = new FormControl();
-  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento','Monto', 'Institucióm', 'estatus', 'Opciones'];
+  displayedColumns: string[] = ['select', 'Clave de rastreo', 'Concepto', 'Fecha de creacion', 'Tipo de movimiento', 'Monto', 'Institucióm', 'estatus', 'Opciones'];
   cantidad: number = 0;//es la cantidad de elementos de la consulta
   inicio!: Date;
   final!: Date;
@@ -53,7 +53,7 @@ export class BusquedaMovimientoComponent implements OnInit {
   selecc: InfoMovimiento[] = [];//Es un auxiliar
   @ViewChild('myInput') myInput!: ElementRef;
   datess = new InfoMovimiento();
-  monto:string="0";
+  monto: string = "0";
   maximaFecha!: Date;
   constructor(private _snackBar: MatSnackBar, private localStorageService: LocalStorageService, private dialog: MatDialog, private infoBancosService: InfoBancosService, private infoBancoService: InfoBancosService) {
     (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
@@ -181,25 +181,28 @@ export class BusquedaMovimientoComponent implements OnInit {
         let mov = JSON.parse(JSON.stringify(todos))?.content;
         mov = mov.filter((item: { cve_rastreo: any; }) => !this.deseleccionados.some(deseleccionado => deseleccionado.cve_rastreo === item.cve_rastreo));
         let movimientosSeleccionados = mov;
+        const columnNames = ['Clave de Rastreo', 'Concepto pago', 'Fecha creación',"Movimiento",  'Clabe destino', 'Institucion dest.', 'Monto', 'Institucion orig.', 'Clabe orig.', 'Estatus']; // Reemplaza con los nombres reales
+        const dataWithHeaders = [columnNames, ...movimientosSeleccionados.map((item: any) => [item.cve_rastreo, item.concepto_pago, item.fecha_creacion,  item.tipomoviiento, item.cuenta_destino, item.institucion, item.monto, item.bancoO,item.cuenta_origen,item.estatus])];
+        const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
         const workbook = XLSX.utils.book_new();
-        const worksheet = XLSX.utils.json_to_sheet(movimientosSeleccionados);
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
-        /* Exportar la hoja de cálculo en formato Excel */
-        const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         FileSaver.saveAs(dataBlob, 'movimientos.xlsx');
         this.selection.clear();
       })
 
     } else {
-      let movimientosSeleccionados = this.selecc;
+      // Supongamos que movimientosSeleccionados es un arreglo de objetos con los datos que deseas exportar
 
+      let movimientosSeleccionados = this.selecc;
+      const columnNames = ['Clave de Rastreo', 'Concepto pago', 'Fecha creación',"Movimiento",  'Clabe destino', 'Institucion dest.', 'Monto', 'Institucion orig.', 'Clabe orig.', 'Estatus']; // Reemplaza con los nombres reales
+      const dataWithHeaders = [columnNames, ...movimientosSeleccionados.map((item: any) => [item.cve_rastreo, item.concepto_pago, item.fecha_creacion,  item.tipomoviiento, item.cuenta_destino, item.institucion, item.monto, item.bancoO,item.cuenta_origen,item.estatus])];
+      const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
       const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.json_to_sheet(movimientosSeleccionados);
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos de la tabla');
-      /* Exportar la hoja de cálculo en formato Excel */
-      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const dataBlob: Blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       FileSaver.saveAs(dataBlob, 'movimientos.xlsx');
       this.selection.clear();
     }
@@ -218,7 +221,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         //let pdfData: any = this.generatePdfData(mov);
         // Generamos el documento PDF y lo abrimos en una nueva pestaña del navegador
         this.pdfNuevo(mov);
-       // pdfMake.createPdf(pdfData).download('movimientos.pdf');
+        // pdfMake.createPdf(pdfData).download('movimientos.pdf');
       })
     } else {
       let movimientosSeleccionados = this.selecc;
@@ -229,22 +232,22 @@ export class BusquedaMovimientoComponent implements OnInit {
     }
     // Generamos el contenido del PDF
   }
-  pdfNuevo(data:any){
-  this.infoBancoService.generarReportePdfMovimiento(data).subscribe(data=>{
-    const url = window.URL.createObjectURL(data);
-    const a=  document.createElement('a');
-    a.setAttribute('style','display:none');
-    a.href = url;
-    a.download='movimientos.pdf';
-    a.click();
-    return url;
-  })
-}
+  pdfNuevo(data: any) {
+    this.infoBancoService.generarReportePdfMovimiento(data).subscribe(data => {
+      const url = window.URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.setAttribute('style', 'display:none');
+      a.href = url;
+      a.download = 'movimientos.pdf';
+      a.click();
+      return url;
+    })
+  }
 
   generatePdfData(movimientos: InfoMovimiento[]) {//generador de pdf con la lista de
     let data = [];
     // Agregamos las columnas del encabezado
-    data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento','Monto', 'Institución', 'Estatus']);
+    data.push(['Clave de rastreo', 'Concepto', 'Fecha de creación', 'Tipo de movimiento', 'Monto', 'Institución', 'Estatus']);
     // Agregamos las filas con los datos de los movimientos seleccionados
     for (let movimiento of movimientos) {
       data.push([
@@ -252,7 +255,7 @@ export class BusquedaMovimientoComponent implements OnInit {
         { text: movimiento.concepto_pago, width: 'auto' },
         { text: movimiento.fecha_creacion, width: 'auto' },
         { text: movimiento.tipomoviiento, width: 'auto' },
-        { text:"$"+ movimiento.monto, width: 'auto' },
+        { text: "$" + movimiento.monto, width: 'auto' },
         { text: movimiento.institucion, width: 'auto' },
         { text: movimiento.estatus, width: 'auto' }
       ]);
@@ -354,19 +357,19 @@ export class BusquedaMovimientoComponent implements OnInit {
       this.req.tipoMovimiento = this.datos.trim();
       this.req.claveRastreo = this.claveDeRastreo.trim();
       this.req.estatus = this.estatus.trim();
-      this.req.monto =parseFloat(this.monto);
+      this.req.monto = parseFloat(this.monto);
 
       this.infoBancoService.listarMovimientoFiltradosPageable(this.req, 0, 10).pipe(
         catchError((error) => {
           this.openSnackBar('Error de conexion', 'Aviso');
           return of(null);
         })).subscribe(data => {
-        let mov = JSON.parse(JSON.stringify(data))?.content
-        this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
-        this.listaMovimiento = mov;
-        this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
+          let mov = JSON.parse(JSON.stringify(data))?.content
+          this.cantidad = JSON.parse(JSON.stringify(data))?.totalElements
+          this.listaMovimiento = mov;
+          this.dataSource = new MatTableDataSource<InfoMovimiento>(this.listaMovimiento);
 
-      })
+        })
     } else {
       this.openSnackBar('Seleccione una fecha de inicio y una fecha final ', 'Aviso');
     }
@@ -385,7 +388,7 @@ export class BusquedaMovimientoComponent implements OnInit {
       parts[1] = decimalPart;
     }
     event.target.value = parts.join('.'); // Unir las partes del número con un punto nuevamente
-   // Llamar a la función para separar y formatear el valor del IVA
+    // Llamar a la función para separar y formatear el valor del IVA
   }
   openSnackBar(da1: string, da2: string) {//snakBar que se abre cuando se manda a llamar
     this._snackBar.open(da1, da2, {
@@ -463,3 +466,15 @@ interface Tipos {
 
 }
 
+interface Movimiento {
+  cve_rastreo: string;
+  concepto_pago: string;
+  fecha_creacion: string;
+  tipomoviiento: string;
+  institucion: string;
+  estatus: string;
+  monto: number;
+  bancoO: string;
+  cuenta_origen: string;
+  cuenta_destino: string;
+}
