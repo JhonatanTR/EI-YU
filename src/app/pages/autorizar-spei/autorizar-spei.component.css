@@ -11,6 +11,11 @@
 table {
     width: 100%;
   }
+  .tabla-container{
+    overflow: auto;
+    margin-right: 18px;
+    position: relative;
+  }
   .disabled-button {
     opacity: 0.5;
     pointer-events: none;
@@ -38,10 +43,27 @@ table {
       margin-left: 10px;
       width: 170px;
     }
-  :host ::ng-deep .mat-header-cell{
+  :host ::ng-deep{
+    .mat-sort-header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 1.5em;
+
+    }
+  .mat-header-cell {
+      text-align: center;
+      margin: 0 10px;
+  }
+  .mat-cell{
     padding: 0 0.5rem;
-  } .mat-row{
-    overflow-wrap: anywhere;
+  }
   } .mat-header-cell{
+    padding: 0 0.5rem;
+  }
+  .mat-row{
+    overflow-wrap: anywhere;
+  }
+  .mat-header-cell{
     text-align: center;
   }
