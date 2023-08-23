@@ -26,7 +26,7 @@
 
             <mat-form-field appearance="fill" class="example-full-width" style="width: 49%; padding-left: 2%;">
                 <mat-label>Nombre beneficiario</mat-label>
-                <input matInput placeholder="Nombre beneficiario" [(ngModel)]="nomBeneficiario">
+                <input matInput placeholder="Nombre beneficiario" [(ngModel)]="nomBeneficiario"  maxlength="40">
             </mat-form-field>
         </div>
         <div class="titulos">
@@ -84,7 +84,7 @@
         </mat-form-field>
         <mat-form-field appearance="fill" class="example-full-width" style="width: 32%; ">
             <mat-label>Concepto pago</mat-label>
-            <input matInput placeholder="Concepto Pago" [(ngModel)]="conceptoPago">
+            <input matInput placeholder="Concepto Pago" [(ngModel)]="conceptoPago" maxlength="40">
         </mat-form-field>
         <!--mat-form-field appearance="fill" class="example-full-width" style="width: 32%;">
             <mat-label>Ref. Cobranza</mat-label>
