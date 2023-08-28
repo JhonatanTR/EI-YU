@@ -14,11 +14,15 @@ import { LoginComponent } from './login/login.component';
 import { GeneradorPdfComponent } from './pages/pdf-generator/generador-pdf/generador-pdf.component';
 import { AjustesComponent } from './pages/ajustes/ajustes.component';
 import { CambiarPasswordComponent } from './pages/ajustes/cambiar-password/cambiar-password.component';
+import { SelectProfileComponent } from './login/select-profile/select-profile.component';
+import { SegundoPerfilResolverResolver } from './resolvers/segundo-perfil-resolver.resolver';
 
 const routes: Routes = [
   {path:"login",component:LoginComponent},
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  {path:"dashboard",component:DashboardComponent,canActivate:[GuardServiceService]},
+  {path:"dashboard",component:DashboardComponent, resolve: {
+    segundoPerfil: SegundoPerfilResolverResolver,
+  }, canActivate:[GuardServiceService]},
   {path: "enviar-pago", component: EnviarPagoComponent,canActivate:[GuardServiceService]},
   {path: "busqueda-movimiento", component: BusquedaMovimientoComponent, canActivate:[GuardServiceService]},
   {path: "trasferencia", component: TransferenciaComponent, canActivate:[GuardServiceService]},
@@ -28,7 +32,8 @@ const routes: Routes = [
   {path: "carga-masiva-pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]},
   {path: "generar-pdf", component: GeneradorPdfComponent, canActivate:[GuardServiceService]},
   {path: "ajustes", component: AjustesComponent, canActivate:[GuardServiceService]},
-  {path: "change-password", component: CambiarPasswordComponent, canActivate:[GuardServiceService]}
+  {path: "change-password", component: CambiarPasswordComponent, canActivate:[GuardServiceService]},
+  {path: "select-profile", component: SelectProfileComponent, data: { layout: 'blank' }, canActivate:[GuardServiceService]}
 ];
 
 @NgModule({

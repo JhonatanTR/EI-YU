@@ -1,0 +1,17 @@
+<div class="main-container">
+  <h1 class="title-txt">
+    Seleccionar Perfil
+  </h1>
+  <span class="desc-txt">Favor de seleccionar un perfil para continuar.</span>
+  <div class="profiles-container">
+    <div class="profiles" *ngFor="let perfil of perfiles" [class.selected]="perfil.selected">
+      <div class="profile" (click)="selectProfile(perfil)">
+        <p class="user-txt">{{usuario}}</p>
+        <span class="clabe-txt">{{perfil.cuenta}}</span>
+      </div>
+    </div>
+    <div class="btn-container">
+      <button class="btn-continue" [disabled]="!isSelected" (click)="continue()">Continuar</button>
+    </div>
+  </div>
+</div>

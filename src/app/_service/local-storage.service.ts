@@ -12,6 +12,15 @@ import { Pagos } from '../_model/Pagos';
 export class LocalStorageService {
 
   constructor(@Inject('WINDOW') private window: Window) { }
+
+  setDataLogin(key: string, list: {}): void {
+    this.window.localStorage.setItem(key, JSON.stringify(list));
+  }
+  getDataLogin(key: string): {} {
+    let listString = this.window.localStorage.getItem(key);
+    return listString ? JSON.parse(listString) : null;
+  }
+
   setPagos(key: string, list: Pagos[]): void {
     this.window.localStorage.setItem(key, JSON.stringify(list));
   }

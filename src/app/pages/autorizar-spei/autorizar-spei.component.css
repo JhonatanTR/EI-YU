@@ -12,7 +12,6 @@ table {
     width: 100%;
   }
   .tabla-container{
-    overflow: auto;
     margin-right: 18px;
     position: relative;
   }

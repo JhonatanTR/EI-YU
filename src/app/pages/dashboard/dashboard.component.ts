@@ -51,11 +51,11 @@ export class DashboardComponent implements OnDestroy {
   clabeMadre="";
   ngOnInit(): void {
     this.cuentaConcentradora();
-    
+
     const datePipe = new DatePipe('en-US');
     //this.startDataUpdate();
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
-   
+
 
     this.loginService.mensaje$.subscribe((mensaje: string) => {
       this.token = mensaje;
@@ -83,7 +83,7 @@ export class DashboardComponent implements OnDestroy {
     })
   }
   ngOnDestroy(): void {//Cuando sale del este pagina destruye todo proceso que este haciendo internamente en este caso el resultado de tiempo real deja de consultarse
-   
+
     this.showSaldoActual(); if (this.intervalSubscription) {
       this.intervalSubscription.unsubscribe();
     }
@@ -99,6 +99,9 @@ export class DashboardComponent implements OnDestroy {
   showSaldoActual(){
     const datePipe = new DatePipe('en-US');
     let ini = datePipe.transform(this.fechaActual, 'yyyy-MM-dd');
+    if(this.clabeMadre !== this.localStorageService.getData('cuenta')){
+      this.clabeMadre = this.localStorageService.getData('cuenta');
+    }
     let dato={
       "cuentaID":this.clabeMadre,
       "fecha":ini
@@ -106,7 +109,7 @@ export class DashboardComponent implements OnDestroy {
         this.infoLog.saldo(dato).subscribe(sal => {
           this.sn = sal;
           let dat = {
-            "idPblu": this.localStorageService.getUsuario("pblu").toString(),
+            "idPblu": this.localStorageService.getUsuario("pblu")?.toString(),
             "fechaInicio": ini,
             "fechaFinal": ini
           }
@@ -114,7 +117,7 @@ export class DashboardComponent implements OnDestroy {
             this.pas = dato;
           });
         })
-        
+
   }
   startDataUpdate(): void {// Iniciamos el intervalo de 15 segundos y nos suscribimos a él
     const datePipe = new DatePipe('en-US');

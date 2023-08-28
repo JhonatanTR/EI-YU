@@ -1,8 +1,8 @@
 <div class="example-container">
-	<header>	<mat-toolbar class="example-toolbar" *ngIf="estalogeado()">
+	<header>	<mat-toolbar class="example-toolbar" *ngIf="estalogeado() && shouldShowNavbar()">
 		<div class="menu-container">
 			<div class="left-size-header">
-				<button mat-icon-button (click)="sidenav.toggle()">
+				<button mat-icon-button (click)="sidenav.toggle()" *ngIf="shouldShowNavbar()">
 					<mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
 					<mat-icon *ngIf="sidenav.opened">keyboard_backspace</mat-icon>
 				</button>
@@ -21,11 +21,11 @@
       </div>
     </div>
 
-		<button mat-icon-button [matMenuTriggerFor]="menu">
+		<button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="shouldShowNavbar()">
 			<mat-icon>more_vert</mat-icon>
 		</button>
 
-		<mat-menu #menu="matMenu" class="transparent-menu">
+		<mat-menu #menu="matMenu" class="transparent-menu" >
 			<!--button mat-menu-item routerLink="/perfil">
 				<mat-icon>account_box</mat-icon>
 				<span>Mi Perfil</span>
@@ -47,51 +47,53 @@
 
 	<mat-sidenav-container class="example-container" class="example-sidenav-container" autosize>
 
-		<mat-sidenav mode="side" [opened]="estalogeado()" #sidenav style="width: 280px" autosize>
+		<mat-sidenav mode="side" [opened]="estalogeado() && shouldShowNavbar()" #sidenav style="width: 280px" autosize>
 
 			<button mat-menu-item routerLink="/dashboard" style="cursor: pointer">
 				<mat-icon>dashboard</mat-icon>
 				<span style="font-size: 16px; font-weight: 600;">DASHBOARD</span>
 			</button>
-			<p class="id" style="font-size: 14px; font-weight: 600;">MOVIMIENTOS DEL PERIODO ACTUAL</p>
-			<!--	<button mat-menu-item style="cursor: pointer">
-					<mat-icon> monetization_on</mat-icon>
-					<span >Pagos</span>
-				</button-->
+      <div *ngIf="segundoPerfil || adm">
+        <p class="id" style="font-size: 14px; font-weight: 600;">MOVIMIENTOS DEL PERIODO ACTUAL</p>
+        <!--	<button mat-menu-item style="cursor: pointer">
+            <mat-icon> monetization_on</mat-icon>
+            <span >Pagos</span>
+          </button-->
 
-			<!--<button mat-menu-item style="cursor: pointer">
-					<mat-icon> money_off</mat-icon>
-					<span  >Abonos</span>
-				</button-->
+        <!--<button mat-menu-item style="cursor: pointer">
+            <mat-icon> money_off</mat-icon>
+            <span  >Abonos</span>
+          </button-->
 
-			<button mat-menu-item routerLink="/busqueda-movimiento" style="cursor: pointer">
-				<mat-icon>star_rate</mat-icon>
-				<span>Búsqueda de movimiento</span>
-			</button>
-			<p class="id" style="font-size: 14px; font-weight: 600;">SPEI</p>
+        <button mat-menu-item routerLink="/busqueda-movimiento" style="cursor: pointer">
+          <mat-icon>star_rate</mat-icon>
+          <span>Búsqueda de movimiento</span>
+        </button>
+      </div>
+        <p class="id" style="font-size: 14px; font-weight: 600;">SPEI</p>
 
-			<!--<button mat-menu-item style="cursor: pointer">
-					<mat-icon>healing</mat-icon>
-					<span  >Unidades de negocio</span>
-				</button-->
+        <!--<button mat-menu-item style="cursor: pointer">
+            <mat-icon>healing</mat-icon>
+            <span  >Unidades de negocio</span>
+          </button-->
 
-			<!--<button mat-menu-item style="cursor: pointer">
-					<mat-icon>assignment</mat-icon>
-					<span >Traspasar</span>
-				</button-->
+        <!--<button mat-menu-item style="cursor: pointer">
+            <mat-icon>assignment</mat-icon>
+            <span >Traspasar</span>
+          </button-->
 
-			<button mat-menu-item routerLink="/enviar-pago" style="cursor: pointer">
-				<mat-icon>accessibility</mat-icon>
-				<span>Enviar SPEI</span>
-			</button>
-			<button mat-menu-item routerLink="/carga-masiva-pagos" style="cursor: pointer">
-				<mat-icon>leaderboard</mat-icon>
-				<span>Carga masiva SPEI</span>
-      </button>
-			<button mat-menu-item routerLink="/autorizarspei" style="cursor: pointer">
-				<mat-icon>assignment</mat-icon>
-				<span>Autorizar SPEI</span>
-			</button>
+        <button mat-menu-item routerLink="/enviar-pago" style="cursor: pointer" >
+          <mat-icon>accessibility</mat-icon>
+          <span>Enviar SPEI</span>
+        </button>
+        <button mat-menu-item routerLink="/carga-masiva-pagos" style="cursor: pointer" *ngIf="!segundoPerfil">
+          <mat-icon>leaderboard</mat-icon>
+          <span>Carga masiva SPEI</span>
+        </button>
+        <button mat-menu-item routerLink="/autorizarspei" style="cursor: pointer" *ngIf="!segundoPerfil">
+          <mat-icon>assignment</mat-icon>
+          <span>Autorizar SPEI</span>
+        </button>
 			<!--
 				<p class="id" style="font-size: 14px; font-weight: 600;">CUENTAS</p>
 				<button mat-menu-item style="cursor: pointer">
@@ -120,7 +122,7 @@
             <span>Cargar cuentas</span>
           </button>
         </div-->
-			<div *ngIf="adm">
+			<div *ngIf="!(adm != !segundoPerfil)">
 				<p class="id" style="font-size: 14px; font-weight: 600;">TESORERÍA</p>
 				<button mat-menu-item style="cursor: pointer" routerLink="/trasferencia">
 					<mat-icon>compare_arrows</mat-icon>

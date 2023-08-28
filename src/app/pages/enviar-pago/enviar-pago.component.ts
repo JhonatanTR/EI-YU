@@ -237,6 +237,9 @@ export class EnviarPagoComponent implements OnInit {
     this.numeroDeCuenta = onlyNumbers;
   }
   enviar() {//Envia los datos
+    if(this.clabeMadre !== this.localStorageService.getData('cuenta')){
+      this.clabeMadre = this.localStorageService.getData('cuenta');
+    }
     if (this.cuentasControl.value?.clabe == undefined) {
       this.numeroDeCuenta = this.cuentasControl.value
     } else {
@@ -405,6 +408,9 @@ export class EnviarPagoComponent implements OnInit {
 
   Listspeiout: InfoCapturaSPEI[] = [];
   enlistarSPEIOUT() {
+    if(this.clabeMadre !== this.localStorageService.getData('cuenta')){
+      this.clabeMadre = this.localStorageService.getData('cuenta');
+    }
     if (this.cuentasControl.value?.clabe == undefined) {
       this.numeroDeCuenta = this.cuentasControl.value;
     } else {

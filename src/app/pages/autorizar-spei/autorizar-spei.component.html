@@ -10,9 +10,9 @@
     </button>
   </div>
   <div class="table-container">
-    <div>
-      <div class="mat-elevation-z8 tabla-container">
-        <table mat-table [dataSource]="dataSource">
+    <div style="overflow-y: hidden;">
+      <div class="tabla-container">
+        <table mat-table [dataSource]="dataSource" style="white-space: nowrap;">
           <ng-container matColumnDef="select" >
             <th mat-header-cell *matHeaderCellDef>
               <mat-checkbox
