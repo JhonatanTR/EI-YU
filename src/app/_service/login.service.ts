@@ -13,12 +13,15 @@ export class LoginService {
   descripcion=new Subject<string>();
   token=new Subject<string>();
   mensajeSubject = new Subject<string>();
-  
+
   private segundoPerfilSubject = new BehaviorSubject<boolean>(false);
   segundoPerfil$ = this.segundoPerfilSubject.asObservable();
 
   setSegundoPerfil(value: boolean) {
     this.segundoPerfilSubject.next(value);
+  }
+  resetSegundoPerfil() {
+    this.segundoPerfilSubject.next(false);
   }
 
   enviarMensaje(mensaje: string): void {

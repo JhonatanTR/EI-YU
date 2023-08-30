@@ -31,8 +31,10 @@ const routes: Routes = [
   {path: "cargar-cuenta", component: CargarCuentaComponent, canActivate:[GuardServiceService]},
   {path: "carga-masiva-pagos", component: CargaMasivaComponent, canActivate:[GuardServiceService]},
   {path: "generar-pdf", component: GeneradorPdfComponent, canActivate:[GuardServiceService]},
-  {path: "ajustes", component: AjustesComponent, canActivate:[GuardServiceService]},
-  {path: "change-password", component: CambiarPasswordComponent, canActivate:[GuardServiceService]},
+  {path: "ajustes", component: AjustesComponent,  children: [
+    { path: "change-password", component: CambiarPasswordComponent, canActivate:[GuardServiceService] },
+    ], canActivate:[GuardServiceService]},
+  //{path: "change-password", component: CambiarPasswordComponent, canActivate:[GuardServiceService]},
   {path: "select-profile", component: SelectProfileComponent, data: { layout: 'blank' }, canActivate:[GuardServiceService]}
 ];
 

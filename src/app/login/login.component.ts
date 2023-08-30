@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
     private loginServices: InfoLoginService,
     private loginService: LoginService,
     private router: Router,
+    private segundoPerfilService: LoginService,
     private localStorageService: LocalStorageService
   ) {
     this.loading = false;
@@ -206,8 +207,8 @@ export class LoginComponent implements OnInit {
                       this.dialog.open(SelectProfileComponent, dialogConfig);*/
                     }else{
                       this.loginService.cli.next(cli);
+                      this.segundoPerfilService.resetSegundoPerfil();
                       this.router.navigate(['dashboard']);
-
                       if (
                         da.usuario.token?.activo == true ||
                         da.usuario.token != null

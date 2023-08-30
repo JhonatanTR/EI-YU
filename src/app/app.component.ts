@@ -3,6 +3,7 @@ import { LoginService } from './_service/login.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Cliente } from './_model/cliente';
 import { LocalStorageService } from './_service/local-storage.service';
+import { SettingsService } from './_service/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +21,10 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private loginService: LoginService,
     private router: Router,
-    private localStorageService: LocalStorageService,
+    public localStorageService: LocalStorageService,
     private cdRef: ChangeDetectorRef,
-    private segundoPerfilService: LoginService
+    private segundoPerfilService: LoginService,
+    private settingsService: SettingsService
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +80,7 @@ export class AppComponent implements OnInit {
   }
   cerrarCession() {
     this.localStorageService.clear();
+    this.segundoPerfilService.resetSegundoPerfil();
     let cl = new Cliente();
     cl.login = false;
     this.loginService.cli.next(cl);
@@ -85,5 +88,10 @@ export class AppComponent implements OnInit {
   }
   ajustes() {
     this.router.navigate(['ajustes']);
+    this.settingsService.setShowSettingsContent(true);
+  }
+  cambiarPerfil(){
+    this.segundoPerfilService.resetSegundoPerfil();
+    this.router.navigate(['select-profile']);
   }
 }

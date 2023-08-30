@@ -1,17 +1,20 @@
-<div class="tabla">
-  <p style="font-size:25px; text-align: center;">Ajustes</p>
+<div *ngIf="showSettingsContent">
+  <div class="tabla">
+    <p style="font-size:25px; text-align: center;">Ajustes</p>
 
-  <div class="medium-box">
-    <div class="config-icon">
-      <button mat-icon-button (click)="changePassword()">
-        <i class="fa-solid fa-key fa-3x" style="color: #000000;"></i>
-      </button>
-      <span>Cambiar contraseña</span>
+    <div class="medium-box">
+      <div class="config-icon">
+        <button mat-icon-button (click)="changePassword()">
+          <i class="fa-solid fa-key fa-3x" style="color: #000000;"></i>
+        </button>
+        <span>Cambiar contraseña</span>
+      </div>
     </div>
+
+
   </div>
-
-
+  <footer class="foot">
+    @ Derechos reservados ASP Integra Opciones V 1.2
+  </footer>
 </div>
-<footer class="foot">
-  @ Derechos reservados ASP Integra Opciones V 1.2
-</footer>
+<router-outlet *ngIf="!showSettingsContent"></router-outlet>

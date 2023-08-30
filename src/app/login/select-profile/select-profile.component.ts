@@ -30,7 +30,6 @@ export class SelectProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.busquedaCuentaConcentradora();
     setTimeout(() => {
     this.datalogin = this.localStorageService.getDataLogin("perfiles");
@@ -38,7 +37,7 @@ export class SelectProfileComponent implements OnInit {
     this.datalogin.usuario.segundo_perfil.forEach((perfil: any) => {
       this.perfiles.push(perfil);
     });
-    }, 100);
+    }, 200);
   }
   selectProfile(perfil: any) {
     this.localStorageService.setData("cuenta", perfil.cuenta);

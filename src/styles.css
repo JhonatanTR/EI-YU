@@ -6,4 +6,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-menu-panel {
     background: rgba(255, 255, 255, 0.31);
 }
-
+.mat-drawer-content{
+  overflow-x: hidden !important;
+}
+.mat-drawer-content{
+  overflow-x: hidden !important;
+}

@@ -131,7 +131,7 @@ export class CambiarPasswordComponent implements OnInit {
       /[a-zA-Z]+/.test(password) && /[0-9]+/.test(password);
     const hasUppercase = /[A-Z]+/.test(password);
     const hasSpecialCharacter =
-      /[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
+    /[,\.\;\:\¨\[\]\{\}\-\•\*\!\/\"\#\$\_\~\+\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password);
     // No debe contener espacios en blanco.
     const hasNoWhitespace = !/\s+/.test(password);
     // No debe contener la letra Ñ.
@@ -184,7 +184,7 @@ export class CambiarPasswordComponent implements OnInit {
     if (/[A-Z]+/.test(password)) {
       errors.hasUppercase = true;
     }
-    if (/[,\.\-\*\!\/\"\#\$\$\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password)) {
+    if (/[,\.\;\:\¨\[\]\{\}\-\•\*\!\/\"\#\$\_\~\+\%\&\(\)\=\?\'\¿\¡\@\|\°\¬]+/.test(password)) {
       errors.hasSpecialCharacter = true;
     }
     if (!/\s+/.test(password)) {

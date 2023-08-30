@@ -30,6 +30,10 @@
 				<mat-icon>account_box</mat-icon>
 				<span>Mi Perfil</span>
 			</button-->
+			<button *ngIf="this.localStorageService.getDataLogin('perfiles')" mat-menu-item (click)="cambiarPerfil()" routerLink="/select-profile">
+				<mat-icon>supervisor_account</mat-icon>
+				<span>Cambiar Perfil</span>
+			</button>
 
 			<button mat-menu-item (click)="ajustes()" routerLink="/ajustes">
 				<mat-icon>settings</mat-icon>
